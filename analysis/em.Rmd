@@ -2,7 +2,9 @@
 title: "EM"
 author: "Jihee You"
 date: "`r Sys.Date()`"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -14,6 +16,63 @@ knitr::opts_chunk$set(echo = TRUE)
 library(here)
 here()
 ```
+
+# PNMF Problem
+\section{Poisson NMF}
+
+Let $X \in R_{+}^{n \times p}$ denote a matrix of observed counts
+$x_{ij}$. Poisson NMF parameters include $L \in R_{+}^{n \times k}$
+and $F \in R_{+}^{p \times k}$, and we seek values of L and F such
+that $X \approx LF^T$.
+
+Given $k \ge 1$, the Poisson NMF model is 
+$$
+\begin{aligned}
+X_{ij} | L, F  \sim Poi(\lambda_{ij}) \\
+\lambda_{ij} = \sum_{k} l_{ik}f_{jk}
+\end{aligned}
+$$
+
+Likelihood for a single observed count $X_{ij}$ is expressed as 
+$$
+P(X_{ij} | L, F) = \frac{\exp(-\lambda_{ij}) \lambda_{ij}^{X_{ij}}}{X_{ij}!}
+$$
+
+Then, the log-likelihood of X is expressed as
+
+$$
+\begin{align*}
+    \ell(X|L,F) &= \log(\prod_{i}\prod_{j} P(X_{ij} | L, F) \\
+    &= \sum_{i}\sum_{j} \log(\frac{\exp(-\lambda_{ij}) \lambda_{ij}^{X_{ij}}}{X_{ij}!}) \\
+    &= \sum_{i} \sum_{j}[-\lambda_{ij} + X_{ij}\log(\lambda_{ij}) - \log(X_{ij}!)]
+\end{align*}
+$$
+
+\subsection{Latent variable representation and EM}
+
+We are able to write the following latent variable representation.
+$$
+Z_{ijk} \sim Poi(l_{ik} f_{jk}) \\
+X_{ij} = \sum_k Z_{ijk}
+$$
+
+Let $\hat z_{ijk} = \mathbb{E}[z_{ijk} | x_{ij}, l_{ik}, f_{jk}]$. $\hat z_{ijk}$ can directly calculated.
+$$\hat z_{ijk} = x_{ij} \frac{l_{ik}f_{jk}}
+{\sum_k {l_{ik}f_{jk}}}$$
+
+The posterior distribution of the latent variable Z is:
+$$ P(Z| X, L,F) = \sum_{ijk} (\hat z_{ijk}\log(l_{ik}f_{jk}) - l_{ik}f_{jk} - \log\hat z_{ijk}!)
+$$
+\[\frac{\partial P}{\partial l_{ik}} = \sum_j (\frac{\hat z_{ijk}}{l_{ik}} - f_{jk})\]
+$\frac{\partial P}{\partial l_{ik}} = 0$ leads to
+$$
+l_{ik}^\text{(new)} = \sum_{j} \frac{\hat z_{ijk}}{f_{jk}}
+$$
+
+Similar multiplicative update is available for $f_{jk}$.
+$$
+f_{jk}^\text{(new)} = \sum_{i} \frac{\hat z_{ijk}}{l_{ik}}
+$$
 
 
 # Data Generation
@@ -73,43 +132,13 @@ given that $\lambda_{ij} = \sum_k L_{ik} F_{jk}$ for simpler notation.
 ## Implementation: Likelihood
 ```{r}
 library(Matrix)
-library(matrixStats)
-
 data$X <- Matrix(data$X, sparse = TRUE)
 
 ```
 
 ```{r}
-# Helper function
-# Take as input matrix (not sparse) LOG L, LOG F
-# Output: log lambda matrix (not sparse)
-compute_log_Lambda_mat <- function(log_L, log_F, X){
-  X_summary = summary(X)
-  i = X_summary$i
-  j = X_summary$j
-  # Create log Lambda matrix (to prevent underflow)
-  log_Lambdaval <- matrixStats::rowLogSumExps(log_L[i, , drop = FALSE] + log_F[j, , drop = FALSE])
-  log_Lambda <- sparseMatrix(i = i,
-                             j = j,
-                             x = log_Lambdaval,
-                             dims = dim(X))
-  return(log_Lambda)
-
-}
-
-# Assume X is a sparse matrix
-# Notice X is not in log space
-# LOG L, LOG F are also matrices
-compute_loglik <- function(log_L, log_F, X){
-  mask <- (X != 0)
-  log_Lambda = compute_log_Lambda_mat(log_L, log_F, X)
-  
-  # Compute Poisson log likelihood for all observations
-  ll = -sum(exp(log_Lambda)) + 
-    sum((X * log_Lambda)) - 
-          sum(lgamma(X[mask] + 1))
-  
-  return(ll)}
+library(matrixStats)
+source(here("docs","code","utils.R"))
 
 cat("Log likelihood",compute_loglik(log(data$L), log(data$F), data$X), "\n")
 
@@ -205,7 +234,7 @@ $$
 f_{jk}^\text{(new)} = \sum_{i} \frac{\mathbb{E}[z_{ijk}]}{l_{ik}}
 $$
 
-## Implementation: EM
+# Implementation: EM
 
 ```{r}
 # Computes E_Z, which is a n x p x k matrix
@@ -248,23 +277,36 @@ M_step <- function(log_L, log_F, E_res){
   newlog_L = logEz_sj - rep(logF_sj, each = nrow(log_L))
   
   # Then update F
-  new_L <- exp(newlog_L)
-  logL_si = log(colSums(new_L)) # length k
+  # L <- exp(log_L)
+  L <- exp(newlog_L)
+  logL_si = log(colSums(L)) # length k
   newlog_F = logEz_si - rep(logL_si, each = nrow(log_F))
   
   return(list(log_L=newlog_L, log_F=newlog_F))
 }
+```
 
+```{r}
 library(fastTopics)
 source(here("docs","code","initialize.R"))
 source(here("docs","code","utils.R"))
+
+set.seed(4)
 init_res = initialize(X=data$X, K=3)
-log_L = data$L[sample(nrow(data$L)),]
-#log_L = init_res$qg$qllog_norm
+shuffled_L <- data$L[sample(nrow(data$L)),]
+log_L = init_res$qg$qllog_norm + 1
 log_F = init_res$qg$qflog_norm
-cat(sprintf("Initial Log-Likelihood: %.2f\n",  
-            compute_loglik(log_L, log_F, data$X)))
-  
+
+init_ll = compute_loglik(log_L, log_F, data$X)
+gt_ll = compute_loglik(log(data$L), log(data$F), data$X)
+
+visualize_lf(exp(log_L),
+             exp(log_F),
+             sprintf("Initialized Log-Likelihood: %.2f\n", init_ll))
+
+# qg = list(ql_norm = L, qllog_norm = log(L), kl_l = replicate(K,NA),
+#             qf_norm = F, qflog_norm = log(F), kl_f = replicate(K,NA),
+
 maxiter=50
 ll_list = rep(numeric(maxiter))
 for (niter in 1:maxiter){
@@ -277,7 +319,10 @@ for (niter in 1:maxiter){
   # cat("niter ",niter, "-------------", sprintf("LL: %.2f\n",  ll))
 }
 visualize_lf(exp(log_L), exp(log_F), "End results")
-plot(ll_list)
+plot(ll_list, 
+     main = sprintf("Init LL: %.2f\nTrue LL: %.2f", init_ll, gt_ll),
+     ylab = "Log-Likelihood",
+     xlab = "EM Iteration")
 
 ```
 
