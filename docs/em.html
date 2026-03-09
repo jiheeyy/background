@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree0280453dcb74ee7a024830a10be57eba56675169targetblank0280453a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree42fc71be0d0e6a6c49474ba40fbe8a691f9d886dtargetblank42fc71ba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/jiheeyy/background/tree/0280453dcb74ee7a024830a10be57eba56675169" target="_blank">0280453</a>
+<a href="https://github.com/jiheeyy/background/tree/42fc71be0d0e6a6c49474ba40fbe8a691f9d886d" target="_blank">42fc71b</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree0280453dcb74ee7a024830a10be57eba56675169targetblank0280453a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree42fc71be0d0e6a6c49474ba40fbe8a691f9d886dtargetblank42fc71ba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/jiheeyy/background/tree/0280453dcb74ee7a024830a10be57eba56675169" target="_blank">0280453</a>.
+<a href="https://github.com/jiheeyy/background/tree/42fc71be0d0e6a6c49474ba40fbe8a691f9d886d" target="_blank">42fc71b</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -605,6 +605,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/42fc71be0d0e6a6c49474ba40fbe8a691f9d886d/analysis/em.Rmd" target="_blank">42fc71b</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-09
+</td>
+<td>
+include metrics
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jiheeyy/background/79e6098ec9ba57635181c22e0a7355ede88c70c1/docs/em.html" target="_blank">79e6098</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-09
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1044,18 +1078,19 @@ M_step &lt;- function(log_L, log_F, E_res){
   return(list(log_L=newlog_L, log_F=newlog_F))
 }</code></pre>
 <pre class="r"><code>library(fastTopics)
+library(NNLM)
 source(here(&quot;docs&quot;,&quot;code&quot;,&quot;initialize.R&quot;))
 source(here(&quot;docs&quot;,&quot;code&quot;,&quot;utils.R&quot;))
 
 set.seed(4)
-init_res = initialize(X=data$X, K=3)</code></pre>
-<pre><code>Initializing factors using Topic SCORE algorithm.
-Initializing loadings by running 10 SCD updates.
-Fitting rank-3 Poisson NMF to 12 x 30 sparse matrix.
-Running at most 50 SCD updates, without extrapolation (fastTopics 0.6-192).</code></pre>
-<pre class="r"><code>shuffled_L &lt;- data$L[sample(nrow(data$L)),]
-log_L = init_res$qg$qllog_norm + 1
-log_F = init_res$qg$qflog_norm
+
+init_res = NNLM::nnmf(A = as.matrix(data$X), k = 3)
+log_L = log(init_res$W)
+log_F = log(t(init_res$H))
+
+# init_res = initialize(X=data$X, K=3)
+# log_L = init_res$qg$qllog_norm
+# log_F = init_res$qg$qflog_norm
 
 init_ll = compute_loglik(log_L, log_F, data$X)
 gt_ll = compute_loglik(log(data$L), log(data$F), data$X)
@@ -1063,7 +1098,82 @@ gt_ll = compute_loglik(log(data$L), log(data$F), data$X)
 visualize_lf(exp(log_L),
              exp(log_F),
              sprintf(&quot;Initialized Log-Likelihood: %.2f\n&quot;, init_ll))</code></pre>
-<p><img src="figure/em.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/em.Rmd/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/em.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
+Past versions of unnamed-chunk-6-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/79e6098ec9ba57635181c22e0a7355ede88c70c1/docs/figure/em.Rmd/unnamed-chunk-6-1.png" target="_blank">79e6098</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-09
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/em.Rmd/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-2">
+Past versions of unnamed-chunk-6-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/79e6098ec9ba57635181c22e0a7355ede88c70c1/docs/figure/em.Rmd/unnamed-chunk-6-2.png" target="_blank">79e6098</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-09
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code># qg = list(ql_norm = L, qllog_norm = log(L), kl_l = replicate(K,NA),
 #             qf_norm = F, qflog_norm = log(F), kl_f = replicate(K,NA),
 
@@ -1074,17 +1184,162 @@ for (niter in 1:maxiter){
   new = M_step(log_L, log_F, Ez_two)
   log_L = new$log_L
   log_F = new$log_F
+
   ll = compute_loglik(log_L, log_F, data$X)
   ll_list[niter] = ll
   # cat(&quot;niter &quot;,niter, &quot;-------------&quot;, sprintf(&quot;LL: %.2f\n&quot;,  ll))
 }
 visualize_lf(exp(log_L), exp(log_F), &quot;End results&quot;)</code></pre>
-<p><img src="figure/em.Rmd/unnamed-chunk-6-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/em.Rmd/unnamed-chunk-6-4.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>plot(ll_list, 
-     main = sprintf(&quot;Init LL: %.2f\nTrue LL: %.2f&quot;, init_ll, gt_ll),
+<p><img src="figure/em.Rmd/unnamed-chunk-6-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-3">
+Past versions of unnamed-chunk-6-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/79e6098ec9ba57635181c22e0a7355ede88c70c1/docs/figure/em.Rmd/unnamed-chunk-6-3.png" target="_blank">79e6098</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-09
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/em.Rmd/unnamed-chunk-6-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-4">
+Past versions of unnamed-chunk-6-4.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-4" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/79e6098ec9ba57635181c22e0a7355ede88c70c1/docs/figure/em.Rmd/unnamed-chunk-6-4.png" target="_blank">79e6098</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-09
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code># 1. Calculate y-axis limits so init_ll and gt_ll don&#39;t get cut off
+y_bounds &lt;- range(c(init_ll, ll_list, gt_ll), na.rm = TRUE)
+
+# 2. Plot the main EM iterations (x = 1 to maxiter)
+plot(1:length(ll_list), ll_list, 
+     xlim = c(0, length(ll_list)),  # Expands x-axis to include 0
+     ylim = y_bounds,               # Expands y-axis to fit all values
+     main = sprintf(&quot;Log Likelihood over EM Iterations\nTrue LL: %.2f&quot;, gt_ll),
      ylab = &quot;Log-Likelihood&quot;,
-     xlab = &quot;EM Iteration&quot;)</code></pre>
+     xlab = &quot;EM Iteration&quot;,
+     type = &quot;b&quot;,                    # &#39;b&#39; draws both points and lines
+     pch = 16)                      # Solid circle marker
+
+# 4. Plot the initial LL point at x = 0 in red (cex = 1.5 makes it slightly larger)
+points(0, init_ll, col = &quot;red&quot;, pch = 16, cex = 1.5)
+
+# 5. Add the True LL as a horizontal dashed line
+abline(h = gt_ll, col = &quot;blue&quot;, lty = 2, lwd = 2)</code></pre>
 <p><img src="figure/em.Rmd/unnamed-chunk-6-5.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-5">
+Past versions of unnamed-chunk-6-5.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-6-5" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/79e6098ec9ba57635181c22e0a7355ede88c70c1/docs/figure/em.Rmd/unnamed-chunk-6-5.png" target="_blank">79e6098</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-09
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="evaluate" class="section level1">
+<h1>Evaluate</h1>
+<pre class="r"><code>source(here(&quot;docs&quot;,&quot;code&quot;,&quot;utils.R&quot;))
+source(here(&quot;docs&quot;,&quot;code&quot;,&quot;eval.R&quot;))</code></pre>
+<pre><code>Warning: package &#39;lsa&#39; was built under R version 4.5.1</code></pre>
+<pre><code>Loading required package: SnowballC</code></pre>
+<pre class="r"><code>mae = eval_mae(est_L=exp(log_L), est_F=exp(log_F), 
+               true_L=data$L, true_F=data$F, 
+               X=data$X)
+
+csim = eval_csim(est_L=exp(log_L), est_F=exp(log_F), 
+                 true_L=data$L, true_F=data$F)
+
+plot_upper_heatmap(csim$cos_L, &quot;L Cosine Similarity&quot;)</code></pre>
+<p><img src="figure/em.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>plot_upper_heatmap(csim$cos_F, &quot;F Cosine Similarity&quot;)</code></pre>
+<p><img src="figure/em.Rmd/unnamed-chunk-7-2.png" width="672" style="display: block; margin: auto;" /></p>
 </div>
 <div id="explanations-for-upkeep-irrelevant-to-implementation-though"
 class="section level1">
@@ -1145,8 +1400,9 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] fastTopics_0.6-192 matrixStats_1.5.0  Matrix_1.7-3       ggplot2_3.5.2     
-[5] pheatmap_1.0.13    here_1.0.2         workflowr_1.7.1   
+ [1] lsa_0.73.4         SnowballC_0.7.1    NNLM_0.4.4         fastTopics_0.6-192
+ [5] matrixStats_1.5.0  Matrix_1.7-3       ggplot2_3.5.2      pheatmap_1.0.13   
+ [9] here_1.0.2         workflowr_1.7.1   
 
 loaded via a namespace (and not attached):
  [1] gtable_0.3.6        xfun_0.52           bslib_0.9.0        
