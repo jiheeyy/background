@@ -288,14 +288,19 @@ M_step <- function(log_L, log_F, E_res){
 
 ```{r}
 library(fastTopics)
+library(NNLM)
 source(here("docs","code","initialize.R"))
 source(here("docs","code","utils.R"))
 
 set.seed(4)
-init_res = initialize(X=data$X, K=3)
-shuffled_L <- data$L[sample(nrow(data$L)),]
-log_L = init_res$qg$qllog_norm + 1
-log_F = init_res$qg$qflog_norm
+
+init_res = NNLM::nnmf(A = as.matrix(data$X), k = 3)
+log_L = log(init_res$W)
+log_F = log(t(init_res$H))
+
+# init_res = initialize(X=data$X, K=3)
+# log_L = init_res$qg$qllog_norm
+# log_F = init_res$qg$qflog_norm
 
 init_ll = compute_loglik(log_L, log_F, data$X)
 gt_ll = compute_loglik(log(data$L), log(data$F), data$X)
@@ -314,19 +319,50 @@ for (niter in 1:maxiter){
   new = M_step(log_L, log_F, Ez_two)
   log_L = new$log_L
   log_F = new$log_F
+
   ll = compute_loglik(log_L, log_F, data$X)
   ll_list[niter] = ll
   # cat("niter ",niter, "-------------", sprintf("LL: %.2f\n",  ll))
 }
 visualize_lf(exp(log_L), exp(log_F), "End results")
-plot(ll_list, 
-     main = sprintf("Init LL: %.2f\nTrue LL: %.2f", init_ll, gt_ll),
+
+# 1. Calculate y-axis limits so init_ll and gt_ll don't get cut off
+y_bounds <- range(c(init_ll, ll_list, gt_ll), na.rm = TRUE)
+
+# 2. Plot the main EM iterations (x = 1 to maxiter)
+plot(1:length(ll_list), ll_list, 
+     xlim = c(0, length(ll_list)),  # Expands x-axis to include 0
+     ylim = y_bounds,               # Expands y-axis to fit all values
+     main = sprintf("Log Likelihood over EM Iterations\nTrue LL: %.2f", gt_ll),
      ylab = "Log-Likelihood",
-     xlab = "EM Iteration")
+     xlab = "EM Iteration",
+     type = "b",                    # 'b' draws both points and lines
+     pch = 16)                      # Solid circle marker
+
+# 4. Plot the initial LL point at x = 0 in red (cex = 1.5 makes it slightly larger)
+points(0, init_ll, col = "red", pch = 16, cex = 1.5)
+
+# 5. Add the True LL as a horizontal dashed line
+abline(h = gt_ll, col = "blue", lty = 2, lwd = 2)
 
 ```
 
+# Evaluate
+```{r}
+source(here("docs","code","utils.R"))
+source(here("docs","code","eval.R"))
 
+mae = eval_mae(est_L=exp(log_L), est_F=exp(log_F), 
+               true_L=data$L, true_F=data$F, 
+               X=data$X)
+
+csim = eval_csim(est_L=exp(log_L), est_F=exp(log_F), 
+                 true_L=data$L, true_F=data$F)
+
+plot_upper_heatmap(csim$cos_L, "L Cosine Similarity")
+plot_upper_heatmap(csim$cos_F, "F Cosine Similarity")
+
+```
 
 # Explanations for upkeep, irrelevant to implementation though
 
