@@ -1,9 +1,8 @@
-# Evaluate L, F using mean absolute error from
-# ground truth L, F (if known from simulation)
-
 library(lsa)
 library(ggplot2)
 
+# Evaluate L, F using mean absolute error from
+# ground truth L, F (if known from simulation)
 eval_mae <- function(est_L, est_F, true_L, true_F, X){
   est_loglam = compute_log_Lambda_mat(log_L = log(est_L),
                                       log_F = log(est_F),
@@ -47,7 +46,6 @@ plot_upper_heatmap <- function(sim_mat, plot_title) {
   df$Row <- factor(df$Row, levels = rev(rownames(sim_mat)))
   df$Col <- factor(df$Col, levels = colnames(sim_mat))
 
-  # --- NEW: Dynamically find the quadrant boundaries ---
   # Count how many "true" and "est" factors exist
   num_true <- sum(grepl("^true_", colnames(sim_mat)))
   num_est  <- sum(grepl("^est_", colnames(sim_mat)))
@@ -59,7 +57,6 @@ plot_upper_heatmap <- function(sim_mat, plot_title) {
   # The line goes above the highest "est_"
   y_intercept <- num_est + 0.5
 
-  # Generate the plot
   p <- ggplot(df, aes(x = Col, y = Row, fill = Value)) +
     geom_tile(color = "white", linewidth = 0.5) +
     scale_fill_gradient2(low = "#2166AC", high = "#B2182B", mid = "white",

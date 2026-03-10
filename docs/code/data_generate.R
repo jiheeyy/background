@@ -23,7 +23,7 @@ normalize_w_matrix <- function(w) {
 }
 
 
-generate_synthetic <- function(data_type, w_matrix = NA, n=12, p=30, K=3){
+generate_synthetic <- function(data_type='mix', w_matrix = NA, n=12, p=30, K=3){
   if (data_type == "mix"){
     # w_matrix is M by K
     w_matrix <- normalize_w_matrix(w_matrix)

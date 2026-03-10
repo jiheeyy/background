@@ -23,12 +23,12 @@ initialize <- function(X, K,
   # Then add eps
   L[L <  1e-8] <- 1e-8
   F[F <  1e-8] <- 1e-8
-  l_mean = apply(L, 1, mean) # get mean of each row (res: length n vector)
-  f_mean = apply(F, 1, mean) # get mean of each row (res: length p vector)
-  L = L/l_mean
-  F = F/f_mean
-  L[L == 0] = 1e-10
-  F[F == 0] = 1e-10
+  # l_mean = apply(L, 1, mean) # get mean of each row (res: length n vector)
+  # f_mean = apply(F, 1, mean) # get mean of each row (res: length p vector)
+  # L = L/l_mean
+  # F = F/f_mean
+  # L[L == 0] = 1e-10
+  # F[F == 0] = 1e-10
 
   qg = list(ql_norm = L, qllog_norm = log(L), kl_l = replicate(K,NA),
             qf_norm = F, qflog_norm = log(F), kl_f = replicate(K,NA),

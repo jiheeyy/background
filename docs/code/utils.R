@@ -71,3 +71,34 @@ dnbinom_cts_log <- function(x, size, prob) {
   return(out)
 }
 
+# Helper function
+# Take as input matrix (not sparse) LOG L, LOG F
+# Output: log lambda matrix (not sparse)
+compute_log_Lambda_mat <- function(log_L, log_F, X){
+  X_summary = summary(X)
+  i = X_summary$i
+  j = X_summary$j
+  # Create log Lambda matrix (to prevent underflow)
+  log_Lambdaval <- matrixStats::rowLogSumExps(log_L[i, , drop = FALSE] + log_F[j, , drop = FALSE])
+  log_Lambda <- sparseMatrix(i = i,
+                             j = j,
+                             x = log_Lambdaval,
+                             dims = dim(X))
+  return(log_Lambda)
+
+}
+
+# Assume X is a sparse matrix
+# Notice X is not in log space
+# LOG L, LOG F are also matrices
+compute_loglik <- function(log_L, log_F, X){
+  mask <- (X != 0)
+  log_Lambda = compute_log_Lambda_mat(log_L, log_F, X)
+
+  # Compute Poisson log likelihood for all observations
+  ll = -sum(exp(log_Lambda)) +
+    sum((X * log_Lambda)) -
+    sum(lgamma(X[mask] + 1))
+
+  return(ll)}
+
