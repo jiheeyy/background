@@ -11,7 +11,7 @@
 
 <meta name="author" content="Jihee You" />
 
-<meta name="date" content="2026-03-09" />
+<meta name="date" content="2026-03-10" />
 
 <title>EM</title>
 
@@ -361,7 +361,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">EM</h1>
 <h4 class="author">Jihee You</h4>
-<h4 class="date">2026-03-09</h4>
+<h4 class="date">2026-03-10</h4>
 
 </div>
 
@@ -390,7 +390,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-03-09
+<strong>Last updated:</strong> 2026-03-10
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree42fc71be0d0e6a6c49474ba40fbe8a691f9d886dtargetblank42fc71ba">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtreeefd473c24a12519c7d00ead2cc7f37a14667dfbetargetblankefd473ca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/jiheeyy/background/tree/42fc71be0d0e6a6c49474ba40fbe8a691f9d886d" target="_blank">42fc71b</a>
+<a href="https://github.com/jiheeyy/background/tree/efd473c24a12519c7d00ead2cc7f37a14667dfbe" target="_blank">efd473c</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree42fc71be0d0e6a6c49474ba40fbe8a691f9d886dtargetblank42fc71ba"
+id="strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtreeefd473c24a12519c7d00ead2cc7f37a14667dfbetargetblankefd473ca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/jiheeyy/background/tree/42fc71be0d0e6a6c49474ba40fbe8a691f9d886d" target="_blank">42fc71b</a>.
+<a href="https://github.com/jiheeyy/background/tree/efd473c24a12519c7d00ead2cc7f37a14667dfbe" target="_blank">efd473c</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -605,6 +605,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/efd473c24a12519c7d00ead2cc7f37a14667dfbe/analysis/em.Rmd" target="_blank">efd473c</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-10
+</td>
+<td>
+final EM
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jiheeyy/background/140cb5e7cdd37a59dea07ddca461801be218c736/docs/em.html" target="_blank">140cb5e</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-09
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -697,80 +731,42 @@ Working version of EM on Simulation Data
 </div>
 </div>
 </div>
-<div id="pnmf-problem" class="section level1">
-<h1>PNMF Problem</h1>
+<div id="what-is-poisson-nonnegative-matrix-factorization"
+class="section level1">
+<h1>What is Poisson Nonnegative Matrix Factorization?</h1>
 <p>Let <span class="math inline">\(X \in R_{+}^{n \times p}\)</span>
 denote a matrix of observed counts <span
-class="math inline">\(x_{ij}\)</span>. Poisson NMF parameters include
-<span class="math inline">\(L \in R_{+}^{n \times k}\)</span> and <span
-class="math inline">\(F \in R_{+}^{p \times k}\)</span>, and we seek
-values of L and F such that <span class="math inline">\(X \approx
-LF^T\)</span>.</p>
-<p>Given <span class="math inline">\(k \ge 1\)</span>, the Poisson NMF
-model is <span class="math display">\[
-\begin{aligned}
-X_{ij} | L, F  \sim Poi(\lambda_{ij}) \\
-\lambda_{ij} = \sum_{k} l_{ik}f_{jk}
-\end{aligned}
-\]</span></p>
-<p>Likelihood for a single observed count <span
-class="math inline">\(X_{ij}\)</span> is expressed as <span
-class="math display">\[
-P(X_{ij} | L, F) = \frac{\exp(-\lambda_{ij})
-\lambda_{ij}^{X_{ij}}}{X_{ij}!}
-\]</span></p>
-<p>Then, the log-likelihood of X is expressed as</p>
-<p><span class="math display">\[
-\begin{align*}
-    \ell(X|L,F) &amp;= \log(\prod_{i}\prod_{j} P(X_{ij} | L, F) \\
-    &amp;= \sum_{i}\sum_{j} \log(\frac{\exp(-\lambda_{ij})
-\lambda_{ij}^{X_{ij}}}{X_{ij}!}) \\
-    &amp;= \sum_{i} \sum_{j}[-\lambda_{ij} + X_{ij}\log(\lambda_{ij}) -
-\log(X_{ij}!)]
-\end{align*}
-\]</span></p>
-<p>We are able to write the following latent variable representation.
-<span class="math display">\[
-Z_{ijk} \sim Poi(l_{ik} f_{jk}) \\
-X_{ij} = \sum_k Z_{ijk}
-\]</span></p>
-<p>Let <span class="math inline">\(\hat z_{ijk} = \mathbb{E}[z_{ijk} |
-x_{ij}, l_{ik}, f_{jk}]\)</span>. <span class="math inline">\(\hat
-z_{ijk}\)</span> can directly calculated. <span
-class="math display">\[\hat z_{ijk} = x_{ij} \frac{l_{ik}f_{jk}}
-{\sum_k {l_{ik}f_{jk}}}\]</span></p>
-<p>The posterior distribution of the latent variable Z is: <span
-class="math display">\[ P(Z| X, L,F) = \sum_{ijk} (\hat
-z_{ijk}\log(l_{ik}f_{jk}) - l_{ik}f_{jk} - \log\hat z_{ijk}!)
-\]</span> <span class="math display">\[\frac{\partial P}{\partial
-l_{ik}} = \sum_j (\frac{\hat z_{ijk}}{l_{ik}} - f_{jk})\]</span> <span
-class="math inline">\(\frac{\partial P}{\partial l_{ik}} = 0\)</span>
-leads to <span class="math display">\[
-l_{ik}^\text{(new)} = \sum_{j} \frac{\hat z_{ijk}}{f_{jk}}
-\]</span></p>
-<p>Similar multiplicative update is available for <span
-class="math inline">\(f_{jk}\)</span>. <span class="math display">\[
-f_{jk}^\text{(new)} = \sum_{i} \frac{\hat z_{ijk}}{l_{ik}}
-\]</span></p>
+class="math inline">\(x_{ij}\)</span>. We assume <span
+class="math inline">\(X_{ij} \sim Poi(\sum_k L_{ik}F_{jk})\)</span>.</p>
+<p>Poisson NMF parameters include <span class="math inline">\(L \in
+R_{+}^{n \times k}\)</span> and <span class="math inline">\(F \in
+R_{+}^{p \times k}\)</span>, and we seek values of L and F such that
+<span class="math inline">\(X \approx LF^T\)</span>.</p>
 </div>
-<div id="data-generation" class="section level1">
-<h1>Data Generation</h1>
-<p>This step is identical to the main experiment.</p>
-<pre class="r"><code>source(here(&quot;docs&quot;,&quot;code&quot;,&quot;data_generate.R&quot;))
+<div id="generating-x-of-interest" class="section level1">
+<h1>Generating X of Interest</h1>
+<p>For this project, we are interested in a particular kind of count
+data <span class="math inline">\(X\)</span> such that there are K
+distinct hidden groups that we expect matrix factorization to reflect.
+Let’s generate a small dataset with 3 distinct groups.</p>
+<!-- Added seed and sparse X to main experiment. -->
+<pre class="r"><code>set.seed(4)
+source(here(&quot;docs&quot;,&quot;code&quot;,&quot;data_generate.R&quot;))
 source(here(&quot;docs&quot;,&quot;code&quot;,&quot;utils.R&quot;))
 library(pheatmap)
 library(ggplot2)
+library(Matrix)
 
 # Generate synthetic L, F, X
 
 # Define mixture weights for each L_k and F_k
 # 21st mixture component (shape, rate) value is 1
-l1 &lt;- c(1, rep(0, 33))
-l2 &lt;- c(rep(0, 20),1, rep(0,13))
-l3 &lt;- c(rep(0, 33), 1)
-f1 &lt;- c(rep(1, 34))
-f2 &lt;- c(1, 1, rep(0, 30), 1, 1)
-f3 &lt;- c(rep(0, 19), 1, 1, 1, 1, rep(0, 11))
+l1 &lt;- c(1, rep(0, 33)) # shape = 1e-16
+l2 &lt;- c(rep(0, 20),1, rep(0,13)) # shape = 1
+l3 &lt;- c(rep(0, 33), 1) # shape = 1000
+f1 &lt;- c(1, rep(0, 33))
+f2 &lt;- c(rep(0, 20),1, rep(0,13))
+f3 &lt;- c(rep(0, 33), 1)
 
 # Weights will be normalized by column inside visualize_mixtures or generate_synthetic
 w_matrix &lt;- cbind(l1,l2,l3,f1,f2,f3)
@@ -816,6 +812,7 @@ jiheeyy
 </div>
 <pre class="r"><code># &quot;mix&quot;, &quot;clear membership&quot;
 data &lt;- generate_synthetic(data_type=&quot;mix&quot;, w_matrix=w_matrix, n=12, p=30, K=3)
+X = Matrix(data$X, sparse = TRUE)
 
 # Visualize Ground Truth L, F
 visualize_lf(data$L, data$F, &quot;True&quot;)</code></pre>
@@ -903,14 +900,14 @@ jiheeyy
 <!-- Eq 11.2 in Jordan chapter -->
 <p>Incomplete data log likelihood is defined as <span
 class="math display">\[
-l(\theta ; x) = \log p(x|\theta) = \log \sum_z p(x, z | \theta)
+\ell(\theta ; x) = \log p(x|\theta) = \log \sum_z p(x, z | \theta)
 \]</span> In this simulation case, the incomplete log likelihood is
 <!-- Notice I go from x to X matrix notation 
 and i didn't specify L n k matrix etc k popped up out of nowhere
 ADD note explaining its a summation of of Poisson PMF (X parametrized by L, F)--></p>
 <p><span class="math display">\[
 \begin{align}
-l(L,F; X) &amp;= \log p(X| L,F) \\
+\ell(L,F; X) &amp;= \log p(X| L,F) \\
 &amp;= \sum_{i} \sum_{j}[-\lambda_{ij} + X_{ij}\log(\lambda_{ij}) -
 \log(X_{ij}!)]
 \end{align}
@@ -919,16 +916,38 @@ L_{ik} F_{jk}\)</span> for simpler notation.</p>
 </div>
 <div id="implementation-likelihood" class="section level2">
 <h2>Implementation: Likelihood</h2>
-<pre class="r"><code>library(Matrix)
-data$X &lt;- Matrix(data$X, sparse = TRUE)</code></pre>
-<pre class="r"><code>library(matrixStats)
-source(here(&quot;docs&quot;,&quot;code&quot;,&quot;utils.R&quot;))
-
-cat(&quot;Log likelihood&quot;,compute_loglik(log(data$L), log(data$F), data$X), &quot;\n&quot;)</code></pre>
-<pre><code>Log likelihood -523.8071 </code></pre>
-<pre class="r"><code># Shuffle L around rows, see how much log likelihood decreases (-569)
-#shuffled_L &lt;- data$L[sample(nrow(data$L)),]
-#compute_loglik(log(shuffled_L), log(data$F), data$X)</code></pre>
+<p>I moved the likelihood calculation implementation to utils.R file,
+but below is the commented out version of the code.</p>
+<pre class="r"><code># # Helper function
+# # Take as input matrix (not sparse) LOG L, LOG F
+# # Output: log lambda matrix (not sparse)
+# compute_log_Lambda_mat &lt;- function(log_L, log_F, X){
+#   X_summary = summary(X)
+#   i = X_summary$i
+#   j = X_summary$j
+#   # Create log Lambda matrix (to prevent underflow)
+#   log_Lambdaval &lt;- matrixStats::rowLogSumExps(log_L[i, , drop = FALSE] + log_F[j, , drop = FALSE])
+#   log_Lambda &lt;- sparseMatrix(i = i,
+#                              j = j,
+#                              x = log_Lambdaval,
+#                              dims = dim(X))
+#   return(log_Lambda)
+# 
+# }
+# 
+# # Assume X is a sparse matrix
+# # Notice X is not in log space
+# # LOG L, LOG F are also matrices
+# compute_loglik &lt;- function(log_L, log_F, X){
+#   mask &lt;- (X != 0)
+#   log_Lambda = compute_log_Lambda_mat(log_L, log_F, X)
+# 
+#   # Compute Poisson log likelihood for all observations
+#   ll = -sum(exp(log_Lambda)) +
+#     sum((X * log_Lambda)) -
+#     sum(lgamma(X[mask] + 1))
+# 
+#   return(ll)}</code></pre>
 </div>
 <div id="complete-data-log-likelihood" class="section level2">
 <h2>2. Complete data log likelihood</h2>
@@ -965,10 +984,10 @@ function for EM algorithm is defined as</p>
 <div id="e-step" class="section level2">
 <h2>E-step</h2>
 <p>Because of the way latent variable Z was defined, we can assume a
-multinominal distribution modelling z given x. Therefore, (also since
-multinominal parameter n is fixed to X) updating <span
+multinomial distribution modelling z given x. Therefore, (also since
+multinomial parameter n is fixed to X) updating <span
 class="math inline">\(q(z|x)\)</span> is just a matter of choosing
-multinominal probabilities. Also, we know that the auxiliary function is
+multinomial probabilities. Also, we know that the auxiliary function is
 maximized when <span class="math inline">\(q^{(t+1)} (z|x) = p(z| x,
 \theta^t)\)</span>. Therefore, the E-step is</p>
 <p><span class="math display">\[
@@ -1032,16 +1051,16 @@ f_{jk}^\text{(new)} = \sum_{i} \frac{\mathbb{E}[z_{ijk}]}{l_{ik}}
 <h1>Implementation: EM</h1>
 <pre class="r"><code># Computes E_Z, which is a n x p x k matrix
 E_step &lt;- function(log_L, log_F, X){
-  log_Lambda = compute_log_Lambda_mat(log_L, log_F, X)
-  loglam_val &lt;- log_Lambda@x
-  
   X_summary &lt;-summary(X)
   x_val &lt;- X_summary$x
   i &lt;- X_summary$i
   j &lt;- X_summary$j
   
+  log_Lambda = compute_log_Lambda_mat(log_L, log_F, X)
+  loglam_val &lt;- log_Lambda@x
+  
   # Compute W_ij = X_ij / Lambda_ij (Only for non-zeros)
-  W_val &lt;- exp(log(x_val) - loglam_val) # does index correspond?
+  W_val &lt;- exp(log(x_val) - loglam_val) 
   W &lt;- sparseMatrix(i=i, j=j, x=W_val, dims=dim(X))
   
   # Fast sparse matrix multiplications in original space
@@ -1070,34 +1089,271 @@ M_step &lt;- function(log_L, log_F, E_res){
   newlog_L = logEz_sj - rep(logF_sj, each = nrow(log_L))
   
   # Then update F
-  # L &lt;- exp(log_L)
-  L &lt;- exp(newlog_L)
+  L &lt;- exp(log_L)
   logL_si = log(colSums(L)) # length k
   newlog_F = logEz_si - rep(logL_si, each = nrow(log_F))
   
   return(list(log_L=newlog_L, log_F=newlog_F))
 }</code></pre>
+<p>Putting everything together,</p>
 <pre class="r"><code>library(fastTopics)
-library(NNLM)
 source(here(&quot;docs&quot;,&quot;code&quot;,&quot;initialize.R&quot;))
 source(here(&quot;docs&quot;,&quot;code&quot;,&quot;utils.R&quot;))
 
-set.seed(4)
+# library(NNLM)
+# Another option in initialization
+# init_res = NNLM::nnmf(A = as.matrix(data$X), k = 3)
+# log_L = log(init_res$W)
+# log_F = log(t(init_res$H))
 
-init_res = NNLM::nnmf(A = as.matrix(data$X), k = 3)
-log_L = log(init_res$W)
-log_F = log(t(init_res$H))
+gt_ll = compute_loglik(log(data$L), log(data$F), X)
+cat(&quot;ground truth log likelihood: &quot;,gt_ll)</code></pre>
+<pre><code>ground truth log likelihood:  -527.0698</code></pre>
+<pre class="r"><code># L, F initialization
+init_res = initialize(X=X, K=3)</code></pre>
+<pre><code>Initializing factors using Topic SCORE algorithm.
+Initializing loadings by running 10 SCD updates.
+Fitting rank-3 Poisson NMF to 12 x 30 sparse matrix.
+Running at most 50 SCD updates, without extrapolation (fastTopics 0.6-192).</code></pre>
+<pre class="r"><code>log_L = init_res$qg$qllog_norm
+log_L = log_L[sample(nrow(log_L)),] # inject randomness since log_L overfit
+log_F = init_res$qg$qflog_norm
+init_ll = compute_loglik(log_L, log_F, X)
 
-# init_res = initialize(X=data$X, K=3)
-# log_L = init_res$qg$qllog_norm
-# log_F = init_res$qg$qflog_norm
-
-init_ll = compute_loglik(log_L, log_F, data$X)
-gt_ll = compute_loglik(log(data$L), log(data$F), data$X)
-
+# Figure 1: Initialized L, F
 visualize_lf(exp(log_L),
              exp(log_F),
              sprintf(&quot;Initialized Log-Likelihood: %.2f\n&quot;, init_ll))</code></pre>
+<p><img src="figure/em.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
+Past versions of unnamed-chunk-5-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/79e6098ec9ba57635181c22e0a7355ede88c70c1/docs/figure/em.Rmd/unnamed-chunk-5-1.png" target="_blank">79e6098</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-09
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/11c27be2d3d290e9d98c823d2622db24b9dbb7f3/docs/figure/em.Rmd/unnamed-chunk-5-1.png" target="_blank">11c27be</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-08
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/em.Rmd/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-2">
+Past versions of unnamed-chunk-5-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/79e6098ec9ba57635181c22e0a7355ede88c70c1/docs/figure/em.Rmd/unnamed-chunk-5-2.png" target="_blank">79e6098</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-09
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/11c27be2d3d290e9d98c823d2622db24b9dbb7f3/docs/figure/em.Rmd/unnamed-chunk-5-2.png" target="_blank">11c27be</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-08
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>maxiter=20
+ll_list = rep(numeric(maxiter))
+for (niter in 1:maxiter){
+  Ez_two = E_step(log_L, log_F, X)
+  
+  new = M_step(log_L, log_F, Ez_two)
+  log_L = new$log_L
+  log_F = new$log_F
+
+  ll = compute_loglik(log_L, log_F, X)
+  ll_list[niter] = ll
+  cat(&quot;niter &quot;,niter, &quot;-------------&quot;, sprintf(&quot;LL: %.2f\n&quot;,  ll))
+}</code></pre>
+<pre><code>niter  1 ------------- LL: -550.89
+niter  2 ------------- LL: -531.99
+niter  3 ------------- LL: -519.61
+niter  4 ------------- LL: -521.61
+niter  5 ------------- LL: -514.70
+niter  6 ------------- LL: -518.86
+niter  7 ------------- LL: -513.30
+niter  8 ------------- LL: -517.93
+niter  9 ------------- LL: -512.81
+niter  10 ------------- LL: -517.49
+niter  11 ------------- LL: -512.51
+niter  12 ------------- LL: -517.16
+niter  13 ------------- LL: -512.24
+niter  14 ------------- LL: -516.86
+niter  15 ------------- LL: -511.98
+niter  16 ------------- LL: -516.58
+niter  17 ------------- LL: -511.73
+niter  18 ------------- LL: -516.30
+niter  19 ------------- LL: -511.48
+niter  20 ------------- LL: -516.03</code></pre>
+<pre class="r"><code># Figure 2: L, F after EM iterations
+visualize_lf(exp(log_L), exp(log_F), &quot;End results&quot;)</code></pre>
+<p><img src="figure/em.Rmd/unnamed-chunk-5-3.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-3">
+Past versions of unnamed-chunk-5-3.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-5-3" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/79e6098ec9ba57635181c22e0a7355ede88c70c1/docs/figure/em.Rmd/unnamed-chunk-5-3.png" target="_blank">79e6098</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-09
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/11c27be2d3d290e9d98c823d2622db24b9dbb7f3/docs/figure/em.Rmd/unnamed-chunk-5-3.png" target="_blank">11c27be</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-08
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/em.Rmd/unnamed-chunk-5-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Figure 3: Plot Log likelihood over EM iterations
+y_bounds &lt;- range(c(init_ll, ll_list, gt_ll), na.rm = TRUE)
+plot(1:length(ll_list), ll_list, 
+     xlim = c(0, length(ll_list)),  # Expands x-axis to include 0
+     ylim = y_bounds,               # Expands y-axis to fit all values
+     main = sprintf(&quot;Log Likelihood over EM Iterations\nTrue LL: %.2f&quot;, gt_ll),
+     ylab = &quot;Log-Likelihood&quot;,
+     xlab = &quot;EM Iteration&quot;,
+     pch = 16)                      # Solid circle marker
+points(0, init_ll, col = &quot;red&quot;, pch = 16, cex = 1.5) # Initial LL point at x = 0
+abline(h = gt_ll, col = &quot;blue&quot;, lty = 2, lwd = 2) # True LL</code></pre>
+<p><img src="figure/em.Rmd/unnamed-chunk-5-5.png" width="672" style="display: block; margin: auto;" />
+We see EM algorithm consistently (although not across every iteration)
+increases in log-likelihood. Initialization is row-perturbed L and F
+produced from fasttopics PMF.</p>
+<p>One thing to note is the fasttopics PMF outputs log likelihood much
+higher than the “ground truth,” probably due to overfitting. If
+initialized with PMF, EM iterations marginally decrease in log
+likelihood over time.</p>
+</div>
+<div id="evaluate" class="section level1">
+<h1>Evaluate</h1>
+<p>Cosine similarity between vectors doesn’t seem to be a good metric
+conveying information about the quality of estimated <span
+class="math inline">\(l_k\)</span>, since it cannot differentiate
+between true <span class="math inline">\(l_k\)</span> or <span
+class="math inline">\(f_k\)</span> anyways. I hoped cosine similarity
+between true vectors would be close to zero, so that true vs. estimated
+vectors would give insight to the degree of different information
+carried by K estimated vectors.</p>
+<p>Mean absolute error is less than one, which is not great but
+acceptable since it would mean EM estimated <span
+class="math inline">\(\lambda_{ij}\)</span> is off by less than one
+count from true <span class="math inline">\(\lambda_{ij}\)</span>.</p>
+<pre class="r"><code>source(here(&quot;docs&quot;,&quot;code&quot;,&quot;utils.R&quot;))
+source(here(&quot;docs&quot;,&quot;code&quot;,&quot;eval.R&quot;))</code></pre>
+<pre><code>Warning: package &#39;lsa&#39; was built under R version 4.5.1</code></pre>
+<pre><code>Loading required package: SnowballC</code></pre>
+<pre class="r"><code>mae = eval_mae(est_L=exp(log_L), est_F=exp(log_F), 
+               true_L=data$L, true_F=data$F, 
+               X=X)
+cat(&quot;Mean absolute error: &quot;,mae)</code></pre>
+<pre><code>Mean absolute error:  0.5141107</code></pre>
+<pre class="r"><code>csim = eval_csim(est_L=exp(log_L), est_F=exp(log_F), 
+                 true_L=data$L, true_F=data$F)
+
+plot_upper_heatmap(csim$cos_L, &quot;L Cosine Similarity&quot;)</code></pre>
 <p><img src="figure/em.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
@@ -1123,6 +1379,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jiheeyy/background/blob/140cb5e7cdd37a59dea07ddca461801be218c736/docs/figure/em.Rmd/unnamed-chunk-6-1.png" target="_blank">140cb5e</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-09
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jiheeyy/background/blob/79e6098ec9ba57635181c22e0a7355ede88c70c1/docs/figure/em.Rmd/unnamed-chunk-6-1.png" target="_blank">79e6098</a>
 </td>
 <td>
@@ -1136,6 +1403,7 @@ jiheeyy
 </table>
 </div>
 </div>
+<pre class="r"><code>plot_upper_heatmap(csim$cos_F, &quot;F Cosine Similarity&quot;)</code></pre>
 <p><img src="figure/em.Rmd/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
 <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-2">
@@ -1161,6 +1429,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/jiheeyy/background/blob/140cb5e7cdd37a59dea07ddca461801be218c736/docs/figure/em.Rmd/unnamed-chunk-6-2.png" target="_blank">140cb5e</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-09
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/jiheeyy/background/blob/79e6098ec9ba57635181c22e0a7355ede88c70c1/docs/figure/em.Rmd/unnamed-chunk-6-2.png" target="_blank">79e6098</a>
 </td>
 <td>
@@ -1174,205 +1453,117 @@ jiheeyy
 </table>
 </div>
 </div>
-<pre class="r"><code># qg = list(ql_norm = L, qllog_norm = log(L), kl_l = replicate(K,NA),
-#             qf_norm = F, qflog_norm = log(F), kl_f = replicate(K,NA),
+<p>Code for MAE and cosine similarity calculation was moved dto eval.R,
+but below is the commented out version of the code.</p>
+<pre class="r"><code># Evaluate L, F using mean absolute error from
+# ground truth L, F (if known from simulation)
+# eval_mae &lt;- function(est_L, est_F, true_L, true_F, X){
+#   est_loglam = compute_log_Lambda_mat(log_L = log(est_L),
+#                                       log_F = log(est_F),
+#                                       X = X)
+#   loglam = compute_log_Lambda_mat(log_L = log(true_L),
+#                                   log_F = log(true_F),
+#                                   X = X)
+#   mae = mean(abs(exp(est_loglam) - exp(loglam)))
+#   return(mae)
+# }
+# 
+# eval_csim &lt;- function(est_L, est_F, true_L, true_F){
+# 
+#   k = ncol(true_L)
+#   estk = ncol(est_L)
+#   col_names &lt;- c(paste0(&quot;true_&quot;, 1:k), paste0(&quot;est_&quot;, 1:estk))
+# 
+#   combined_L &lt;- cbind(true_L, est_L)
+#   colnames(combined_L) &lt;- col_names
+#   cos_L &lt;- lsa::cosine(combined_L)
+# 
+#   combined_F &lt;- cbind(true_F, est_F)
+#   colnames(combined_F) &lt;- col_names
+#   cos_F &lt;- lsa::cosine(combined_F)
+# 
+#   return(list(cos_L = cos_L, cos_F = cos_F))
+# }
+# 
+# # Input 1 matrix, text title
+# plot_upper_heatmap &lt;- function(sim_mat, plot_title) {
+#   rows &lt;- row(sim_mat)
+#   cols &lt;- col(sim_mat)
+#   upper_tri_mask &lt;- rows &lt;= cols
+# 
+#   df &lt;- data.frame(
+#     Row = rownames(sim_mat)[rows[upper_tri_mask]],
+#     Col = colnames(sim_mat)[cols[upper_tri_mask]],
+#     Value = sim_mat[upper_tri_mask]
+#   )
+# 
+#   df$Row &lt;- factor(df$Row, levels = rev(rownames(sim_mat)))
+#   df$Col &lt;- factor(df$Col, levels = colnames(sim_mat))
+# 
+#   # Count how many &quot;true&quot; and &quot;est&quot; factors exist
+#   num_true &lt;- sum(grepl(&quot;^true_&quot;, colnames(sim_mat)))
+#   num_est  &lt;- sum(grepl(&quot;^est_&quot;, colnames(sim_mat)))
+# 
+#   # X-axis goes left-to-right. The line goes after the last &quot;true_&quot;
+#   x_intercept &lt;- num_true + 0.5
+# 
+#   # Y-axis goes bottom-to-top (because we reversed the levels).
+#   # The line goes above the highest &quot;est_&quot;
+#   y_intercept &lt;- num_est + 0.5
+# 
+#   p &lt;- ggplot(df, aes(x = Col, y = Row, fill = Value)) +
+#     geom_tile(color = &quot;white&quot;, linewidth = 0.5) +
+#     scale_fill_gradient2(low = &quot;#2166AC&quot;, high = &quot;#B2182B&quot;, mid = &quot;white&quot;,
+#                          midpoint = 0, limit = c(0, 1),
+#                          name = &quot;Cosine\nSimilarity&quot;,
+#                          na.value = &quot;grey85&quot;) +
+#     geom_text(aes(label = ifelse(is.na(Value), &quot;NaN&quot;, sprintf(&quot;%.2f&quot;, Value))),
+#               color = &quot;black&quot;, size = 3.5) +
+# 
+#     # --- NEW: Draw the quadrant lines ---
+#     geom_vline(xintercept = x_intercept, color = &quot;black&quot;, linewidth = 1) +
+#     geom_hline(yintercept = y_intercept, color = &quot;black&quot;, linewidth = 1) +
+# 
+#     theme_minimal() +
+#     theme(
+#       axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
+#       axis.text.y = element_text(size = 10),
+#       axis.title = element_blank(),
+#       panel.grid = element_blank(),
+#       plot.title = element_text(face = &quot;bold&quot;, hjust = 0.5)
+#     ) +
+#     coord_fixed() +
+#     ggtitle(plot_title)
+# 
+#   return(p)
+# }</code></pre>
+</div>
+<div id="additional-questions-to-explore" class="section level1">
+<h1>Additional questions to explore</h1>
+<p>S. Amari, Information geometry of the EM and em algorithms for neural
+networks (1995) gives a geometric view of the EM algorithm. I’m
+interested in how the overfitted PMF solution would fit into this
+view.</p>
+<p><img src="../docs/figure/em.Rmd/geom.png" style="width:100.0%" /></p>
+<!--
+Observed data $X \in \mathbb{R}^{n \times p}$ may have intricate internal dependencies that we don't know how to model. But introducing  but assuming a latent Z exists
 
-maxiter=50
-ll_list = rep(numeric(maxiter))
-for (niter in 1:maxiter){
-  Ez_two = E_step(log_L, log_F, data$X)
-  new = M_step(log_L, log_F, Ez_two)
-  log_L = new$log_L
-  log_F = new$log_F
-
-  ll = compute_loglik(log_L, log_F, data$X)
-  ll_list[niter] = ll
-  # cat(&quot;niter &quot;,niter, &quot;-------------&quot;, sprintf(&quot;LL: %.2f\n&quot;,  ll))
-}
-visualize_lf(exp(log_L), exp(log_F), &quot;End results&quot;)</code></pre>
-<p><img src="figure/em.Rmd/unnamed-chunk-6-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-3">
-Past versions of unnamed-chunk-6-3.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-6-3" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jiheeyy/background/blob/79e6098ec9ba57635181c22e0a7355ede88c70c1/docs/figure/em.Rmd/unnamed-chunk-6-3.png" target="_blank">79e6098</a>
-</td>
-<td>
-jiheeyy
-</td>
-<td>
-2026-03-09
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><img src="figure/em.Rmd/unnamed-chunk-6-4.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-4">
-Past versions of unnamed-chunk-6-4.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-6-4" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jiheeyy/background/blob/79e6098ec9ba57635181c22e0a7355ede88c70c1/docs/figure/em.Rmd/unnamed-chunk-6-4.png" target="_blank">79e6098</a>
-</td>
-<td>
-jiheeyy
-</td>
-<td>
-2026-03-09
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code># 1. Calculate y-axis limits so init_ll and gt_ll don&#39;t get cut off
-y_bounds &lt;- range(c(init_ll, ll_list, gt_ll), na.rm = TRUE)
-
-# 2. Plot the main EM iterations (x = 1 to maxiter)
-plot(1:length(ll_list), ll_list, 
-     xlim = c(0, length(ll_list)),  # Expands x-axis to include 0
-     ylim = y_bounds,               # Expands y-axis to fit all values
-     main = sprintf(&quot;Log Likelihood over EM Iterations\nTrue LL: %.2f&quot;, gt_ll),
-     ylab = &quot;Log-Likelihood&quot;,
-     xlab = &quot;EM Iteration&quot;,
-     type = &quot;b&quot;,                    # &#39;b&#39; draws both points and lines
-     pch = 16)                      # Solid circle marker
-
-# 4. Plot the initial LL point at x = 0 in red (cex = 1.5 makes it slightly larger)
-points(0, init_ll, col = &quot;red&quot;, pch = 16, cex = 1.5)
-
-# 5. Add the True LL as a horizontal dashed line
-abline(h = gt_ll, col = &quot;blue&quot;, lty = 2, lwd = 2)</code></pre>
-<p><img src="figure/em.Rmd/unnamed-chunk-6-5.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-5">
-Past versions of unnamed-chunk-6-5.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-6-5" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jiheeyy/background/blob/79e6098ec9ba57635181c22e0a7355ede88c70c1/docs/figure/em.Rmd/unnamed-chunk-6-5.png" target="_blank">79e6098</a>
-</td>
-<td>
-jiheeyy
-</td>
-<td>
-2026-03-09
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div id="evaluate" class="section level1">
-<h1>Evaluate</h1>
-<pre class="r"><code>source(here(&quot;docs&quot;,&quot;code&quot;,&quot;utils.R&quot;))
-source(here(&quot;docs&quot;,&quot;code&quot;,&quot;eval.R&quot;))</code></pre>
-<pre><code>Warning: package &#39;lsa&#39; was built under R version 4.5.1</code></pre>
-<pre><code>Loading required package: SnowballC</code></pre>
-<pre class="r"><code>mae = eval_mae(est_L=exp(log_L), est_F=exp(log_F), 
-               true_L=data$L, true_F=data$F, 
-               X=data$X)
-
-csim = eval_csim(est_L=exp(log_L), est_F=exp(log_F), 
-                 true_L=data$L, true_F=data$F)
-
-plot_upper_heatmap(csim$cos_L, &quot;L Cosine Similarity&quot;)</code></pre>
-<p><img src="figure/em.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>plot_upper_heatmap(csim$cos_F, &quot;F Cosine Similarity&quot;)</code></pre>
-<p><img src="figure/em.Rmd/unnamed-chunk-7-2.png" width="672" style="display: block; margin: auto;" /></p>
-</div>
-<div id="explanations-for-upkeep-irrelevant-to-implementation-though"
-class="section level1">
-<h1>Explanations for upkeep, irrelevant to implementation though</h1>
-<p>Observed data <span class="math inline">\(X \in \mathbb{R}^{n \times
-p}\)</span> may have intricate internal dependencies that we don’t know
-how to model. But introducing but assuming a latent Z exists</p>
-<p>$p(x, z| ) $ is the complete log likelihood, can be obtained if
-latent Z was observed. <span class="math inline">\(Z= LF^T\)</span> in
-my case is the clean data where the real world data was pulled from with
-<span class="math inline">\(X = Poi (Z)\)</span>. However, Z cannot be
-observed, so we are forced to work with incomplete log likelihood, equal
-to marginalized complete log-likelihood. <span class="math display">\[
+$\log p(x, z| \theta) $ is the complete log likelihood, can be obtained if latent Z was observed. $Z= LF^T$  in my case is the clean data where the real world data was pulled from with $X = Poi (Z)$. However, Z cannot be observed, so we are forced to work with incomplete log likelihood, equal to marginalized complete log-likelihood.
+$$ 
 \begin{align}
-\log p(x|\theta) &amp;= log \sum_z p(x,z | \theta) \\
-&amp;= l(\theta ; x) \text{&lt;-  log likelihood}
+\log p(x|\theta) &= log \sum_z p(x,z | \theta) \\
+&= l(\theta ; x) \text{<-  log likelihood}
 \end{align}
-\]</span></p>
-<p>Given that Z is not observed, complete log likelihood <span
-class="math inline">\(\log p(x, z| \theta)\)</span> is a random
-quantity. To remove the randomness in complete log likelihood, we can
-average over z drawn from a estimated distribution <span
-class="math inline">\(q(z|x,\theta). Then we can define the expected
-complete log likelihood as\)</span>$ l(; x, z) _q = _z q (z | x,) p (x,z
-| ) $$ Note posterior probability of the latent variable z <span
-class="math inline">\(p(z| x, \theta^{(t)})\)</span> is the optimal
-<span class="math inline">\(q^{(t+1)}(z|x)\)</span> with</p>
-<p>Averaging over z removes stochasticity associated with z, making
-expected complete log likelihood no longer a random variable but a
-deterministic function over <span class="math inline">\(\theta\)</span>.
-This ensures auxiliary function <span class="math inline">\(L(q,
-\theta^{t})\)</span> (also the lower bound on log likelihood) becomes
-equal to log likelihood.</p>
+$$
+
+Given that Z is not observed, complete log likelihood $\log p(x, z| \theta)$ is a random quantity. To remove the randomness in complete log likelihood, we can average over z drawn from a estimated distribution $q(z|x,\theta). Then we can define the expected complete log likelihood as
+$$
+\langle l(\theta ; x, z) \rangle _q = \sum_z q (z | x,\theta) \log p (x,z | \theta)
+$$
+Note posterior probability of the latent variable z $p(z| x, \theta^{(t)})$ is the optimal $q^{(t+1)}(z|x)$ with 
+
+Averaging over z removes stochasticity associated with z, making expected complete log likelihood no longer a random variable but a deterministic function over $\theta$. This ensures auxiliary function $L(q, \theta^{t})$ (also the lower bound on log likelihood) becomes equal to log likelihood.
+-->
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1400,9 +1591,8 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] lsa_0.73.4         SnowballC_0.7.1    NNLM_0.4.4         fastTopics_0.6-192
- [5] matrixStats_1.5.0  Matrix_1.7-3       ggplot2_3.5.2      pheatmap_1.0.13   
- [9] here_1.0.2         workflowr_1.7.1   
+[1] lsa_0.73.4         SnowballC_0.7.1    fastTopics_0.6-192 Matrix_1.7-3      
+[5] ggplot2_3.5.2      pheatmap_1.0.13    here_1.0.2         workflowr_1.7.1   
 
 loaded via a namespace (and not attached):
  [1] gtable_0.3.6        xfun_0.52           bslib_0.9.0        
@@ -1415,8 +1605,8 @@ loaded via a namespace (and not attached):
 [22] truncnorm_1.0-9     compiler_4.5.0      farver_2.1.2       
 [25] stringr_1.5.1       git2r_0.36.2        progress_1.2.3     
 [28] RhpcBLASctl_0.23-42 getPass_0.2-4       httpuv_1.6.16      
-[31] htmltools_0.5.8.1   sass_0.4.10         lazyeval_0.2.2     
-[34] yaml_2.3.10         plotly_4.10.4       crayon_1.5.3       
+[31] htmltools_0.5.8.1   sass_0.4.10         yaml_2.3.10        
+[34] lazyeval_0.2.2      plotly_4.10.4       crayon_1.5.3       
 [37] tidyr_1.3.1         later_1.4.2         pillar_1.10.2      
 [40] jquerylib_0.1.4     whisker_0.4.1       uwot_0.2.3         
 [43] cachem_1.1.0        gtools_3.9.5        tidyselect_1.2.1   
@@ -1426,12 +1616,12 @@ loaded via a namespace (and not attached):
 [55] fastmap_1.2.0       grid_4.5.0          cli_3.6.5          
 [58] invgamma_1.1        magrittr_2.0.3      withr_3.0.2        
 [61] prettyunits_1.2.0   scales_1.4.0        promises_1.3.2     
-[64] rmarkdown_2.29      httr_1.4.7          hms_1.1.3          
-[67] pbapply_1.7-2       evaluate_1.0.3      knitr_1.50         
-[70] viridisLite_0.4.2   irlba_2.3.5.1       rlang_1.1.6        
-[73] Rcpp_1.0.14         mixsqp_0.3-54       glue_1.8.0         
-[76] rstudioapi_0.17.1   jsonlite_2.0.0      R6_2.6.1           
-[79] fs_1.6.6           </code></pre>
+[64] rmarkdown_2.29      httr_1.4.7          matrixStats_1.5.0  
+[67] hms_1.1.3           pbapply_1.7-2       evaluate_1.0.3     
+[70] knitr_1.50          viridisLite_0.4.2   irlba_2.3.5.1      
+[73] rlang_1.1.6         Rcpp_1.0.14         mixsqp_0.3-54      
+[76] glue_1.8.0          rstudioapi_0.17.1   jsonlite_2.0.0     
+[79] R6_2.6.1            fs_1.6.6           </code></pre>
 </div>
 </div>
 </div>
