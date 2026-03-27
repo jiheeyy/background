@@ -11,7 +11,7 @@
 
 <meta name="author" content="Jihee You" />
 
-<meta name="date" content="2026-03-10" />
+<meta name="date" content="2026-03-27" />
 
 <title>EM</title>
 
@@ -361,7 +361,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">EM</h1>
 <h4 class="author">Jihee You</h4>
-<h4 class="date">2026-03-10</h4>
+<h4 class="date">2026-03-27</h4>
 
 </div>
 
@@ -390,7 +390,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-03-10
+<strong>Last updated:</strong> 2026-03-27
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtreeefd473c24a12519c7d00ead2cc7f37a14667dfbetargetblankefd473ca">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree97d0c1cb35f54d79b207b2a306b0cdbe8b03c6c1targetblank97d0c1ca">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/jiheeyy/background/tree/efd473c24a12519c7d00ead2cc7f37a14667dfbe" target="_blank">efd473c</a>
+<a href="https://github.com/jiheeyy/background/tree/97d0c1cb35f54d79b207b2a306b0cdbe8b03c6c1" target="_blank">97d0c1c</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtreeefd473c24a12519c7d00ead2cc7f37a14667dfbetargetblankefd473ca"
+id="strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree97d0c1cb35f54d79b207b2a306b0cdbe8b03c6c1targetblank97d0c1ca"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/jiheeyy/background/tree/efd473c24a12519c7d00ead2cc7f37a14667dfbe" target="_blank">efd473c</a>.
+<a href="https://github.com/jiheeyy/background/tree/97d0c1cb35f54d79b207b2a306b0cdbe8b03c6c1" target="_blank">97d0c1c</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -557,11 +557,19 @@ Ignored files:
     Ignored:    .DS_Store
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/.DS_Store
+
+Untracked files:
+    Untracked:  analysis/.ipynb_checkpoints/
+    Untracked:  analysis/Untitled.ipynb
+    Untracked:  analysis/gene_lst.txt
+    Untracked:  analysis/gtex_processing.ipynb
 
 Unstaged changes:
     Modified:   analysis/main.Rmd
     Modified:   background.Rproj
     Deleted:    code/README.md
+    Deleted:    data/README.md
 
 </code></pre>
 <p>
@@ -605,6 +613,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/97d0c1cb35f54d79b207b2a306b0cdbe8b03c6c1/analysis/em.Rmd" target="_blank">97d0c1c</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-27
+</td>
+<td>
+wflow_publish("analysis/em.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jiheeyy/background/c6dd13a3bd4627c5db68f47009059789588eeb73/docs/em.html" target="_blank">c6dd13a</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-10
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -751,147 +793,19 @@ distinct hidden groups that we expect matrix factorization to reflect.
 Let’s generate a small dataset with 3 distinct groups.</p>
 <!-- Added seed and sparse X to main experiment. -->
 <pre class="r"><code>set.seed(4)
-source(here(&quot;docs&quot;,&quot;code&quot;,&quot;data_generate.R&quot;))
+source(here(&quot;docs&quot;,&quot;code&quot;,&quot;load_data.R&quot;))
 source(here(&quot;docs&quot;,&quot;code&quot;,&quot;utils.R&quot;))
 library(pheatmap)
 library(ggplot2)
 library(Matrix)
 
-# Generate synthetic L, F, X
+# &quot;mix&quot;, &quot;clear&quot;,&quot;news&quot;
 
-# Define mixture weights for each L_k and F_k
-# 21st mixture component (shape, rate) value is 1
-l1 &lt;- c(1, rep(0, 33)) # shape = 1e-16
-l2 &lt;- c(rep(0, 20),1, rep(0,13)) # shape = 1
-l3 &lt;- c(rep(0, 33), 1) # shape = 1000
-f1 &lt;- c(1, rep(0, 33))
-f2 &lt;- c(rep(0, 20),1, rep(0,13))
-f3 &lt;- c(rep(0, 33), 1)
-
-# Weights will be normalized by column inside visualize_mixtures or generate_synthetic
-w_matrix &lt;- cbind(l1,l2,l3,f1,f2,f3)
-
-visualize_mixtures(w_matrix)</code></pre>
-<p><img src="figure/em.Rmd/unnamed-chunk-2-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-1">
-Past versions of unnamed-chunk-2-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-2-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jiheeyy/background/blob/11c27be2d3d290e9d98c823d2622db24b9dbb7f3/docs/figure/em.Rmd/unnamed-chunk-2-1.png" target="_blank">11c27be</a>
-</td>
-<td>
-jiheeyy
-</td>
-<td>
-2026-03-08
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code># &quot;mix&quot;, &quot;clear membership&quot;
-data &lt;- generate_synthetic(data_type=&quot;mix&quot;, w_matrix=w_matrix, n=12, p=30, K=3)
+data &lt;- general_load(data_type=&quot;mix&quot;)
 X = Matrix(data$X, sparse = TRUE)
 
 # Visualize Ground Truth L, F
-visualize_lf(data$L, data$F, &quot;True&quot;)</code></pre>
-<p><img src="figure/em.Rmd/unnamed-chunk-2-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-2">
-Past versions of unnamed-chunk-2-2.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-2-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jiheeyy/background/blob/11c27be2d3d290e9d98c823d2622db24b9dbb7f3/docs/figure/em.Rmd/unnamed-chunk-2-2.png" target="_blank">11c27be</a>
-</td>
-<td>
-jiheeyy
-</td>
-<td>
-2026-03-08
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><img src="figure/em.Rmd/unnamed-chunk-2-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-2-3">
-Past versions of unnamed-chunk-2-3.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-2-3" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jiheeyy/background/blob/11c27be2d3d290e9d98c823d2622db24b9dbb7f3/docs/figure/em.Rmd/unnamed-chunk-2-3.png" target="_blank">11c27be</a>
-</td>
-<td>
-jiheeyy
-</td>
-<td>
-2026-03-08
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+#visualize_lf(data$L, data$F, &quot;True&quot;)</code></pre>
 </div>
 <div id="define-likelihood-related-functions" class="section level1">
 <h1>Define likelihood-related functions</h1>
@@ -916,38 +830,8 @@ L_{ik} F_{jk}\)</span> for simpler notation.</p>
 </div>
 <div id="implementation-likelihood" class="section level2">
 <h2>Implementation: Likelihood</h2>
-<p>I moved the likelihood calculation implementation to utils.R file,
-but below is the commented out version of the code.</p>
-<pre class="r"><code># # Helper function
-# # Take as input matrix (not sparse) LOG L, LOG F
-# # Output: log lambda matrix (not sparse)
-# compute_log_Lambda_mat &lt;- function(log_L, log_F, X){
-#   X_summary = summary(X)
-#   i = X_summary$i
-#   j = X_summary$j
-#   # Create log Lambda matrix (to prevent underflow)
-#   log_Lambdaval &lt;- matrixStats::rowLogSumExps(log_L[i, , drop = FALSE] + log_F[j, , drop = FALSE])
-#   log_Lambda &lt;- sparseMatrix(i = i,
-#                              j = j,
-#                              x = log_Lambdaval,
-#                              dims = dim(X))
-#   return(log_Lambda)
-# 
-# }
-# 
-# # Assume X is a sparse matrix
-# # Notice X is not in log space
-# # LOG L, LOG F are also matrices
-# compute_loglik &lt;- function(log_L, log_F, X){
-#   mask &lt;- (X != 0)
-#   log_Lambda = compute_log_Lambda_mat(log_L, log_F, X)
-# 
-#   # Compute Poisson log likelihood for all observations
-#   ll = -sum(exp(log_Lambda)) +
-#     sum((X * log_Lambda)) -
-#     sum(lgamma(X[mask] + 1))
-# 
-#   return(ll)}</code></pre>
+<p>I moved the likelihood calculation implementation to utils.R
+file.</p>
 </div>
 <div id="complete-data-log-likelihood" class="section level2">
 <h2>2. Complete data log likelihood</h2>
@@ -1106,8 +990,8 @@ source(here(&quot;docs&quot;,&quot;code&quot;,&quot;utils.R&quot;))
 # log_L = log(init_res$W)
 # log_F = log(t(init_res$H))
 
-gt_ll = compute_loglik(log(data$L), log(data$F), X)
-cat(&quot;ground truth log likelihood: &quot;,gt_ll)</code></pre>
+try({gt_ll = compute_loglik(log(data$L), log(data$F), X)
+    cat(&quot;ground truth log likelihood: &quot;,gt_ll)})</code></pre>
 <pre><code>ground truth log likelihood:  -527.0698</code></pre>
 <pre class="r"><code># L, F initialization
 init_res = initialize(X=X, K=3)</code></pre>
@@ -1124,104 +1008,7 @@ init_ll = compute_loglik(log_L, log_F, X)
 visualize_lf(exp(log_L),
              exp(log_F),
              sprintf(&quot;Initialized Log-Likelihood: %.2f\n&quot;, init_ll))</code></pre>
-<p><img src="figure/em.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
-Past versions of unnamed-chunk-5-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-5-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jiheeyy/background/blob/79e6098ec9ba57635181c22e0a7355ede88c70c1/docs/figure/em.Rmd/unnamed-chunk-5-1.png" target="_blank">79e6098</a>
-</td>
-<td>
-jiheeyy
-</td>
-<td>
-2026-03-09
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jiheeyy/background/blob/11c27be2d3d290e9d98c823d2622db24b9dbb7f3/docs/figure/em.Rmd/unnamed-chunk-5-1.png" target="_blank">11c27be</a>
-</td>
-<td>
-jiheeyy
-</td>
-<td>
-2026-03-08
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><img src="figure/em.Rmd/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-2">
-Past versions of unnamed-chunk-5-2.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-5-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jiheeyy/background/blob/79e6098ec9ba57635181c22e0a7355ede88c70c1/docs/figure/em.Rmd/unnamed-chunk-5-2.png" target="_blank">79e6098</a>
-</td>
-<td>
-jiheeyy
-</td>
-<td>
-2026-03-09
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jiheeyy/background/blob/11c27be2d3d290e9d98c823d2622db24b9dbb7f3/docs/figure/em.Rmd/unnamed-chunk-5-2.png" target="_blank">11c27be</a>
-</td>
-<td>
-jiheeyy
-</td>
-<td>
-2026-03-08
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+<p><img src="figure/em.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/em.Rmd/unnamed-chunk-4-2.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>maxiter=20
 ll_list = rep(numeric(maxiter))
 for (niter in 1:maxiter){
@@ -1257,56 +1044,7 @@ niter  19 ------------- LL: -511.48
 niter  20 ------------- LL: -516.03</code></pre>
 <pre class="r"><code># Figure 2: L, F after EM iterations
 visualize_lf(exp(log_L), exp(log_F), &quot;End results&quot;)</code></pre>
-<p><img src="figure/em.Rmd/unnamed-chunk-5-3.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-3">
-Past versions of unnamed-chunk-5-3.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-5-3" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jiheeyy/background/blob/79e6098ec9ba57635181c22e0a7355ede88c70c1/docs/figure/em.Rmd/unnamed-chunk-5-3.png" target="_blank">79e6098</a>
-</td>
-<td>
-jiheeyy
-</td>
-<td>
-2026-03-09
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jiheeyy/background/blob/11c27be2d3d290e9d98c823d2622db24b9dbb7f3/docs/figure/em.Rmd/unnamed-chunk-5-3.png" target="_blank">11c27be</a>
-</td>
-<td>
-jiheeyy
-</td>
-<td>
-2026-03-08
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p><img src="figure/em.Rmd/unnamed-chunk-5-4.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/em.Rmd/unnamed-chunk-4-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/em.Rmd/unnamed-chunk-4-4.png" width="672" style="display: block; margin: auto;" /></p>
 <pre class="r"><code># Figure 3: Plot Log likelihood over EM iterations
 y_bounds &lt;- range(c(init_ll, ll_list, gt_ll), na.rm = TRUE)
 plot(1:length(ll_list), ll_list, 
@@ -1318,7 +1056,7 @@ plot(1:length(ll_list), ll_list,
      pch = 16)                      # Solid circle marker
 points(0, init_ll, col = &quot;red&quot;, pch = 16, cex = 1.5) # Initial LL point at x = 0
 abline(h = gt_ll, col = &quot;blue&quot;, lty = 2, lwd = 2) # True LL</code></pre>
-<p><img src="figure/em.Rmd/unnamed-chunk-5-5.png" width="672" style="display: block; margin: auto;" />
+<p><img src="figure/em.Rmd/unnamed-chunk-4-5.png" width="672" style="display: block; margin: auto;" />
 We see EM algorithm consistently (although not across every iteration)
 increases in log-likelihood. Initialization is row-perturbed L and F
 produced from fasttopics PMF.</p>
@@ -1354,13 +1092,13 @@ cat(&quot;Mean absolute error: &quot;,mae)</code></pre>
                  true_L=data$L, true_F=data$F)
 
 plot_upper_heatmap(csim$cos_L, &quot;L Cosine Similarity&quot;)</code></pre>
-<p><img src="figure/em.Rmd/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/em.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-1">
-Past versions of unnamed-chunk-6-1.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
+Past versions of unnamed-chunk-5-1.png
 </button>
 </p>
-<div id="fig-unnamed-chunk-6-1" class="collapse">
+<div id="fig-unnamed-chunk-5-1" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -1379,7 +1117,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/jiheeyy/background/blob/140cb5e7cdd37a59dea07ddca461801be218c736/docs/figure/em.Rmd/unnamed-chunk-6-1.png" target="_blank">140cb5e</a>
+<a href="https://github.com/jiheeyy/background/blob/c6dd13a3bd4627c5db68f47009059789588eeb73/docs/figure/em.Rmd/unnamed-chunk-5-1.png" target="_blank">c6dd13a</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-10
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/79e6098ec9ba57635181c22e0a7355ede88c70c1/docs/figure/em.Rmd/unnamed-chunk-5-1.png" target="_blank">79e6098</a>
 </td>
 <td>
 jiheeyy
@@ -1390,13 +1139,13 @@ jiheeyy
 </tr>
 <tr>
 <td>
-<a href="https://github.com/jiheeyy/background/blob/79e6098ec9ba57635181c22e0a7355ede88c70c1/docs/figure/em.Rmd/unnamed-chunk-6-1.png" target="_blank">79e6098</a>
+<a href="https://github.com/jiheeyy/background/blob/11c27be2d3d290e9d98c823d2622db24b9dbb7f3/docs/figure/em.Rmd/unnamed-chunk-5-1.png" target="_blank">11c27be</a>
 </td>
 <td>
 jiheeyy
 </td>
 <td>
-2026-03-09
+2026-03-08
 </td>
 </tr>
 </tbody>
@@ -1404,13 +1153,13 @@ jiheeyy
 </div>
 </div>
 <pre class="r"><code>plot_upper_heatmap(csim$cos_F, &quot;F Cosine Similarity&quot;)</code></pre>
-<p><img src="figure/em.Rmd/unnamed-chunk-6-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p><img src="figure/em.Rmd/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /></p>
 <p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-6-2">
-Past versions of unnamed-chunk-6-2.png
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-2">
+Past versions of unnamed-chunk-5-2.png
 </button>
 </p>
-<div id="fig-unnamed-chunk-6-2" class="collapse">
+<div id="fig-unnamed-chunk-5-2" class="collapse">
 <div class="table-responsive">
 <table class="table table-condensed table-hover">
 <thead>
@@ -1429,7 +1178,18 @@ Date
 <tbody>
 <tr>
 <td>
-<a href="https://github.com/jiheeyy/background/blob/140cb5e7cdd37a59dea07ddca461801be218c736/docs/figure/em.Rmd/unnamed-chunk-6-2.png" target="_blank">140cb5e</a>
+<a href="https://github.com/jiheeyy/background/blob/c6dd13a3bd4627c5db68f47009059789588eeb73/docs/figure/em.Rmd/unnamed-chunk-5-2.png" target="_blank">c6dd13a</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-10
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/79e6098ec9ba57635181c22e0a7355ede88c70c1/docs/figure/em.Rmd/unnamed-chunk-5-2.png" target="_blank">79e6098</a>
 </td>
 <td>
 jiheeyy
@@ -1440,13 +1200,13 @@ jiheeyy
 </tr>
 <tr>
 <td>
-<a href="https://github.com/jiheeyy/background/blob/79e6098ec9ba57635181c22e0a7355ede88c70c1/docs/figure/em.Rmd/unnamed-chunk-6-2.png" target="_blank">79e6098</a>
+<a href="https://github.com/jiheeyy/background/blob/11c27be2d3d290e9d98c823d2622db24b9dbb7f3/docs/figure/em.Rmd/unnamed-chunk-5-2.png" target="_blank">11c27be</a>
 </td>
 <td>
 jiheeyy
 </td>
 <td>
-2026-03-09
+2026-03-08
 </td>
 </tr>
 </tbody>
