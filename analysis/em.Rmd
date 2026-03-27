@@ -33,34 +33,21 @@ For this project, we are interested in a particular kind of count data $X$ such 
 
 ```{r}
 set.seed(4)
-source(here("docs","code","data_generate.R"))
+source(here("docs","code","load_data.R"))
 source(here("docs","code","utils.R"))
 library(pheatmap)
 library(ggplot2)
 library(Matrix)
 
-# Generate synthetic L, F, X
+# "mix", "clear","news"
 
-# Define mixture weights for each L_k and F_k
-# 21st mixture component (shape, rate) value is 1
-l1 <- c(1, rep(0, 33)) # shape = 1e-16
-l2 <- c(rep(0, 20),1, rep(0,13)) # shape = 1
-l3 <- c(rep(0, 33), 1) # shape = 1000
-f1 <- c(1, rep(0, 33))
-f2 <- c(rep(0, 20),1, rep(0,13))
-f3 <- c(rep(0, 33), 1)
-
-# Weights will be normalized by column inside visualize_mixtures or generate_synthetic
-w_matrix <- cbind(l1,l2,l3,f1,f2,f3)
-
-visualize_mixtures(w_matrix)
-# "mix", "clear membership"
-data <- generate_synthetic(data_type="mix", w_matrix=w_matrix, n=12, p=30, K=3)
+data <- general_load(data_type="mix")
 X = Matrix(data$X, sparse = TRUE)
 
 # Visualize Ground Truth L, F
-visualize_lf(data$L, data$F, "True")
+#visualize_lf(data$L, data$F, "True")
 ```
+
 
 # Define likelihood-related functions
 
@@ -86,41 +73,7 @@ given that $\lambda_{ij} = \sum_k L_{ik} F_{jk}$ for simpler notation.
 
 ## Implementation: Likelihood
 
-I moved the likelihood calculation implementation to utils.R file, but below is the commented out version of the code.
-
-```{r}
-# # Helper function
-# # Take as input matrix (not sparse) LOG L, LOG F
-# # Output: log lambda matrix (not sparse)
-# compute_log_Lambda_mat <- function(log_L, log_F, X){
-#   X_summary = summary(X)
-#   i = X_summary$i
-#   j = X_summary$j
-#   # Create log Lambda matrix (to prevent underflow)
-#   log_Lambdaval <- matrixStats::rowLogSumExps(log_L[i, , drop = FALSE] + log_F[j, , drop = FALSE])
-#   log_Lambda <- sparseMatrix(i = i,
-#                              j = j,
-#                              x = log_Lambdaval,
-#                              dims = dim(X))
-#   return(log_Lambda)
-# 
-# }
-# 
-# # Assume X is a sparse matrix
-# # Notice X is not in log space
-# # LOG L, LOG F are also matrices
-# compute_loglik <- function(log_L, log_F, X){
-#   mask <- (X != 0)
-#   log_Lambda = compute_log_Lambda_mat(log_L, log_F, X)
-# 
-#   # Compute Poisson log likelihood for all observations
-#   ll = -sum(exp(log_Lambda)) +
-#     sum((X * log_Lambda)) -
-#     sum(lgamma(X[mask] + 1))
-# 
-#   return(ll)}
-
-```
+I moved the likelihood calculation implementation to utils.R file.
 
 
 ## 2. Complete data log likelihood
@@ -274,8 +227,8 @@ source(here("docs","code","utils.R"))
 # log_L = log(init_res$W)
 # log_F = log(t(init_res$H))
 
-gt_ll = compute_loglik(log(data$L), log(data$F), X)
-cat("ground truth log likelihood: ",gt_ll)
+try({gt_ll = compute_loglik(log(data$L), log(data$F), X)
+    cat("ground truth log likelihood: ",gt_ll)})
 
 # L, F initialization
 init_res = initialize(X=X, K=3)
