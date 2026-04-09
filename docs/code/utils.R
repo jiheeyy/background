@@ -100,5 +100,5 @@ compute_loglik <- function(log_L, log_F, X){
     sum((X * log_Lambda)) -
     sum(lgamma(X[mask] + 1))
 
-  return(ll)}
+  return(c(ll, log_Lambda))}
 
