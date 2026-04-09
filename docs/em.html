@@ -11,7 +11,7 @@
 
 <meta name="author" content="Jihee You" />
 
-<meta name="date" content="2026-03-27" />
+<meta name="date" content="2026-04-09" />
 
 <title>EM</title>
 
@@ -361,7 +361,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">EM</h1>
 <h4 class="author">Jihee You</h4>
-<h4 class="date">2026-03-27</h4>
+<h4 class="date">2026-04-09</h4>
 
 </div>
 
@@ -390,7 +390,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-03-27
+<strong>Last updated:</strong> 2026-04-09
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree97d0c1cb35f54d79b207b2a306b0cdbe8b03c6c1targetblank97d0c1ca">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree6141eff646d80f58783af634c729820d637651fctargetblank6141effa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/jiheeyy/background/tree/97d0c1cb35f54d79b207b2a306b0cdbe8b03c6c1" target="_blank">97d0c1c</a>
+<a href="https://github.com/jiheeyy/background/tree/6141eff646d80f58783af634c729820d637651fc" target="_blank">6141eff</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree97d0c1cb35f54d79b207b2a306b0cdbe8b03c6c1targetblank97d0c1ca"
+id="strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree6141eff646d80f58783af634c729820d637651fctargetblank6141effa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/jiheeyy/background/tree/97d0c1cb35f54d79b207b2a306b0cdbe8b03c6c1" target="_blank">97d0c1c</a>.
+<a href="https://github.com/jiheeyy/background/tree/6141eff646d80f58783af634c729820d637651fc" target="_blank">6141eff</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -613,6 +613,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/6141eff646d80f58783af634c729820d637651fc/analysis/em.Rmd" target="_blank">6141eff</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-04-09
+</td>
+<td>
+wflow_publish("analysis/em.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jiheeyy/background/ec0027365b1e0613ab59ea24606d5cda85639fd5/docs/em.html" target="_blank">ec00273</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-27
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -785,28 +819,6 @@ R_{+}^{n \times k}\)</span> and <span class="math inline">\(F \in
 R_{+}^{p \times k}\)</span>, and we seek values of L and F such that
 <span class="math inline">\(X \approx LF^T\)</span>.</p>
 </div>
-<div id="generating-x-of-interest" class="section level1">
-<h1>Generating X of Interest</h1>
-<p>For this project, we are interested in a particular kind of count
-data <span class="math inline">\(X\)</span> such that there are K
-distinct hidden groups that we expect matrix factorization to reflect.
-Let’s generate a small dataset with 3 distinct groups.</p>
-<!-- Added seed and sparse X to main experiment. -->
-<pre class="r"><code>set.seed(4)
-source(here(&quot;docs&quot;,&quot;code&quot;,&quot;load_data.R&quot;))
-source(here(&quot;docs&quot;,&quot;code&quot;,&quot;utils.R&quot;))
-library(pheatmap)
-library(ggplot2)
-library(Matrix)
-
-# &quot;mix&quot;, &quot;clear&quot;,&quot;news&quot;
-
-data &lt;- general_load(data_type=&quot;mix&quot;)
-X = Matrix(data$X, sparse = TRUE)
-
-# Visualize Ground Truth L, F
-#visualize_lf(data$L, data$F, &quot;True&quot;)</code></pre>
-</div>
 <div id="define-likelihood-related-functions" class="section level1">
 <h1>Define likelihood-related functions</h1>
 <div id="incomplete-data-log-likelihood" class="section level2">
@@ -827,11 +839,6 @@ ADD note explaining its a summation of of Poisson PMF (X parametrized by L, F)--
 \end{align}
 \]</span> given that <span class="math inline">\(\lambda_{ij} = \sum_k
 L_{ik} F_{jk}\)</span> for simpler notation.</p>
-</div>
-<div id="implementation-likelihood" class="section level2">
-<h2>Implementation: Likelihood</h2>
-<p>I moved the likelihood calculation implementation to utils.R
-file.</p>
 </div>
 <div id="complete-data-log-likelihood" class="section level2">
 <h2>2. Complete data log likelihood</h2>
@@ -933,6 +940,8 @@ f_{jk}^\text{(new)} = \sum_{i} \frac{\mathbb{E}[z_{ijk}]}{l_{ik}}
 </div>
 <div id="implementation-em" class="section level1">
 <h1>Implementation: EM</h1>
+<div id="helper-function-e_step" class="section level2">
+<h2>Helper Function: E_step</h2>
 <pre class="r"><code># Computes E_Z, which is a n x p x k matrix
 E_step &lt;- function(log_L, log_F, X){
   X_summary &lt;-summary(X)
@@ -959,9 +968,11 @@ E_step &lt;- function(log_L, log_F, X){
   
   # Return two squished slices of logEz
   return(list(logEz_sj = logEz_sj, logEz_si = logEz_si))
-}
-
-# Update log_L, log_F 
+}</code></pre>
+</div>
+<div id="helper-function-m_step" class="section level2">
+<h2>Helper Function: M_step</h2>
+<pre class="r"><code># Update log_L, log_F 
 M_step &lt;- function(log_L, log_F, E_res){
   # Prepare inputs
   logEz_sj = E_res$logEz_sj
@@ -979,327 +990,540 @@ M_step &lt;- function(log_L, log_F, E_res){
   
   return(list(log_L=newlog_L, log_F=newlog_F))
 }</code></pre>
-<p>Putting everything together,</p>
+</div>
+<div id="helper-function-initialize_lf" class="section level2">
+<h2>Helper Function: initialize_LF</h2>
+<p>Given generated X, output an initial guess of L, F</p>
 <pre class="r"><code>library(fastTopics)
 source(here(&quot;docs&quot;,&quot;code&quot;,&quot;initialize.R&quot;))
 source(here(&quot;docs&quot;,&quot;code&quot;,&quot;utils.R&quot;))
 
-# library(NNLM)
-# Another option in initialization
-# init_res = NNLM::nnmf(A = as.matrix(data$X), k = 3)
-# log_L = log(init_res$W)
-# log_F = log(t(init_res$H))
+initialize_LF &lt;- function(X=X, K=3, shuffle=TRUE){
+  # Estimate L, F: fasttopics
+  ft = initialize(X=X, K=K)
+  ftlog_L = ft$qg$qllog_norm
+  ftlog_F = ft$qg$qflog_norm
+  ft_res = compute_loglik(ftlog_L, ftlog_F, X)
+  cat(&quot;fasttopics log-likelihood: &quot;,ft_res[[1]])
+  
+  # Storage
+  ft_ll = ft_res[1]
+  ft_lamb = exp(ft_res[[2]])
+  ft_L = exp(ftlog_L)
+  ft_F = exp(ftlog_F)
+  
+  if (shuffle==TRUE){
+    initlog_L = ftlog_L[sample(nrow(ftlog_L)),] # inject randomness since log_L overfit
+  }
+  else{
+    initlog_L = ftlog_L
+  }
+  initlog_F = ftlog_F
+  init_res = compute_loglik(initlog_L, initlog_F, X)
+  
+  # Storage
+  init_ll = init_res[1]
+  init_lamb = exp(init_res[[2]])
+  init_L = exp(initlog_L)
+  init_F = exp(initlog_F)
+  
+  # Need to format
+  return(list(initlog_L=initlog_L,
+             initlog_F=initlog_F,
+             stor2 = list(ft_ll=ft_ll, ft_lamb=ft_lamb, 
+                       ft_L=ft_L, ft_F=ft_F,
+                       init_ll=init_ll, init_lamb=init_lamb, 
+                       init_L=init_L, init_F=(init_F))))
+}</code></pre>
+</div>
+<div id="top-level-helper-function-init_and_run_em"
+class="section level2">
+<h2>Top Level Helper Function: init_and_run_em</h2>
+<p>Main code chunk that initializes then runs EM over iterations.
+Includes initialize_LF, E_step, M_step.</p>
+<pre class="r"><code>init_and_run_em &lt;- function(X=X, K=3, shuffle=TRUE,
+                            experiment_gt = FALSE, data=data, # variables not used unless experiment_gt flag is TRUE
+                            maxiter=20){
+  if (experiment_gt==TRUE){init=list(initlog_L=log(data$L),initlog_F=log(data$F),stor2=list(ft_ll=NULL, ft_lamb=Matrix(), 
+                       ft_L=Matrix(), ft_F=Matrix(),
+                       init_ll=NULL, init_lamb=Matrix(), 
+                       init_L=Matrix(), init_F=Matrix()))
+  }
+  else{init = initialize_LF(X=X, K=K, shuffle=shuffle)}
+  
 
-try({gt_ll = compute_loglik(log(data$L), log(data$F), X)
-    cat(&quot;ground truth log likelihood: &quot;,gt_ll)})</code></pre>
-<pre><code>ground truth log likelihood:  -527.0698</code></pre>
-<pre class="r"><code># L, F initialization
-init_res = initialize(X=X, K=3)</code></pre>
+  # Initialize variables for loop 
+  log_L = init$initlog_L
+  log_F = init$initlog_F
+  ll_list = rep(numeric(maxiter))
+
+  for (niter in 1:maxiter){
+    Ez_two = E_step(log_L, log_F, X)
+    
+    new = M_step(log_L, log_F, Ez_two)
+    log_L = new$log_L
+    log_F = new$log_F
+  
+    nres = compute_loglik(log_L, log_F, X)
+    ll_list[niter] = nres[1]
+    #cat(&quot;niter &quot;,niter, &quot;-------------&quot;, sprintf(&quot;LL: %.2f\n&quot;,  nres[1]))
+  }
+  
+  # Storage
+  final_lamb = exp(nres[[2]])
+  final_L = exp(log_L)
+  final_F = exp(log_F)
+  
+  stor3 = list(final_L = final_L, final_F = final_F, final_lamb = final_lamb, ll_list = ll_list)
+  
+  return(list(stor2=init$stor2,
+              stor3=stor3))}</code></pre>
+</div>
+<div id="putting-things-together-full_em_pipeline"
+class="section level2">
+<h2>Putting things together: full_EM_pipeline</h2>
+<p>Includes data generation code block, init_and_run_em, and
+visualization &amp; metric code block.</p>
+<!-- Added seed and sparse X to main experiment. we are interested in a particular kind of count data $X$ such that there are K distinct hidden groups that we expect matrix factorization to reflect. Let's generate a small dataset with 3 distinct groups.-->
+<pre class="r"><code>source(here(&quot;docs&quot;,&quot;code&quot;,&quot;load_data.R&quot;))
+source(here(&quot;docs&quot;,&quot;code&quot;,&quot;utils.R&quot;))
+source(here(&quot;docs&quot;,&quot;code&quot;,&quot;initialize.R&quot;))
+library(pheatmap)
+library(ggplot2)
+library(Matrix)
+library(pracma)</code></pre>
+<pre><code>Warning: package &#39;pracma&#39; was built under R version 4.5.1</code></pre>
+<pre><code>
+Attaching package: &#39;pracma&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:Matrix&#39;:
+
+    expm, lu, tril, triu</code></pre>
+<pre class="r"><code># &quot;mix&quot;, &quot;clear&quot;,&quot;news&quot;, &quot;unif&quot;, &quot;clear&quot;
+full_EM_pipeline &lt;- function(data_type, w_matrix=NULL, experiment_gt=FALSE){
+  set.seed(4) # else general_load gives slighly diff data each time
+  # Data Generation
+  data_type = data_type # &quot;mix&quot;, &quot;clear&quot;,&quot;news&quot;, &quot;unif&quot;, &quot;clear&quot;
+  data &lt;- general_load(data_type=data_type, w_matrix = w_matrix)
+  X = Matrix(data$X, sparse = TRUE)
+  res = compute_loglik(log(data$L), log(data$F), X)
+  
+  # Storage
+  gt_ll = res[1] # ground truth log likelihood
+  gt_lamb = exp(res[[2]]) # mean(abs(X - exp(res[[2]]))) is Poisson noise floor
+  gt_L = Matrix(data$L)
+  gt_F = Matrix(data$F)
+  stor1 = list(gt_ll=gt_ll, gt_lamb=gt_lamb, gt_L=gt_L, gt_F=gt_F)
+  
+  # --------------
+  res_final = init_and_run_em(X=X, K=3, shuffle=TRUE, 
+                              experiment_gt = experiment_gt, data=data,
+                              maxiter=20)
+  stor_all = c(stor1, res_final$stor2, res_final$stor3)
+  # store_all = list(gt_ll, gt_lamb, gt_L, gt_F, # stor1
+  #           ft_ll, ft_lamb, ft_L, ft_F, # stor2
+  #           init_ll, init_lamb, init_L, init_F, # stor2
+  #           ll_list, final_lamb final_L, final_F # stor3
+  #           )
+  
+  # -------------
+  source(here(&quot;docs&quot;,&quot;code&quot;,&quot;viz.R&quot;))
+
+  all_vals &lt;- unlist(lapply(list(stor_all$gt_L,    stor_all$gt_F,
+                                 stor_all$ft_L,    stor_all$ft_F,
+                                 stor_all$init_L,  stor_all$init_F,
+                                 stor_all$final_L, stor_all$final_F), 
+                            as.numeric))
+  print(&#39;\n -----&#39;)
+  print(&quot;Correlation between k columns of EM L&quot;)
+  print(cor(as.matrix(stor_all$final_L), method=&#39;pearson&#39;))
+  
+  print(&quot;Correlation between k columns of EM F&quot;)
+  print(cor(as.matrix(stor_all$final_F), method=&#39;pearson&#39;))
+  print(&#39;\n -----&#39;)
+  
+  
+  global_breaks &lt;- seq(min(all_vals, na.rm=TRUE), 
+                       max(all_vals, na.rm=TRUE), 
+                       length.out = 101)
+  
+  #Plots
+  if (data_type == &quot;news&quot;){
+    
+  }
+  else{
+    try_run &lt;- function(expr, label) {
+   tryCatch(
+    eval(substitute(expr), envir = parent.frame()),
+    error = function(e) cat(sprintf(&quot;Skipped [%s]: %s\n&quot;, label, e$message)))}
+    
+    try_run(plot_lf(stor_all$gt_L,    stor_all$gt_F,    sprintf(&quot;%s - Ground Truth&quot;, data_type), global_breaks), &quot;Ground Truth&quot;)
+    try_run(plot_lf(stor_all$ft_L,    stor_all$ft_F,    &quot;Fasttopics&quot;,  global_breaks),                           &quot;Fasttopics LF&quot;)
+    # try_run(plot_lf(stor_all$init_L,  stor_all$init_F,  &quot;Initialized&quot;, global_breaks),                           &quot;Initialized LF&quot;)
+    try_run(plot_lf(stor_all$final_L, stor_all$final_F, &quot;EM&quot;,          global_breaks),                           &quot;EM LF&quot;)
+    try_run(plot_em_ll(init_ll=stor_all$init_ll, ll_list=stor_all$ll_list, gt_ll=stor_all$gt_ll),                 &quot;EM LL plot&quot;)
+
+    ft_X     &lt;- NA
+    ft_lamb  &lt;- NA
+    
+    try_run({
+      ft_X    &lt;- mean(abs(X - stor_all$ft_lamb))
+      ft_lamb &lt;- mean(abs(stor_all$gt_lamb - stor_all$ft_lamb))
+    }, &quot;Fasttopics MAE&quot;)
+    
+    try_run({
+      poinoise &lt;&lt;- mean(abs(stor_all$gt_lamb - X))
+      em_X     &lt;&lt;- mean(abs(X - stor_all$final_lamb))
+      em_lamb  &lt;&lt;- mean(abs(stor_all$gt_lamb - stor_all$final_lamb))
+    }, &quot;EM MAE&quot;)
+    
+    try_run({
+      met_res &lt;- data.frame(
+        Comparison = c(&quot;Poisson noise floor: true λ vs X&quot;,
+                       &quot;Fasttopics λ vs X&quot;, &quot;Fasttopics λ vs true λ&quot;,
+                       &quot;EM λ vs X&quot;,         &quot;EM λ vs true λ&quot;),
+        MAE = c(poinoise, ft_X, ft_lamb, em_X, em_lamb)
+      )
+      print(met_res, digits=2, row.names=FALSE)
+    }, &quot;Metrics table&quot;)
+  }
+  }</code></pre>
+</div>
+</div>
+<div id="a-set-of-experiments" class="section level1">
+<h1>A set of experiments</h1>
+<div id="clear-3-groups-case-perfect-initialization"
+class="section level2">
+<h2>Clear 3 groups case, perfect initialization</h2>
+<p>EM’s results look very close to the ground truth, because of
+initialization (with the “answer”).</p>
+<p>EM is good at recovering Loadings, which have ground truth low
+variance. However, EM overestimates variance in Factors. True factors do
+not vary much within group, since its variance depends on normal noise
+with variance 1.</p>
+<p>Also, in this case EM seems to overfit to data X, rather than
+focusing on recovering true <span class="math inline">\(LF^T\)</span>.
+It seems the term “overfitting to X” is interchangeable with
+MAE(algorithm-esimated <span class="math inline">\(\Lambda =
+LF^T\)</span>, X) &lt; MAE (True <span
+class="math inline">\(\Lambda\)</span>, X) which is the Poisson noise
+floor.</p>
+<p>EM log likelihood over iterations is well above the true <span
+class="math inline">\(\Lambda\)</span> log likelihood, reflecting the
+overfitting issue.</p>
+<p>Pearson’s correlation between L_k are more or less around -0.5, which
+is to be expected. We see similar correlation between F_k.</p>
+<!--Note spearman's corr(EM L_1, EM L_2) > corr(EM L_1, EM L_3), but I am not too interested in monotonicity by rank. EM loadings are clearly separated into three groups, so visually, difference between any two Loading columns are 2/3 of its rows. -->
+<pre class="r"><code>full_EM_pipeline(&quot;clear&quot;, experiment_gt=TRUE)</code></pre>
+<pre><code>[1] &quot;\n -----&quot;
+[1] &quot;Correlation between k columns of EM L&quot;
+           [,1]       [,2]       [,3]
+[1,]  1.0000000 -0.4405702 -0.5063792
+[2,] -0.4405702  1.0000000 -0.4947028
+[3,] -0.5063792 -0.4947028  1.0000000
+[1] &quot;Correlation between k columns of EM F&quot;
+           [,1]       [,2]       [,3]
+[1,]  1.0000000 -0.4754003 -0.5243384
+[2,] -0.4754003  1.0000000 -0.4500048
+[3,] -0.5243384 -0.4500048  1.0000000
+[1] &quot;\n -----&quot;</code></pre>
+<p><img src="figure/em.Rmd/unnamed-chunk-7-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-1">
+Past versions of unnamed-chunk-7-1.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/c6dd13a3bd4627c5db68f47009059789588eeb73/docs/figure/em.Rmd/unnamed-chunk-7-1.png" target="_blank">c6dd13a</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-10
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/140cb5e7cdd37a59dea07ddca461801be218c736/docs/figure/em.Rmd/unnamed-chunk-7-1.png" target="_blank">140cb5e</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-09
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre><code>Skipped [Fasttopics LF]: &#39;x&#39; must be numeric</code></pre>
+<p><img src="figure/em.Rmd/unnamed-chunk-7-2.png" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-7-2">
+Past versions of unnamed-chunk-7-2.png
+</button>
+</p>
+<div id="fig-unnamed-chunk-7-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/c6dd13a3bd4627c5db68f47009059789588eeb73/docs/figure/em.Rmd/unnamed-chunk-7-2.png" target="_blank">c6dd13a</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-10
+</td>
+</tr>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/140cb5e7cdd37a59dea07ddca461801be218c736/docs/figure/em.Rmd/unnamed-chunk-7-2.png" target="_blank">140cb5e</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-03-09
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><img src="figure/em.Rmd/unnamed-chunk-7-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>Skipped [Fasttopics MAE]: error in evaluating the argument &#39;x&#39; in selecting a method for function &#39;mean&#39;: non-conformable matrix dimensions in as(e1, &quot;dMatrix&quot;) - .M2kind(e2, &quot;d&quot;)
+                       Comparison  MAE
+ Poisson noise floor: true λ vs X 2.09
+                Fasttopics λ vs X   NA
+           Fasttopics λ vs true λ   NA
+                        EM λ vs X 1.77
+                   EM λ vs true λ 0.99</code></pre>
+</div>
+<div id="clear-3-groups-case-shuffled-fasttopics-initialization"
+class="section level2">
+<h2>Clear 3 groups case, shuffled fasttopics initialization</h2>
+<p>Since fasttopics <span class="math inline">\(LF^T\)</span> already
+overfits to X, it is not a good initialization for EM. If initialized
+with fasttopics, EM would get “stuck” and its results are more or less
+identical to fasttopics <span class="math inline">\(LF^T\)</span> (not
+shown in this document). Therefore, EM is initialized with fasttopics
+factors and row-permutated fasttopics loadings.</p>
+<p>However, even with such initialization, visually EM loadings and
+factors are indistinguishable from fasttopics. Therefore, EM results
+reflect how fasttopics loadings are overexpressed and fasttopics factors
+are underexpressed.</p>
+<p>Also in terms of MAE or final log likelihood, EM and fasttopics
+results are very similar.</p>
+<pre class="r"><code>full_EM_pipeline(&quot;clear&quot;)</code></pre>
 <pre><code>Initializing factors using Topic SCORE algorithm.
 Initializing loadings by running 10 SCD updates.
 Fitting rank-3 Poisson NMF to 12 x 30 sparse matrix.
-Running at most 50 SCD updates, without extrapolation (fastTopics 0.6-192).</code></pre>
-<pre class="r"><code>log_L = init_res$qg$qllog_norm
-log_L = log_L[sample(nrow(log_L)),] # inject randomness since log_L overfit
-log_F = init_res$qg$qflog_norm
-init_ll = compute_loglik(log_L, log_F, X)
-
-# Figure 1: Initialized L, F
-visualize_lf(exp(log_L),
-             exp(log_F),
-             sprintf(&quot;Initialized Log-Likelihood: %.2f\n&quot;, init_ll))</code></pre>
-<p><img src="figure/em.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/em.Rmd/unnamed-chunk-4-2.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>maxiter=20
-ll_list = rep(numeric(maxiter))
-for (niter in 1:maxiter){
-  Ez_two = E_step(log_L, log_F, X)
-  
-  new = M_step(log_L, log_F, Ez_two)
-  log_L = new$log_L
-  log_F = new$log_F
-
-  ll = compute_loglik(log_L, log_F, X)
-  ll_list[niter] = ll
-  cat(&quot;niter &quot;,niter, &quot;-------------&quot;, sprintf(&quot;LL: %.2f\n&quot;,  ll))
-}</code></pre>
-<pre><code>niter  1 ------------- LL: -550.89
-niter  2 ------------- LL: -531.99
-niter  3 ------------- LL: -519.61
-niter  4 ------------- LL: -521.61
-niter  5 ------------- LL: -514.70
-niter  6 ------------- LL: -518.86
-niter  7 ------------- LL: -513.30
-niter  8 ------------- LL: -517.93
-niter  9 ------------- LL: -512.81
-niter  10 ------------- LL: -517.49
-niter  11 ------------- LL: -512.51
-niter  12 ------------- LL: -517.16
-niter  13 ------------- LL: -512.24
-niter  14 ------------- LL: -516.86
-niter  15 ------------- LL: -511.98
-niter  16 ------------- LL: -516.58
-niter  17 ------------- LL: -511.73
-niter  18 ------------- LL: -516.30
-niter  19 ------------- LL: -511.48
-niter  20 ------------- LL: -516.03</code></pre>
-<pre class="r"><code># Figure 2: L, F after EM iterations
-visualize_lf(exp(log_L), exp(log_F), &quot;End results&quot;)</code></pre>
-<p><img src="figure/em.Rmd/unnamed-chunk-4-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/em.Rmd/unnamed-chunk-4-4.png" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code># Figure 3: Plot Log likelihood over EM iterations
-y_bounds &lt;- range(c(init_ll, ll_list, gt_ll), na.rm = TRUE)
-plot(1:length(ll_list), ll_list, 
-     xlim = c(0, length(ll_list)),  # Expands x-axis to include 0
-     ylim = y_bounds,               # Expands y-axis to fit all values
-     main = sprintf(&quot;Log Likelihood over EM Iterations\nTrue LL: %.2f&quot;, gt_ll),
-     ylab = &quot;Log-Likelihood&quot;,
-     xlab = &quot;EM Iteration&quot;,
-     pch = 16)                      # Solid circle marker
-points(0, init_ll, col = &quot;red&quot;, pch = 16, cex = 1.5) # Initial LL point at x = 0
-abline(h = gt_ll, col = &quot;blue&quot;, lty = 2, lwd = 2) # True LL</code></pre>
-<p><img src="figure/em.Rmd/unnamed-chunk-4-5.png" width="672" style="display: block; margin: auto;" />
-We see EM algorithm consistently (although not across every iteration)
-increases in log-likelihood. Initialization is row-perturbed L and F
-produced from fasttopics PMF.</p>
-<p>One thing to note is the fasttopics PMF outputs log likelihood much
-higher than the “ground truth,” probably due to overfitting. If
-initialized with PMF, EM iterations marginally decrease in log
-likelihood over time.</p>
+Running at most 50 SCD updates, without extrapolation (fastTopics 0.6-192).
+fasttopics log-likelihood:  -750.5115[1] &quot;\n -----&quot;
+[1] &quot;Correlation between k columns of EM L&quot;
+           k1         k2         k3
+k1  1.0000000 -0.5402973 -0.3869458
+k2 -0.5402973  1.0000000 -0.5307941
+k3 -0.3869458 -0.5307941  1.0000000
+[1] &quot;Correlation between k columns of EM F&quot;
+           k1         k2         k3
+k1  1.0000000 -0.4922618 -0.5194738
+k2 -0.4922618  1.0000000 -0.4127181
+k3 -0.5194738 -0.4127181  1.0000000
+[1] &quot;\n -----&quot;</code></pre>
+<p><img src="figure/em.Rmd/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/em.Rmd/unnamed-chunk-8-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/em.Rmd/unnamed-chunk-8-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/em.Rmd/unnamed-chunk-8-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>                       Comparison MAE
+ Poisson noise floor: true λ vs X 2.1
+                Fasttopics λ vs X 1.7
+           Fasttopics λ vs true λ 1.1
+                        EM λ vs X 1.7
+                   EM λ vs true λ 1.1</code></pre>
 </div>
-<div id="evaluate" class="section level1">
-<h1>Evaluate</h1>
-<p>Cosine similarity between vectors doesn’t seem to be a good metric
-conveying information about the quality of estimated <span
-class="math inline">\(l_k\)</span>, since it cannot differentiate
-between true <span class="math inline">\(l_k\)</span> or <span
+<div id="uniform-groups-case-shuffled-fasttopics-initialization"
+class="section level2">
+<h2>Uniform groups case, shuffled fasttopics initialization</h2>
+<p>This case of simulated data has no underlying structure following k
+groups. All true loading and factor are randomly sampled between 0 and
+1. This data generation is similar to
+fasttopics::simulate_count_data.</p>
+<p>EM results overfit, and its MAE and log likelihood look very
+good.However, visually neither fasttopics or EM are doing well.</p>
+<pre class="r"><code>full_EM_pipeline(&quot;unif&quot;)</code></pre>
+<pre><code>Initializing factors using Topic SCORE algorithm.
+Initializing loadings by running 10 SCD updates.
+Fitting rank-3 Poisson NMF to 12 x 30 sparse matrix.
+Running at most 50 SCD updates, without extrapolation (fastTopics 0.6-192).
+fasttopics log-likelihood:  -432.5292[1] &quot;\n -----&quot;
+[1] &quot;Correlation between k columns of EM L&quot;
+           k1         k2         k3
+k1  1.0000000 -0.4493282 -0.4895517
+k2 -0.4493282  1.0000000 -0.2660457
+k3 -0.4895517 -0.2660457  1.0000000
+[1] &quot;Correlation between k columns of EM F&quot;
+            k1          k2          k3
+k1  1.00000000  0.08751322 -0.05804618
+k2  0.08751322  1.00000000 -0.43539661
+k3 -0.05804618 -0.43539661  1.00000000
+[1] &quot;\n -----&quot;</code></pre>
+<p><img src="figure/em.Rmd/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" /><img src="figure/em.Rmd/unnamed-chunk-9-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/em.Rmd/unnamed-chunk-9-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/em.Rmd/unnamed-chunk-9-4.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>                       Comparison  MAE
+ Poisson noise floor: true λ vs X 0.88
+                Fasttopics λ vs X 0.82
+           Fasttopics λ vs true λ 0.22
+                        EM λ vs X 0.82
+                   EM λ vs true λ 0.23</code></pre>
+</div>
+<div
+id="groups-with-gamma-prior-case-shuffled-fasttopics-initialization"
+class="section level2">
+<h2>3 groups with gamma prior case, shuffled fasttopics
+initialization</h2>
+<p>Very similar to uniform groups case: fasttopics and EM results are
+very similar visually and also in terms of MAE and log likelihood.</p>
+<p>EM results did not overfit here, but EM is unable to recover
+underlying structure at all.</p>
+<pre class="r"><code># Define mixture weights for each L_k and F_k
+# 21st mixture component (shape, rate) value is 1
+l1 &lt;- c(1, rep(0, 33)) # shape = 1e-16
+l2 &lt;- c(1, rep(0, 33)) # shape = 1e-16
+l3 &lt;- c(rep(0, 33), 1) # shape = 1000
+f1 &lt;- c(1, rep(0, 33)) # shape = 1e-16
+f2 &lt;- c(rep(0, 33), 1) # shape = 1000
+f3 &lt;- c(rep(0, 33), 1) # shape = 1000
+# Weights will be normalized by column inside visualize_mixtures or generate_synthetic
+# First visualize each mixture
+cusw &lt;- cbind(l1,l2,l3,f1,f2,f3)
+visualize_mixtures(cusw)</code></pre>
+<p><img src="figure/em.Rmd/unnamed-chunk-10-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>full_EM_pipeline(&quot;mix&quot;, w_matrix=cusw)</code></pre>
+<pre><code>Initializing factors using Topic SCORE algorithm.
+Initializing loadings by running 10 SCD updates.
+Fitting rank-3 Poisson NMF to 12 x 30 sparse matrix.
+Running at most 50 SCD updates, without extrapolation (fastTopics 0.6-192).
+fasttopics log-likelihood:  -434.3849[1] &quot;\n -----&quot;
+[1] &quot;Correlation between k columns of EM L&quot;
+           k1         k2         k3
+k1  1.0000000 -0.7450863 -0.2788425
+k2 -0.7450863  1.0000000 -0.3059523
+k3 -0.2788425 -0.3059523  1.0000000
+[1] &quot;Correlation between k columns of EM F&quot;
+           k1         k2         k3
+k1  1.0000000 -0.3925036 -0.3579587
+k2 -0.3925036  1.0000000 -0.4768853
+k3 -0.3579587 -0.4768853  1.0000000
+[1] &quot;\n -----&quot;</code></pre>
+<p><img src="figure/em.Rmd/unnamed-chunk-10-2.png" width="672" style="display: block; margin: auto;" /><img src="figure/em.Rmd/unnamed-chunk-10-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/em.Rmd/unnamed-chunk-10-4.png" width="672" style="display: block; margin: auto;" /><img src="figure/em.Rmd/unnamed-chunk-10-5.png" width="672" style="display: block; margin: auto;" /></p>
+<pre><code>                       Comparison  MAE
+ Poisson noise floor: true λ vs X 0.71
+                Fasttopics λ vs X 0.74
+           Fasttopics λ vs true λ 0.24
+                        EM λ vs X 0.74
+                   EM λ vs true λ 0.22</code></pre>
+<!--
+## 3 groups with gamma prior case, perfect initialization
+
+``` r
+# Define mixture weights for each L_k and F_k
+# 21st mixture component (shape, rate) value is 1
+l1 <- c(1, rep(0, 33)) # shape = 1e-16
+l2 <- c(1, rep(0, 33)) # shape = 1e-16
+l3 <- c(rep(0, 33), 1) # shape = 1000
+f1 <- c(1, rep(0, 33)) # shape = 1e-16
+f2 <- c(rep(0, 33), 1) # shape = 1000
+f3 <- c(rep(0, 33), 1) # shape = 1000
+# Weights will be normalized by column inside visualize_mixtures or generate_synthetic
+# First visualize each mixture
+cusw <- cbind(l1,l2,l3,f1,f2,f3)
+visualize_mixtures(cusw)
+```
+
+<img src="figure/em.Rmd/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" />
+
+``` r
+full_EM_pipeline("mix", w_matrix=cusw, experiment_gt = TRUE)
+```
+
+```
+[1] "\n -----"
+[1] "Correlation between k columns of EM L"
+     [,1] [,2] [,3]
+[1,]    1   NA   NA
+[2,]   NA    1   NA
+[3,]   NA   NA    1
+[1] "Correlation between k columns of EM F"
+     [,1] [,2] [,3]
+[1,]    1   NA   NA
+[2,]   NA    1   NA
+[3,]   NA   NA    1
+[1] "\n -----"
+```
+
+<img src="figure/em.Rmd/unnamed-chunk-11-2.png" width="672" style="display: block; margin: auto;" />
+
+```
+Skipped [Fasttopics LF]: 'x' must be numeric
+```
+
+<img src="figure/em.Rmd/unnamed-chunk-11-3.png" width="672" style="display: block; margin: auto;" /><img src="figure/em.Rmd/unnamed-chunk-11-4.png" width="672" style="display: block; margin: auto;" />
+
+```
+Skipped [Fasttopics MAE]: error in evaluating the argument 'x' in selecting a method for function 'mean': non-conformable matrix dimensions in as(e1, "dMatrix") - .M2kind(e2, "d")
+                       Comparison  MAE
+ Poisson noise floor: true λ vs X 0.71
+                Fasttopics λ vs X   NA
+           Fasttopics λ vs true λ   NA
+                        EM λ vs X   NA
+                   EM λ vs true λ   NA
+```
+-->
+</div>
+</div>
+<div id="questions-for-the-future" class="section level1">
+<h1>Questions for the future</h1>
+<p>While not shown in the current rmarkdown version, cosine similarity
+between vectors doesn’t seem to be a good metric conveying information
+about the quality of estimated <span class="math inline">\(l_k\)</span>,
+since it cannot differentiate between true <span
+class="math inline">\(l_k\)</span> or <span
 class="math inline">\(f_k\)</span> anyways. I hoped cosine similarity
 between true vectors would be close to zero, so that true vs. estimated
 vectors would give insight to the degree of different information
 carried by K estimated vectors.</p>
-<p>Mean absolute error is less than one, which is not great but
-acceptable since it would mean EM estimated <span
-class="math inline">\(\lambda_{ij}\)</span> is off by less than one
-count from true <span class="math inline">\(\lambda_{ij}\)</span>.</p>
-<pre class="r"><code>source(here(&quot;docs&quot;,&quot;code&quot;,&quot;utils.R&quot;))
-source(here(&quot;docs&quot;,&quot;code&quot;,&quot;eval.R&quot;))</code></pre>
-<pre><code>Warning: package &#39;lsa&#39; was built under R version 4.5.1</code></pre>
-<pre><code>Loading required package: SnowballC</code></pre>
-<pre class="r"><code>mae = eval_mae(est_L=exp(log_L), est_F=exp(log_F), 
-               true_L=data$L, true_F=data$F, 
-               X=X)
-cat(&quot;Mean absolute error: &quot;,mae)</code></pre>
-<pre><code>Mean absolute error:  0.5141107</code></pre>
-<pre class="r"><code>csim = eval_csim(est_L=exp(log_L), est_F=exp(log_F), 
-                 true_L=data$L, true_F=data$F)
-
-plot_upper_heatmap(csim$cos_L, &quot;L Cosine Similarity&quot;)</code></pre>
-<p><img src="figure/em.Rmd/unnamed-chunk-5-1.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-1">
-Past versions of unnamed-chunk-5-1.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-5-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jiheeyy/background/blob/c6dd13a3bd4627c5db68f47009059789588eeb73/docs/figure/em.Rmd/unnamed-chunk-5-1.png" target="_blank">c6dd13a</a>
-</td>
-<td>
-jiheeyy
-</td>
-<td>
-2026-03-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jiheeyy/background/blob/79e6098ec9ba57635181c22e0a7355ede88c70c1/docs/figure/em.Rmd/unnamed-chunk-5-1.png" target="_blank">79e6098</a>
-</td>
-<td>
-jiheeyy
-</td>
-<td>
-2026-03-09
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jiheeyy/background/blob/11c27be2d3d290e9d98c823d2622db24b9dbb7f3/docs/figure/em.Rmd/unnamed-chunk-5-1.png" target="_blank">11c27be</a>
-</td>
-<td>
-jiheeyy
-</td>
-<td>
-2026-03-08
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>plot_upper_heatmap(csim$cos_F, &quot;F Cosine Similarity&quot;)</code></pre>
-<p><img src="figure/em.Rmd/unnamed-chunk-5-2.png" width="672" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-unnamed-chunk-5-2">
-Past versions of unnamed-chunk-5-2.png
-</button>
-</p>
-<div id="fig-unnamed-chunk-5-2" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/jiheeyy/background/blob/c6dd13a3bd4627c5db68f47009059789588eeb73/docs/figure/em.Rmd/unnamed-chunk-5-2.png" target="_blank">c6dd13a</a>
-</td>
-<td>
-jiheeyy
-</td>
-<td>
-2026-03-10
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jiheeyy/background/blob/79e6098ec9ba57635181c22e0a7355ede88c70c1/docs/figure/em.Rmd/unnamed-chunk-5-2.png" target="_blank">79e6098</a>
-</td>
-<td>
-jiheeyy
-</td>
-<td>
-2026-03-09
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/jiheeyy/background/blob/11c27be2d3d290e9d98c823d2622db24b9dbb7f3/docs/figure/em.Rmd/unnamed-chunk-5-2.png" target="_blank">11c27be</a>
-</td>
-<td>
-jiheeyy
-</td>
-<td>
-2026-03-08
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<p>Code for MAE and cosine similarity calculation was moved dto eval.R,
-but below is the commented out version of the code.</p>
-<pre class="r"><code># Evaluate L, F using mean absolute error from
-# ground truth L, F (if known from simulation)
-# eval_mae &lt;- function(est_L, est_F, true_L, true_F, X){
-#   est_loglam = compute_log_Lambda_mat(log_L = log(est_L),
-#                                       log_F = log(est_F),
-#                                       X = X)
-#   loglam = compute_log_Lambda_mat(log_L = log(true_L),
-#                                   log_F = log(true_F),
-#                                   X = X)
-#   mae = mean(abs(exp(est_loglam) - exp(loglam)))
-#   return(mae)
-# }
-# 
-# eval_csim &lt;- function(est_L, est_F, true_L, true_F){
-# 
-#   k = ncol(true_L)
-#   estk = ncol(est_L)
-#   col_names &lt;- c(paste0(&quot;true_&quot;, 1:k), paste0(&quot;est_&quot;, 1:estk))
-# 
-#   combined_L &lt;- cbind(true_L, est_L)
-#   colnames(combined_L) &lt;- col_names
-#   cos_L &lt;- lsa::cosine(combined_L)
-# 
-#   combined_F &lt;- cbind(true_F, est_F)
-#   colnames(combined_F) &lt;- col_names
-#   cos_F &lt;- lsa::cosine(combined_F)
-# 
-#   return(list(cos_L = cos_L, cos_F = cos_F))
-# }
-# 
-# # Input 1 matrix, text title
-# plot_upper_heatmap &lt;- function(sim_mat, plot_title) {
-#   rows &lt;- row(sim_mat)
-#   cols &lt;- col(sim_mat)
-#   upper_tri_mask &lt;- rows &lt;= cols
-# 
-#   df &lt;- data.frame(
-#     Row = rownames(sim_mat)[rows[upper_tri_mask]],
-#     Col = colnames(sim_mat)[cols[upper_tri_mask]],
-#     Value = sim_mat[upper_tri_mask]
-#   )
-# 
-#   df$Row &lt;- factor(df$Row, levels = rev(rownames(sim_mat)))
-#   df$Col &lt;- factor(df$Col, levels = colnames(sim_mat))
-# 
-#   # Count how many &quot;true&quot; and &quot;est&quot; factors exist
-#   num_true &lt;- sum(grepl(&quot;^true_&quot;, colnames(sim_mat)))
-#   num_est  &lt;- sum(grepl(&quot;^est_&quot;, colnames(sim_mat)))
-# 
-#   # X-axis goes left-to-right. The line goes after the last &quot;true_&quot;
-#   x_intercept &lt;- num_true + 0.5
-# 
-#   # Y-axis goes bottom-to-top (because we reversed the levels).
-#   # The line goes above the highest &quot;est_&quot;
-#   y_intercept &lt;- num_est + 0.5
-# 
-#   p &lt;- ggplot(df, aes(x = Col, y = Row, fill = Value)) +
-#     geom_tile(color = &quot;white&quot;, linewidth = 0.5) +
-#     scale_fill_gradient2(low = &quot;#2166AC&quot;, high = &quot;#B2182B&quot;, mid = &quot;white&quot;,
-#                          midpoint = 0, limit = c(0, 1),
-#                          name = &quot;Cosine\nSimilarity&quot;,
-#                          na.value = &quot;grey85&quot;) +
-#     geom_text(aes(label = ifelse(is.na(Value), &quot;NaN&quot;, sprintf(&quot;%.2f&quot;, Value))),
-#               color = &quot;black&quot;, size = 3.5) +
-# 
-#     # --- NEW: Draw the quadrant lines ---
-#     geom_vline(xintercept = x_intercept, color = &quot;black&quot;, linewidth = 1) +
-#     geom_hline(yintercept = y_intercept, color = &quot;black&quot;, linewidth = 1) +
-# 
-#     theme_minimal() +
-#     theme(
-#       axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
-#       axis.text.y = element_text(size = 10),
-#       axis.title = element_blank(),
-#       panel.grid = element_blank(),
-#       plot.title = element_text(face = &quot;bold&quot;, hjust = 0.5)
-#     ) +
-#     coord_fixed() +
-#     ggtitle(plot_title)
-# 
-#   return(p)
-# }</code></pre>
-</div>
-<div id="additional-questions-to-explore" class="section level1">
-<h1>Additional questions to explore</h1>
 <p>S. Amari, Information geometry of the EM and em algorithms for neural
 networks (1995) gives a geometric view of the EM algorithm. I’m
 interested in how the overfitted PMF solution would fit into this
@@ -1351,8 +1575,8 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] lsa_0.73.4         SnowballC_0.7.1    fastTopics_0.6-192 Matrix_1.7-3      
-[5] ggplot2_3.5.2      pheatmap_1.0.13    here_1.0.2         workflowr_1.7.1   
+[1] gridExtra_2.3      pracma_2.4.6       Matrix_1.7-3       ggplot2_3.5.2     
+[5] pheatmap_1.0.13    fastTopics_0.6-192 here_1.0.2         workflowr_1.7.1   
 
 loaded via a namespace (and not attached):
  [1] gtable_0.3.6        xfun_0.52           bslib_0.9.0        
@@ -1365,8 +1589,8 @@ loaded via a namespace (and not attached):
 [22] truncnorm_1.0-9     compiler_4.5.0      farver_2.1.2       
 [25] stringr_1.5.1       git2r_0.36.2        progress_1.2.3     
 [28] RhpcBLASctl_0.23-42 getPass_0.2-4       httpuv_1.6.16      
-[31] htmltools_0.5.8.1   sass_0.4.10         yaml_2.3.10        
-[34] lazyeval_0.2.2      plotly_4.10.4       crayon_1.5.3       
+[31] htmltools_0.5.8.1   sass_0.4.10         lazyeval_0.2.2     
+[34] yaml_2.3.10         plotly_4.10.4       crayon_1.5.3       
 [37] tidyr_1.3.1         later_1.4.2         pillar_1.10.2      
 [40] jquerylib_0.1.4     whisker_0.4.1       uwot_0.2.3         
 [43] cachem_1.1.0        gtools_3.9.5        tidyselect_1.2.1   
