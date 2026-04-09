@@ -9,6 +9,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+set.seed(4)
 ```
 
 ```{r, include=FALSE}
@@ -23,30 +24,6 @@ Let $X \in R_{+}^{n \times p}$ denote a matrix of observed counts $x_{ij}$. We a
 
 Poisson NMF parameters include $L \in R_{+}^{n \times k}$
 and $F \in R_{+}^{p \times k}$, and we seek values of L and F such that $X \approx LF^T$.
-
-
-# Generating X of Interest
-
-For this project, we are interested in a particular kind of count data $X$ such that there are K distinct hidden groups that we expect matrix factorization to reflect. Let's generate a small dataset with 3 distinct groups.
-
-<!-- Added seed and sparse X to main experiment. -->
-
-```{r}
-set.seed(4)
-source(here("docs","code","load_data.R"))
-source(here("docs","code","utils.R"))
-library(pheatmap)
-library(ggplot2)
-library(Matrix)
-
-# "mix", "clear","news"
-
-data <- general_load(data_type="mix")
-X = Matrix(data$X, sparse = TRUE)
-
-# Visualize Ground Truth L, F
-#visualize_lf(data$L, data$F, "True")
-```
 
 
 # Define likelihood-related functions
@@ -70,11 +47,6 @@ $$
 \end{align}
 $$
 given that $\lambda_{ij} = \sum_k L_{ik} F_{jk}$ for simpler notation.
-
-## Implementation: Likelihood
-
-I moved the likelihood calculation implementation to utils.R file.
-
 
 ## 2. Complete data log likelihood
 <!-- Eq 11.1 in Jordan chapter -->
@@ -164,6 +136,8 @@ $$
 
 # Implementation: EM
 
+## Helper Function: E_step
+
 ```{r}
 # Computes E_Z, which is a n x p x k matrix
 E_step <- function(log_L, log_F, X){
@@ -193,6 +167,10 @@ E_step <- function(log_L, log_F, X){
   return(list(logEz_sj = logEz_sj, logEz_si = logEz_si))
 }
 
+```
+
+## Helper Function: M_step
+```{r}
 # Update log_L, log_F 
 M_step <- function(log_L, log_F, E_res){
   # Prepare inputs
@@ -211,180 +189,298 @@ M_step <- function(log_L, log_F, E_res){
   
   return(list(log_L=newlog_L, log_F=newlog_F))
 }
-
 ```
 
-Putting everything together,
+## Helper Function: initialize_LF
+Given generated X, output an initial guess of L, F
 
 ```{r}
 library(fastTopics)
 source(here("docs","code","initialize.R"))
 source(here("docs","code","utils.R"))
 
-# library(NNLM)
-# Another option in initialization
-# init_res = NNLM::nnmf(A = as.matrix(data$X), k = 3)
-# log_L = log(init_res$W)
-# log_F = log(t(init_res$H))
-
-try({gt_ll = compute_loglik(log(data$L), log(data$F), X)
-    cat("ground truth log likelihood: ",gt_ll)})
-
-# L, F initialization
-init_res = initialize(X=X, K=3)
-log_L = init_res$qg$qllog_norm
-log_L = log_L[sample(nrow(log_L)),] # inject randomness since log_L overfit
-log_F = init_res$qg$qflog_norm
-init_ll = compute_loglik(log_L, log_F, X)
-
-# Figure 1: Initialized L, F
-visualize_lf(exp(log_L),
-             exp(log_F),
-             sprintf("Initialized Log-Likelihood: %.2f\n", init_ll))
-
-maxiter=20
-ll_list = rep(numeric(maxiter))
-for (niter in 1:maxiter){
-  Ez_two = E_step(log_L, log_F, X)
+initialize_LF <- function(X=X, K=3, shuffle=TRUE){
+  # Estimate L, F: fasttopics
+  ft = initialize(X=X, K=K)
+  ftlog_L = ft$qg$qllog_norm
+  ftlog_F = ft$qg$qflog_norm
+  ft_res = compute_loglik(ftlog_L, ftlog_F, X)
+  cat("fasttopics log-likelihood: ",ft_res[[1]])
   
-  new = M_step(log_L, log_F, Ez_two)
-  log_L = new$log_L
-  log_F = new$log_F
-
-  ll = compute_loglik(log_L, log_F, X)
-  ll_list[niter] = ll
-  cat("niter ",niter, "-------------", sprintf("LL: %.2f\n",  ll))
+  # Storage
+  ft_ll = ft_res[1]
+  ft_lamb = exp(ft_res[[2]])
+  ft_L = exp(ftlog_L)
+  ft_F = exp(ftlog_F)
+  
+  if (shuffle==TRUE){
+    initlog_L = ftlog_L[sample(nrow(ftlog_L)),] # inject randomness since log_L overfit
+  }
+  else{
+    initlog_L = ftlog_L
+  }
+  initlog_F = ftlog_F
+  init_res = compute_loglik(initlog_L, initlog_F, X)
+  
+  # Storage
+  init_ll = init_res[1]
+  init_lamb = exp(init_res[[2]])
+  init_L = exp(initlog_L)
+  init_F = exp(initlog_F)
+  
+  # Need to format
+  return(list(initlog_L=initlog_L,
+             initlog_F=initlog_F,
+             stor2 = list(ft_ll=ft_ll, ft_lamb=ft_lamb, 
+                       ft_L=ft_L, ft_F=ft_F,
+                       init_ll=init_ll, init_lamb=init_lamb, 
+                       init_L=init_L, init_F=(init_F))))
 }
-# Figure 2: L, F after EM iterations
-visualize_lf(exp(log_L), exp(log_F), "End results")
-
-# Figure 3: Plot Log likelihood over EM iterations
-y_bounds <- range(c(init_ll, ll_list, gt_ll), na.rm = TRUE)
-plot(1:length(ll_list), ll_list, 
-     xlim = c(0, length(ll_list)),  # Expands x-axis to include 0
-     ylim = y_bounds,               # Expands y-axis to fit all values
-     main = sprintf("Log Likelihood over EM Iterations\nTrue LL: %.2f", gt_ll),
-     ylab = "Log-Likelihood",
-     xlab = "EM Iteration",
-     pch = 16)                      # Solid circle marker
-points(0, init_ll, col = "red", pch = 16, cex = 1.5) # Initial LL point at x = 0
-abline(h = gt_ll, col = "blue", lty = 2, lwd = 2) # True LL
 
 ```
-We see EM algorithm consistently (although not across every iteration) increases in log-likelihood. Initialization is row-perturbed L and F produced from fasttopics PMF.
 
-One thing to note is the fasttopics PMF outputs log likelihood much higher than the "ground truth," probably due to overfitting. If initialized with PMF, EM iterations marginally decrease in log likelihood over time. 
 
-# Evaluate
-
-Cosine similarity between vectors doesn't seem to be a good metric conveying information about the quality of estimated $l_k$, since it cannot differentiate between true $l_k$ or $f_k$ anyways. I hoped cosine similarity between true vectors would be close to zero, so that true vs. estimated vectors would give insight to the degree of different information carried by K estimated vectors.
-
-Mean absolute error is less than one, which is not great but acceptable since it would mean EM estimated $\lambda_{ij}$ is off by less than one count from true $\lambda_{ij}$.
+## Top Level Helper Function: init_and_run_em
+Main code chunk that initializes then runs EM over iterations.
+Includes initialize_LF, E_step, M_step.
 
 ```{r}
+init_and_run_em <- function(X=X, K=3, shuffle=TRUE,
+                            experiment_gt = FALSE, data=data, # variables not used unless experiment_gt flag is TRUE
+                            maxiter=20){
+  if (experiment_gt==TRUE){init=list(initlog_L=log(data$L),initlog_F=log(data$F),stor2=list(ft_ll=NULL, ft_lamb=Matrix(), 
+                       ft_L=Matrix(), ft_F=Matrix(),
+                       init_ll=NULL, init_lamb=Matrix(), 
+                       init_L=Matrix(), init_F=Matrix()))
+  }
+  else{init = initialize_LF(X=X, K=K, shuffle=shuffle)}
+  
+
+  # Initialize variables for loop 
+  log_L = init$initlog_L
+  log_F = init$initlog_F
+  ll_list = rep(numeric(maxiter))
+
+  for (niter in 1:maxiter){
+    Ez_two = E_step(log_L, log_F, X)
+    
+    new = M_step(log_L, log_F, Ez_two)
+    log_L = new$log_L
+    log_F = new$log_F
+  
+    nres = compute_loglik(log_L, log_F, X)
+    ll_list[niter] = nres[1]
+    #cat("niter ",niter, "-------------", sprintf("LL: %.2f\n",  nres[1]))
+  }
+  
+  # Storage
+  final_lamb = exp(nres[[2]])
+  final_L = exp(log_L)
+  final_F = exp(log_F)
+  
+  stor3 = list(final_L = final_L, final_F = final_F, final_lamb = final_lamb, ll_list = ll_list)
+  
+  return(list(stor2=init$stor2,
+              stor3=stor3))}
+```
+
+
+## Putting things together: full_EM_pipeline
+Includes data generation code block, init_and_run_em, and visualization & metric code block.
+
+
+<!-- Added seed and sparse X to main experiment. we are interested in a particular kind of count data $X$ such that there are K distinct hidden groups that we expect matrix factorization to reflect. Let's generate a small dataset with 3 distinct groups.-->
+
+
+```{r}
+source(here("docs","code","load_data.R"))
 source(here("docs","code","utils.R"))
-source(here("docs","code","eval.R"))
+source(here("docs","code","initialize.R"))
+library(pheatmap)
+library(ggplot2)
+library(Matrix)
+library(pracma)
 
-mae = eval_mae(est_L=exp(log_L), est_F=exp(log_F), 
-               true_L=data$L, true_F=data$F, 
-               X=X)
-cat("Mean absolute error: ",mae)
+# "mix", "clear","news", "unif", "clear"
+full_EM_pipeline <- function(data_type, w_matrix=NULL, experiment_gt=FALSE){
+  set.seed(4) # else general_load gives slighly diff data each time
+  # Data Generation
+  data_type = data_type # "mix", "clear","news", "unif", "clear"
+  data <- general_load(data_type=data_type, w_matrix = w_matrix)
+  X = Matrix(data$X, sparse = TRUE)
+  res = compute_loglik(log(data$L), log(data$F), X)
+  
+  # Storage
+  gt_ll = res[1] # ground truth log likelihood
+  gt_lamb = exp(res[[2]]) # mean(abs(X - exp(res[[2]]))) is Poisson noise floor
+  gt_L = Matrix(data$L)
+  gt_F = Matrix(data$F)
+  stor1 = list(gt_ll=gt_ll, gt_lamb=gt_lamb, gt_L=gt_L, gt_F=gt_F)
+  
+  # --------------
+  res_final = init_and_run_em(X=X, K=3, shuffle=TRUE, 
+                              experiment_gt = experiment_gt, data=data,
+                              maxiter=20)
+  stor_all = c(stor1, res_final$stor2, res_final$stor3)
+  # store_all = list(gt_ll, gt_lamb, gt_L, gt_F, # stor1
+  #           ft_ll, ft_lamb, ft_L, ft_F, # stor2
+  #           init_ll, init_lamb, init_L, init_F, # stor2
+  #           ll_list, final_lamb final_L, final_F # stor3
+  #           )
+  
+  # -------------
+  source(here("docs","code","viz.R"))
 
-csim = eval_csim(est_L=exp(log_L), est_F=exp(log_F), 
-                 true_L=data$L, true_F=data$F)
+  all_vals <- unlist(lapply(list(stor_all$gt_L,    stor_all$gt_F,
+                                 stor_all$ft_L,    stor_all$ft_F,
+                                 stor_all$init_L,  stor_all$init_F,
+                                 stor_all$final_L, stor_all$final_F), 
+                            as.numeric))
+  print('\n -----')
+  print("Correlation between k columns of EM L")
+  print(cor(as.matrix(stor_all$final_L), method='pearson'))
+  
+  print("Correlation between k columns of EM F")
+  print(cor(as.matrix(stor_all$final_F), method='pearson'))
+  print('\n -----')
+  
+  
+  global_breaks <- seq(min(all_vals, na.rm=TRUE), 
+                       max(all_vals, na.rm=TRUE), 
+                       length.out = 101)
+  
+  #Plots
+  if (data_type == "news"){
+    
+  }
+  else{
+    try_run <- function(expr, label) {
+   tryCatch(
+    eval(substitute(expr), envir = parent.frame()),
+    error = function(e) cat(sprintf("Skipped [%s]: %s\n", label, e$message)))}
+    
+    try_run(plot_lf(stor_all$gt_L,    stor_all$gt_F,    sprintf("%s - Ground Truth", data_type), global_breaks), "Ground Truth")
+    try_run(plot_lf(stor_all$ft_L,    stor_all$ft_F,    "Fasttopics",  global_breaks),                           "Fasttopics LF")
+    # try_run(plot_lf(stor_all$init_L,  stor_all$init_F,  "Initialized", global_breaks),                           "Initialized LF")
+    try_run(plot_lf(stor_all$final_L, stor_all$final_F, "EM",          global_breaks),                           "EM LF")
+    try_run(plot_em_ll(init_ll=stor_all$init_ll, ll_list=stor_all$ll_list, gt_ll=stor_all$gt_ll),                 "EM LL plot")
 
-plot_upper_heatmap(csim$cos_L, "L Cosine Similarity")
-plot_upper_heatmap(csim$cos_F, "F Cosine Similarity")
-
+    ft_X     <- NA
+    ft_lamb  <- NA
+    
+    try_run({
+      ft_X    <- mean(abs(X - stor_all$ft_lamb))
+      ft_lamb <- mean(abs(stor_all$gt_lamb - stor_all$ft_lamb))
+    }, "Fasttopics MAE")
+    
+    try_run({
+      poinoise <<- mean(abs(stor_all$gt_lamb - X))
+      em_X     <<- mean(abs(X - stor_all$final_lamb))
+      em_lamb  <<- mean(abs(stor_all$gt_lamb - stor_all$final_lamb))
+    }, "EM MAE")
+    
+    try_run({
+      met_res <- data.frame(
+        Comparison = c("Poisson noise floor: true λ vs X",
+                       "Fasttopics λ vs X", "Fasttopics λ vs true λ",
+                       "EM λ vs X",         "EM λ vs true λ"),
+        MAE = c(poinoise, ft_X, ft_lamb, em_X, em_lamb)
+      )
+      print(met_res, digits=2, row.names=FALSE)
+    }, "Metrics table")
+  }
+  }
 ```
-Code for MAE and cosine similarity calculation was moved dto eval.R, but below is the commented out version of the code.
+
+
+# A set of experiments
+
+## Clear 3 groups case, perfect initialization
+EM's results look very close to the ground truth, because of initialization (with the "answer"). 
+
+EM is good at recovering Loadings, which have ground truth low variance. However, EM overestimates variance in Factors. True factors do not vary much within group, since its variance depends on normal noise with variance 1. 
+
+Also, in this case EM seems to overfit to data X, rather than focusing on recovering true $LF^T$. It seems the term "overfitting to X" is interchangeable with MAE(algorithm-esimated $\Lambda = LF^T$, X) < MAE (True $\Lambda$, X) which is the Poisson noise floor.
+
+EM log likelihood over iterations is well above the true $\Lambda$ log likelihood, reflecting the overfitting issue.
+
+Pearson's correlation between L_k are more or less around -0.5, which is to be expected. We see similar correlation between F_k.
+ 
+<!--Note spearman's corr(EM L_1, EM L_2) > corr(EM L_1, EM L_3), but I am not too interested in monotonicity by rank. EM loadings are clearly separated into three groups, so visually, difference between any two Loading columns are 2/3 of its rows. -->
 
 ```{r}
-# Evaluate L, F using mean absolute error from
-# ground truth L, F (if known from simulation)
-# eval_mae <- function(est_L, est_F, true_L, true_F, X){
-#   est_loglam = compute_log_Lambda_mat(log_L = log(est_L),
-#                                       log_F = log(est_F),
-#                                       X = X)
-#   loglam = compute_log_Lambda_mat(log_L = log(true_L),
-#                                   log_F = log(true_F),
-#                                   X = X)
-#   mae = mean(abs(exp(est_loglam) - exp(loglam)))
-#   return(mae)
-# }
-# 
-# eval_csim <- function(est_L, est_F, true_L, true_F){
-# 
-#   k = ncol(true_L)
-#   estk = ncol(est_L)
-#   col_names <- c(paste0("true_", 1:k), paste0("est_", 1:estk))
-# 
-#   combined_L <- cbind(true_L, est_L)
-#   colnames(combined_L) <- col_names
-#   cos_L <- lsa::cosine(combined_L)
-# 
-#   combined_F <- cbind(true_F, est_F)
-#   colnames(combined_F) <- col_names
-#   cos_F <- lsa::cosine(combined_F)
-# 
-#   return(list(cos_L = cos_L, cos_F = cos_F))
-# }
-# 
-# # Input 1 matrix, text title
-# plot_upper_heatmap <- function(sim_mat, plot_title) {
-#   rows <- row(sim_mat)
-#   cols <- col(sim_mat)
-#   upper_tri_mask <- rows <= cols
-# 
-#   df <- data.frame(
-#     Row = rownames(sim_mat)[rows[upper_tri_mask]],
-#     Col = colnames(sim_mat)[cols[upper_tri_mask]],
-#     Value = sim_mat[upper_tri_mask]
-#   )
-# 
-#   df$Row <- factor(df$Row, levels = rev(rownames(sim_mat)))
-#   df$Col <- factor(df$Col, levels = colnames(sim_mat))
-# 
-#   # Count how many "true" and "est" factors exist
-#   num_true <- sum(grepl("^true_", colnames(sim_mat)))
-#   num_est  <- sum(grepl("^est_", colnames(sim_mat)))
-# 
-#   # X-axis goes left-to-right. The line goes after the last "true_"
-#   x_intercept <- num_true + 0.5
-# 
-#   # Y-axis goes bottom-to-top (because we reversed the levels).
-#   # The line goes above the highest "est_"
-#   y_intercept <- num_est + 0.5
-# 
-#   p <- ggplot(df, aes(x = Col, y = Row, fill = Value)) +
-#     geom_tile(color = "white", linewidth = 0.5) +
-#     scale_fill_gradient2(low = "#2166AC", high = "#B2182B", mid = "white",
-#                          midpoint = 0, limit = c(0, 1),
-#                          name = "Cosine\nSimilarity",
-#                          na.value = "grey85") +
-#     geom_text(aes(label = ifelse(is.na(Value), "NaN", sprintf("%.2f", Value))),
-#               color = "black", size = 3.5) +
-# 
-#     # --- NEW: Draw the quadrant lines ---
-#     geom_vline(xintercept = x_intercept, color = "black", linewidth = 1) +
-#     geom_hline(yintercept = y_intercept, color = "black", linewidth = 1) +
-# 
-#     theme_minimal() +
-#     theme(
-#       axis.text.x = element_text(angle = 45, hjust = 1, size = 10),
-#       axis.text.y = element_text(size = 10),
-#       axis.title = element_blank(),
-#       panel.grid = element_blank(),
-#       plot.title = element_text(face = "bold", hjust = 0.5)
-#     ) +
-#     coord_fixed() +
-#     ggtitle(plot_title)
-# 
-#   return(p)
-# }
+full_EM_pipeline("clear", experiment_gt=TRUE)
 ```
 
-# Additional questions to explore
+## Clear 3 groups case, shuffled fasttopics initialization
+
+Since fasttopics $LF^T$ already overfits to X, it is not a good initialization for EM. If initialized with fasttopics, EM would get "stuck" and its results are more or less identical to fasttopics $LF^T$ (not shown in this document). Therefore, EM is initialized with fasttopics factors and row-permutated fasttopics loadings.
+
+However, even with such initialization, visually EM loadings and factors are indistinguishable from fasttopics. Therefore, EM results reflect how fasttopics loadings are overexpressed and fasttopics factors are underexpressed.
+
+Also in terms of MAE or final log likelihood, EM and fasttopics results are very similar.
+
+
+```{r}
+full_EM_pipeline("clear")
+```
+
+## Uniform groups case, shuffled fasttopics initialization
+This case of simulated data has no underlying structure following k groups. All true loading and factor are randomly sampled between 0 and 1. This data generation is similar to fasttopics::simulate_count_data.
+
+EM results overfit, and its MAE and log likelihood look very good.However, visually neither fasttopics or EM are doing well.
+
+
+```{r}
+full_EM_pipeline("unif")
+```
+
+## 3 groups with gamma prior case, shuffled fasttopics initialization
+Very similar to uniform groups case: fasttopics and EM results are very similar visually and also in terms of MAE and log likelihood.
+
+EM results did not overfit here, but EM is unable to recover underlying structure at all.
+
+```{r}
+# Define mixture weights for each L_k and F_k
+# 21st mixture component (shape, rate) value is 1
+l1 <- c(1, rep(0, 33)) # shape = 1e-16
+l2 <- c(1, rep(0, 33)) # shape = 1e-16
+l3 <- c(rep(0, 33), 1) # shape = 1000
+f1 <- c(1, rep(0, 33)) # shape = 1e-16
+f2 <- c(rep(0, 33), 1) # shape = 1000
+f3 <- c(rep(0, 33), 1) # shape = 1000
+# Weights will be normalized by column inside visualize_mixtures or generate_synthetic
+# First visualize each mixture
+cusw <- cbind(l1,l2,l3,f1,f2,f3)
+visualize_mixtures(cusw)
+
+full_EM_pipeline("mix", w_matrix=cusw)
+```
+
+<!--
+## 3 groups with gamma prior case, perfect initialization
+```{r}
+# Define mixture weights for each L_k and F_k
+# 21st mixture component (shape, rate) value is 1
+l1 <- c(1, rep(0, 33)) # shape = 1e-16
+l2 <- c(1, rep(0, 33)) # shape = 1e-16
+l3 <- c(rep(0, 33), 1) # shape = 1000
+f1 <- c(1, rep(0, 33)) # shape = 1e-16
+f2 <- c(rep(0, 33), 1) # shape = 1000
+f3 <- c(rep(0, 33), 1) # shape = 1000
+# Weights will be normalized by column inside visualize_mixtures or generate_synthetic
+# First visualize each mixture
+cusw <- cbind(l1,l2,l3,f1,f2,f3)
+visualize_mixtures(cusw)
+
+full_EM_pipeline("mix", w_matrix=cusw, experiment_gt = TRUE)
+```
+-->
+
+# Questions for the future
+
+While not shown in the current rmarkdown version, cosine similarity between vectors doesn't seem to be a good metric conveying information about the quality of estimated $l_k$, since it cannot differentiate between true $l_k$ or $f_k$ anyways. I hoped cosine similarity between true vectors would be close to zero, so that true vs. estimated vectors would give insight to the degree of different information carried by K estimated vectors.
+
 S. Amari, Information geometry of the EM and em algorithms for neural networks (1995) gives a geometric view of the EM algorithm. I'm interested in how the overfitted PMF solution would fit into this view.
 
 ![](../docs/figure/em.Rmd/geom.png){width=100%}
