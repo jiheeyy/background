@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Jihee You" />
+
+<meta name="date" content="2026-05-14" />
+
+<title>simulation and omim demo</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">background</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/jiheeyy/background">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">simulation and omim demo</h1>
+<h4 class="author">Jihee You</h4>
+<h4 class="date">2026-05-14</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2026-05-14
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>background/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.1). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20260201code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20260201)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20260201code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20260201)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree240c5bd37b491aca94d2c68d731aaae1aeb94cf5targetblank240c5bda">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/jiheeyy/background/tree/240c5bd37b491aca94d2c68d731aaae1aeb94cf5" target="_blank">240c5bd</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree240c5bd37b491aca94d2c68d731aaae1aeb94cf5targetblank240c5bda"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/jiheeyy/background/tree/240c5bd37b491aca94d2c68d731aaae1aeb94cf5" target="_blank">240c5bd</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/.DS_Store
+    Ignored:    analysis/figure/
+
+Untracked files:
+    Untracked:  analysis/.ipynb_checkpoints/
+    Untracked:  analysis/Untitled.ipynb
+    Untracked:  analysis/gene_lst.txt
+    Untracked:  analysis/gtex_processing.ipynb
+
+Unstaged changes:
+    Modified:   analysis/main.Rmd
+    Modified:   background.Rproj
+    Deleted:    code/README.md
+    Deleted:    data/README.md
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/omim.Rmd</code>) and HTML
+(<code>docs/omim.html</code>) files. If you’ve configured a remote Git
+repository (see <code>?wflow_git_remote</code>), click on the hyperlinks
+in the table below to view the files as they were in that past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/240c5bd37b491aca94d2c68d731aaae1aeb94cf5/analysis/omim.Rmd" target="_blank">240c5bd</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-05-14
+</td>
+<td>
+wflow_publish("omim.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/faf5ca4f7822018f06872adada36ec199d9e99e7/analysis/omim.Rmd" target="_blank">faf5ca4</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-05-14
+</td>
+<td>
+simulation and peter’s omim fasttopics
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="simulation-visualization---related-imports"
+class="section level2">
+<h2>Simulation, Visualization - Related Imports</h2>
+<pre class="r"><code>source(here(&quot;docs&quot;,&quot;code&quot;,&quot;load_data.R&quot;))
+source(here(&quot;docs&quot;,&quot;code&quot;,&quot;utils.R&quot;))
+library(Matrix)
+set.seed(1)
+
+source(here(&quot;docs&quot;,&quot;code&quot;,&quot;viz.R&quot;))
+library(pheatmap)
+library(ggplot2)
+library(fastTopics)</code></pre>
+</div>
+<div id="main-code-implementation-for-model-a-m1-case"
+class="section level2">
+<h2>Main Code Implementation for Model A, M=1 Case</h2>
+<div id="explanation-for-ebpmf_modela_m1-steps-1-3"
+class="section level3">
+<h3>Explanation for ebpmf_modelA_m1 steps 1-3</h3>
+<p>Similar to E-step in EM, we derived from “Update Z” section the
+following result:</p>
+<p><span class="math display">\[
+\mathbb{E}_q[z_{ijk}] = \frac{x_{ij}}{\sum_{k=1}^K h_{ik}w_{jk}} h_{ik}
+w_{jk}
+\]</span> Let <span class="math inline">\(A_{ij}\)</span> denote <span
+class="math inline">\(\frac{x_{ij}}{\sum_{k=1}^K h_{ik}w_{jk}}\)</span>.
+Then,</p>
+<p><span class="math display">\[
+\sum_{j=1}^p \mathbb{E}_q [z_{ijk}] = h_{ik} \sum_{j=1}^p A_{ij} w_{jk}
+\]</span></p>
+<p><span class="math display">\[
+\sum_{i=1}^n \mathbb{E}_q [z_{ijk}] = w_{jk} \sum_{i=1}^n A_{ij}h_{ik}
+\]</span></p>
+</div>
+<div id="reference-to-writeup-for-ebpmf_modela_m1-steps-4-5"
+class="section level3">
+<h3>Reference to writeup for ebpmf_modelA_m1 steps 4, 5</h3>
+<p>Step 4 updates W according to equation 19 in writeup. <span
+class="math display">\[
+w_{jk}^* = \frac{a_k + \sum_{i=1}^n \langle z_{ijk} \rangle}{b_k +
+\sum_{i=1}^n h_{ik}}
+\]</span></p>
+<p>Step 5 updates H according equation 26 in writeup.</p>
+<p><span class="math display">\[
+\hat h_{ik} = \frac{\sum_{j=1}^p \langle z_{ijk} \rangle}{\sum_{j=1}^p
+\mathbb{E}_q[w_{jk}]}
+\]</span></p>
+</div>
+<div id="code" class="section level3">
+<h3>Code</h3>
+<pre class="r"><code>ebpmf_modelA_m1 &lt;- function(X, 
+                            K=3, 
+                            a = c(1e-16, 1, 1000), 
+                            b = c(1e-16, 1, 1000), 
+                            max_iter = 50) {
+  n &lt;- nrow(X)
+  p &lt;- ncol(X)
+  
+  # Initialize H and W with random values [0,1]
+  H &lt;- matrix(runif(n * K, 0, 1), nrow = n, ncol = K)
+  W &lt;- matrix(runif(p * K, 0, 1), nrow = p, ncol = K)
+  
+  # Extract sparse matrix components for easy index access when working with H or W
+  X_i &lt;- X@i + 1            # 0-indexed -&gt; 1-indexed rows
+  X_p &lt;- X@p                # Column pointers
+  X_j &lt;- rep(seq_along(X_p[-1]), diff(X_p)) # Reconstruct columns
+  X_val &lt;- X@x              # Store nonzero values
+  
+  for (iter in 1:max_iter) {
+    # 1. Compute expected Poisson rates
+    # Denoted as lambda_{ij}, but actually \sumk \langle z_{ijk} \rangle 
+    # Lambda_ij = \sum_k h_ik w_jk
+    Lambda_val &lt;- rowSums(H[X_i, , drop = FALSE] * W[X_j, , drop = FALSE])
+
+    # 2. Compute A_ij = X_ij / Lambda_ij
+    # A and X have same dimension: n x p
+    A_val &lt;- X_val / (Lambda_val + 1e-20)
+    A &lt;- sparseMatrix(i = X_i, j = X_j, x = A_val, dims = c(n, p))
+    
+    # 3. Compute expected Z (similar to E-step)
+    Z_H &lt;- H * as.matrix(A %*% W) # This is \sumj E_q[Z]
+    Z_W &lt;- W * as.matrix(crossprod(A, H)) # This is \sumi E_q[Z]
+    
+    ######
+    # Check dimensions
+    # print(length(a))
+    # print(dim(Z_H)) nk
+    # print(dim(Z_W)) pK
+    
+    # Sweep demonstrations
+    # print(Z_W)
+    # print(a)
+    # print(sweep(Z_W, 2, a, &quot;+&quot;))
+    ######
+
+    # 4. Update W (Equation 19)
+    sum_H &lt;- colSums(H)
+    W_new &lt;- sweep(sweep(Z_W, 2, a, &quot;+&quot;), 2, b + sum_H, &quot;/&quot;) # Add k-length &#39;a&#39; to each row of k entries, divide by (b + sum_H) for each row
+    
+    # 5. Update H (Equation 26)
+    sum_W &lt;- colSums(W_new) 
+    H_new &lt;- sweep(Z_H, 2, sum_W, &quot;/&quot;)
+    
+    # Early stop?
+    delta &lt;- max(abs(H - H_new), abs(W - W_new))
+    if (delta &lt; 1e-6) { cat(&quot;Converged at iter&quot;, iter, &quot;\n&quot;); break }
+    
+    # Apply updates
+    H &lt;- H_new
+    W &lt;- W_new
+    }
+  
+  return(list(H = H, W = W))
+}</code></pre>
+<pre class="r"><code># Experiment 1:
+# When randomness in X comes from
+# 1) Randomness in factors W
+#     k=1: W_{jk} \sim Gamma(shape=1e-16, rate = 1/shape)
+#     k=2: W_{jk} \sim Gamma(shape=1, rate = 1/shape)
+#     k=3: W_{jk} \sim Gamma(shape=1000, rate = 1/shape)
+# 2) X \sim Poisson generation process
+# NOT randomness in loadings H. H_{ik} = 0.5
+
+data &lt;- general_load(data_type=&quot;modelA_unifL&quot;)
+plot_lf(data$L, data$F, &quot;True&quot;)</code></pre>
+<p><img src="figure/omim.Rmd/unnamed-chunk-3-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>X &lt;- Matrix(as.matrix(data$X), sparse = TRUE)
+res = ebpmf_modelA_m1(X, max_iter=50)
+plot_lf(res$H, res$W, &quot;Estimated&quot;)</code></pre>
+<p><img src="figure/omim.Rmd/unnamed-chunk-3-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>fast_fit = fastTopics::fit_poisson_nmf(X,3, numiter=50)</code></pre>
+<pre><code>Initializing factors using Topic SCORE algorithm.
+Initializing loadings by running 10 SCD updates.
+Fitting rank-3 Poisson NMF to 12 x 30 sparse matrix.
+Running at most 50 SCD updates, without extrapolation (fastTopics 0.6-192).</code></pre>
+<pre class="r"><code>plot_lf(fast_fit$L, fast_fit$F, &quot;Fasttopics&quot;)</code></pre>
+<p><img src="figure/omim.Rmd/unnamed-chunk-3-3.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code># Experiment 2:
+# Some randomness in loadings H as well, since H_{ik} \sim Gamma(1,1)
+
+data &lt;- general_load(data_type=&quot;modelA_gammashape1L&quot;)
+plot_lf(data$L, data$F, &quot;True&quot;)</code></pre>
+<p><img src="figure/omim.Rmd/unnamed-chunk-4-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>X &lt;- Matrix(as.matrix(data$X), sparse = TRUE)
+res = ebpmf_modelA_m1(X, max_iter=50)
+plot_lf(res$H, res$W, &quot;Estimated&quot;)</code></pre>
+<p><img src="figure/omim.Rmd/unnamed-chunk-4-2.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>fast_fit = fastTopics::fit_poisson_nmf(X,3, numiter=50)</code></pre>
+<pre><code>Initializing factors using Topic SCORE algorithm.
+Initializing loadings by running 10 SCD updates.
+Fitting rank-3 Poisson NMF to 12 x 30 sparse matrix.
+Running at most 50 SCD updates, without extrapolation (fastTopics 0.6-192).</code></pre>
+<pre class="r"><code>plot_lf(fast_fit$L, fast_fit$F, &quot;Fasttopics&quot;)</code></pre>
+<p><img src="figure/omim.Rmd/unnamed-chunk-4-3.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+</div>
+<div id="fasttopics-on-omim-peters-code" class="section level2">
+<h2>Fasttopics on Omim (Peter’s code)</h2>
+<pre class="r"><code># library(tools)
+# library(fastTopics)
+# load(file=here(&quot;docs&quot;,&quot;data&quot;, &quot;omim.RData&quot;))
+# set.seed(1)
+# k &lt;- 40
+# tm &lt;- fit_poisson_nmf(counts,k = k,init.method = &quot;random&quot;,method = &quot;em&quot;,
+#                       numiter = 20,verbose = &quot;detailed&quot;,
+#                       control = list(numiter = 4,nc = 4,extrapolate = FALSE))
+# tm &lt;- fit_poisson_nmf(counts,fit0 = tm,method = &quot;scd&quot;,numiter = 100,
+#                       control = list(numiter = 4,nc = 4,extrapolate = FALSE),
+#                       verbose = &quot;detailed&quot;)
+# tm &lt;- fit_poisson_nmf(counts,fit0 = tm,method = &quot;scd&quot;,numiter = 100,
+#                       control = list(numiter = 4,nc = 4,extrapolate = TRUE),
+#                       verbose = &quot;detailed&quot;)
+# save(list = &quot;tm&quot;,file = &quot;omim_topics_k=40.RData&quot;)
+# resaveRdaFiles(&quot;omim_topics_k=40.RData&quot;)
+# 
+# # Inspecting the topics:
+# k &lt;- 1
+# L &lt;- poisson2multinom(tm)$L
+# F &lt;- poisson2multinom(tm)$F
+# i &lt;- head(order(L[,k],decreasing = TRUE),n = 20)
+# j &lt;- which(F[,k] &gt; apply(F[,-k],1,max))
+# j &lt;- head(j[order(F[j,k],decreasing = TRUE)],n = 30)
+# keywords &lt;- rownames(F)[j]
+# dat &lt;- data.frame(L     = L[,k],
+#                   mim   = meta_data$mim,
+#                   title = substr(meta_data$title,1,60))
+# cat(&quot;Topic &quot;,k,&quot;:\n&quot;,sep = &quot;&quot;)
+# print(format(dat[i,],justify = &quot;left&quot;),
+#       row.names = FALSE)
+# cat(&quot;keywords:\n&quot;)
+# print(keywords,quote = FALSE)</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.5.0 (2025-04-11)
+Platform: x86_64-apple-darwin20
+Running under: macOS Sequoia 15.4.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.5-x86_64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.5-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: America/Chicago
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] fastTopics_0.6-192 ggplot2_3.5.2      gridExtra_2.3      pheatmap_1.0.13   
+[5] Matrix_1.7-3       here_1.0.2        
+
+loaded via a namespace (and not attached):
+ [1] gtable_0.3.6        xfun_0.52           bslib_0.9.0        
+ [4] htmlwidgets_1.6.4   ggrepel_0.9.6       lattice_0.22-6     
+ [7] quadprog_1.5-8      vctrs_0.6.5         tools_4.5.0        
+[10] generics_0.1.4      parallel_4.5.0      tibble_3.2.1       
+[13] pkgconfig_2.0.3     data.table_1.17.0   SQUAREM_2021.1     
+[16] RColorBrewer_1.1-3  RcppParallel_5.1.10 lifecycle_1.0.4    
+[19] truncnorm_1.0-9     compiler_4.5.0      farver_2.1.2       
+[22] stringr_1.5.1       git2r_0.36.2        progress_1.2.3     
+[25] RhpcBLASctl_0.23-42 httpuv_1.6.16       htmltools_0.5.8.1  
+[28] sass_0.4.10         yaml_2.3.10         lazyeval_0.2.2     
+[31] plotly_4.10.4       crayon_1.5.3        later_1.4.2        
+[34] pillar_1.10.2       jquerylib_0.1.4     whisker_0.4.1      
+[37] tidyr_1.3.1         uwot_0.2.3          cachem_1.1.0       
+[40] gtools_3.9.5        tidyselect_1.2.1    digest_0.6.37      
+[43] Rtsne_0.17          stringi_1.8.7       dplyr_1.1.4        
+[46] purrr_1.0.4         ashr_2.2-63         cowplot_1.1.3      
+[49] rprojroot_2.1.1     fastmap_1.2.0       grid_4.5.0         
+[52] cli_3.6.5           invgamma_1.1        magrittr_2.0.3     
+[55] withr_3.0.2         prettyunits_1.2.0   scales_1.4.0       
+[58] promises_1.3.2      rmarkdown_2.29      httr_1.4.7         
+[61] workflowr_1.7.1     hms_1.1.3           pbapply_1.7-2      
+[64] evaluate_1.0.3      knitr_1.50          viridisLite_0.4.2  
+[67] irlba_2.3.5.1       rlang_1.1.6         Rcpp_1.0.14        
+[70] mixsqp_0.3-54       glue_1.8.0          rstudioapi_0.17.1  
+[73] jsonlite_2.0.0      R6_2.6.1            fs_1.6.6           </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
