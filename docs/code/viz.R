@@ -2,7 +2,7 @@ library(pheatmap)
 library(gridExtra)
 
 # Plot matrix L,F
-plot_lf <- function(L, F, lf_str, breaks){
+plot_lf <- function(L, F, lf_str, breaks=seq(0, 1, length.out = 101)){
   pl <- pheatmap(L,
            main = paste(lf_str, " Loadings"),
            cluster_rows = FALSE,

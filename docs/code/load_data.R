@@ -25,19 +25,19 @@ normalize_w_matrix <- function(w) {
 ###########################
 # Define mixture weights for each L_k and F_k
 # 21st mixture component (shape, rate) value is 1
-l1 <- c(1, rep(0, 33)) # shape = 1e-16
-l2 <- c(rep(0, 20),1, rep(0,13)) # shape = 1
-l3 <- c(rep(0, 33), 1) # shape = 1000
-f1 <- c(1, rep(0, 33))
-f2 <- c(rep(0, 20),1, rep(0,13))
-f3 <- c(rep(0, 33), 1)
+# 1e-16, ..., 1, ... ,1000
+g0 <- c(1, rep(0, 33))
+g1 <- c(rep(0, 20),1, rep(0,13))
+g1000 <- c(rep(0, 33), 1)
 # Weights will be normalized by column inside visualize_mixtures or generate_synthetic
-default_w_matrix <- cbind(l1,l2,l3,f1,f2,f3)
 ###########################
 
-general_load <- function(data_type=NA, w_matrix = default_w_matrix, n=12, p=30, K=3){
-  if (data_type == "mix"){
+general_load <- function(data_type=NA, w_matrix = NA, n=12, p=30, K=3){
+  if (data_type == "modelA_gammashape1L"){
     # w_matrix is M by K
+    w_matrix = cbind(g1,g1,g1, #loadings
+                     g0,g1,g1000) #factors
+
     w_matrix <- normalize_w_matrix(w_matrix)
     colnames(w_matrix) <- c(paste0("L", 1:K), paste0("F", 1:K))
 
@@ -59,6 +59,39 @@ general_load <- function(data_type=NA, w_matrix = default_w_matrix, n=12, p=30, 
       idx_F <- sample(1:len_grid, size = p, replace = TRUE, prob = w_F)
       FF[, k] <- rgamma(p, shape = shapes[idx_F], rate = rates[idx_F])
     }
+
+    lambda = LL %*% t(FF)
+    X = matrix(rpois(n=length(lambda),lambda),nrow=n)
+    return(list(L = LL, F = FF, X = X))
+  }
+  if (data_type == "modelA_unifL"){
+    # w_matrix is M by K
+    w_matrix = cbind(g1000,g1000,g1000, #loadings
+                     g0,g1,g1000) #factors
+
+    w_matrix <- normalize_w_matrix(w_matrix)
+    colnames(w_matrix) <- c(paste0("L", 1:K), paste0("F", 1:K))
+
+    LL = matrix(0, nrow=n, ncol=K)
+    FF = matrix(0, nrow=p, ncol=K)
+
+    grid_info = gammamix()
+    shapes <- grid_info$shape
+    rates  <- grid_info$rate
+    len_grid <- length(shapes)
+
+    for (k in 1:K){
+      w_L <- w_matrix[, k]
+      # Pick mixture component for each of n values in L_k
+      idx_L <- sample(1:len_grid, size = n, replace = TRUE, prob = w_L)
+      LL[, k] <- rgamma(n, shape = shapes[idx_L], rate = rates[idx_L])
+
+      w_F <- w_matrix[, K + k]
+      idx_F <- sample(1:len_grid, size = p, replace = TRUE, prob = w_F)
+      FF[, k] <- rgamma(p, shape = shapes[idx_F], rate = rates[idx_F])
+    }
+
+    LL = matrix(0.5, nrow = nrow(LL), ncol= ncol(LL))
 
     lambda = LL %*% t(FF)
     X = matrix(rpois(n=length(lambda),lambda),nrow=n)
