@@ -1,0 +1,171 @@
+---
+title: "Background"
+author: "Jihee You"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(here)
+here()
+```
+
+This page attempts to show the differences between the previously developed ebpmf-gamma derivation and the proposed ebpmf-background model. This is a work in progress.
+
+# Section 0 ebpmf-background problem formulation
+Let ${\bf X} \in \mathbb{R}_{+}^{n \times p}$ denote a matrix of observed counts $x_{ij} \in \mathbb{R}$. Background Poisson NMF parameters include ${\bf L} \in \mathbb{R}_{+}^{n \times K}$, ${\bf F} \in \mathbb{R}_{+}^{p\times K}$, and $\bf f_0 \in \mathbb{R}_{+}^p$ and we seek values of ${\bf L}$, ${\bf F}$, $\bf f_0$ such that ${\bf X} \approx ({\bf L}{\bf F}^T) \text{diag}(\bf f_0)$. In the progress, we will also update $\pi \in \mathbb{R}_{+}^{M \times K}$.
+
+$$
+\begin{align}
+x_{ij} &\sim \mathrm{Pois}(\lambda_{ij}) \\
+\lambda_{ij} &= f_{j0} \sum_{k=1}^K l_{ik} f_{jk} \\
+f_{jk} &\sim g_k, \qquad 
+g_k = \sum_{m=1}^M \pi_{mk} \text{Gamma}(\text{shape} = a_m, \text{rate} =a_m) \\
+f_{j0}, f_{jk}, 
+l_{ik}, \pi_{mk} &\geq 0, \qquad 
+\sum_{m=1}^M \pi_{mk}=1
+\quad \text{for each } k
+\end{align}
+$$
+
+We use the same Poisson latent variable formulation as in ebpmf-gamma, modified to include the background term $f_{j0}$:
+
+$$
+x_{ij} = \sum_{k=1}^K z_{ijk},
+\qquad
+z_{ijk} \sim \mathrm{Pois}(f_{j0}l_{ik}f_{jk}).
+$$
+The latent variable formulation remains essentially the same, with the main changes being the feature-specific background factor $\bf f_0$, and now $\pi_{mk}$ is the optimization objective while $a_m$ remains fixed.
+
+# Section 1 ELBO Update
+
+### Section 1.1 Update q(F)
+Similar to ebpmf-gamma, we can still use CAVI.
+
+$$
+\begin{align}
+q^*(\mathbf{F}) &\propto \exp \mathbb{E}_\mathbf{Z} [\log p(\mathbf{Z}, \mathbf{F}, \mathbf{X})] \\
+&= \exp \mathbb{E}_\mathbf{Z} \left[ {\log p(\mathbf{Z} \mid \mathbf{L}, \mathbf{F}, \bf f_0) + \log p(\mathbf{F} \mid \pi)} \right] + const
+\end{align}
+$$
+Define notations for simplicity:
+$C_{jk}:=\sum_{i=1}^n \mathbb E_q[z_{ijk}], D_{jk}:=f_{j0}\sum_{i=1}^n l_{ik}$.
+
+
+For each $f_{jk}$,
+
+$$
+\begin{align}
+q^*(f_{jk})
+
+&\propto
+\exp\left\{
+\mathbb E_{\mathbf Z}
+\left[
+\sum_{i=1}^n
+\left\{
+z_{ijk}\log(f_{j0}l_{ik}f_{jk})
+-
+f_{j0}l_{ik}f_{jk}
+-
+\log(z_{ijk}!)
+\right\}
++
+\log\sum_{m=1}^M
+\pi_{mk}\mathrm{Gamma}(f_{jk};a_m,a_m)
+\right]
+\right\}\\
+
+&=
+\exp\left\{
+C_{jk}\log f_{jk}
+-
+D_{jk}f_{jk}\right\}
+\sum_{m=1}^M
+\pi_{mk}\mathrm{Gamma}(f_{jk};a_m,a_m)
+ \\
+
+&=
+\sum_{m=1}^M
+\pi_{mk}
+\frac{a_m^{a_m}}{\Gamma(a_m)}
+f_{jk}^{a_m+C_{jk}-1}
+e^{-(a_m+D_{jk})f_{jk}} \\
+
+&= \sum_{m=1}^M \pi_{mk}
+\mathrm{Gamma}
+\left(
+f_{jk};
+a_m+C_{jk},
+a_m+D_{jk}
+\right)
+
+\end{align}
+$$
+
+So far we only have variational approximation up to a constant. I need to work on this more to get the exact update for $f_{jk}$, but I think at the end $\pi_{mk}$ should be replaced with $\pi^{post}_{mk}$.
+
+### Section 1.2 Update $\pi$
+
+$$
+ELBO_\pi = \mathbb{E}_q [\log p(\bf{F} \mid \pi)] + const
+$$
+
+Introduce responsibility
+$$
+r_{mjk}
+:=
+p(\text{m-th Gamma component generated }f_{jk})
+$$
+
+Then,
+$$
+\begin{align}
+ELBO_\pi
+&= \sum_{j=1}^p\sum_{k=1}^K \left( \sum_{m=1}^M
+r_{mjk}
+\left[
+\log \pi_{mk}
++
+\log \mathrm{Gamma}(f_{jk};a_m,a_m)
+\right] \right) + const \\
+&= \sum_{j=1}^p\sum_{k=1}^K \left( \sum_{m=1}^M
+r_{mjk}
+\log \pi_{mk} \right) + const \\
+\end{align}
+$$
+
+Introduce new notation $N_{mk}:=\sum_{j=1}^p r_{mjk}$ for simplicity. Then the $\pi_{\cdot k}$-dependent objective is
+$$
+\sum_{m=1}^M N_{mk}\log \pi_{mk} \\
+s.t. \sum_m \pi_{mk}=1
+$$
+This is the multinomial log-likelihood with soft counts $N_{mk}$, where normalized soft count is the maximum likelihood estimate on $\pi_{mk}$:
+$$
+\pi_{mk}^{\mathrm{post}}
+=
+\frac{N_{mk}}{\sum_{m'=1}^M N_{m'k}}
+=
+\frac{\sum_{j=1}^p r_{mjk}}{p}
+$$
+
+At the end, I ran into a similar problem as section 1.1. For an exact update, I need to calculate $r_{mjk}$.
+
+### Section 1.3 Update q(Z)
+While the solution would include f0, this remains largely unchanged from ebpmf-gamma.
+$$
+q(Z) \propto \exp \mathbb{E}_\mathbf{F} [\log p(\mathbf{Z} \mid \mathbf{L}, \mathbf{F}, f0)]
+$$
+
+Apply CAVI.
+
+### Section 1.4 Update L
+While the solution would include f0, this remains largely unchanged from ebpmf-gamma.
+$$ 
+ELBO_L = \mathbb{E}_q [\log p (\mathbf{Z} \mid \mathbf{L}, \mathbf{F}, \bf f_0)] + const
+$$
+Derive $\hat {\mathbf{H}}$ associated with the maximum likelihood estimate of the expected Poisson likelihood. H update is exactly an EM update.
+
+## Section 1.5 Update f0
+TODO. Zihao updated with a Lagrangian.
