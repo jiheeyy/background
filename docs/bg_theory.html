@@ -522,15 +522,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree88c2d508afd4ab05189ce6826d44fb4e17fae341targetblank88c2d50a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree8bdab8fd59d0ec5e276641bab648dc8d71b69ce2targetblank8bdab8fa">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/jiheeyy/background/tree/88c2d508afd4ab05189ce6826d44fb4e17fae341" target="_blank">88c2d50</a>
+<a href="https://github.com/jiheeyy/background/tree/8bdab8fd59d0ec5e276641bab648dc8d71b69ce2" target="_blank">8bdab8f</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree88c2d508afd4ab05189ce6826d44fb4e17fae341targetblank88c2d50a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree8bdab8fd59d0ec5e276641bab648dc8d71b69ce2targetblank8bdab8fa"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -540,7 +540,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/jiheeyy/background/tree/88c2d508afd4ab05189ce6826d44fb4e17fae341" target="_blank">88c2d50</a>.
+<a href="https://github.com/jiheeyy/background/tree/8bdab8fd59d0ec5e276641bab648dc8d71b69ce2" target="_blank">8bdab8f</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -631,6 +631,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/jiheeyy/background/blob/8bdab8fd59d0ec5e276641bab648dc8d71b69ce2/analysis/bg_theory.Rmd" target="_blank">8bdab8f</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-09-08
+</td>
+<td>
+Publish minor corrections to theory rmd
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jiheeyy/background/a3c6d8fbbb92affa0c84c7824443a97b299e97ba/docs/bg_theory.html" target="_blank">a3c6d8f</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-09-08
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/jiheeyy/background/blob/88c2d508afd4ab05189ce6826d44fb4e17fae341/analysis/bg_theory.Rmd" target="_blank">88c2d50</a>
 </td>
 <td>
@@ -650,8 +684,8 @@ Publish the initial files for myproject
 </div>
 </div>
 </div>
-<p>This page presents the mathematical foundation of the proposed
-ebpmf-background model.</p>
+<p>This page presents, briefly, the mathematical foundation of the
+proposed ebpmf-background model.</p>
 <div id="section-1-ebpmf-background-problem-formulation"
 class="section level1">
 <h1>Section 1: ebpmf-background problem formulation</h1>
@@ -859,9 +893,8 @@ q(f_{jk}\mid\delta_{jk})q(\delta_{jk}),
 <p><span class="math display">\[
 q(\delta_{jk}=m)=r_{jkm}.
 \]</span></p>
-<p>The implementation stores these responsibilities as
-<code>resp[j, k, m]</code>. Define for simplicity the expected allocated
-count <span class="math inline">\(C_{jk} =
+<p>Define for simplicity the expected allocated count <span
+class="math inline">\(C_{jk} =
 \sum_{i=1}^{n}\mathbb{E}_q[z_{ijk}]\)</span> and exposure <span
 class="math inline">\(D_{jk}=f_{j0}\sum_{i=1}^{n}l_{ik}\)</span>.</p>
 <p>For a fixed mixture component <span class="math inline">\(m\)</span>,
@@ -906,7 +939,8 @@ a_m + C_{jk}, \text{rate = } a_m + D_{jk} )}.
 \beta_{jkm}=a_m+D_{jk},
 \]</span></p>
 <p>the updated Gamma shape and rate. The unnormalized joint factor can
-then be written as</p>
+then be written as a product of unnormalized weight of component m and
+the Gamma density indicated by component m.</p>
 <p><span class="math display">\[
 q^*(f_{jk},\delta_{jk}=m)
 \propto
@@ -1046,7 +1080,7 @@ l_{ik}^{\mathrm{new}}
 </div>
 <div id="section-2.5-update-f_0" class="section level3">
 <h3>Section 2.5 Update <span class="math inline">\(f_0\)</span></h3>
-<p>Similar to 2.3 and 2.4, olding other parameters fixed, the <span
+<p>Similar to 2.3 and 2.4, holding other parameters fixed, the <span
 class="math inline">\(f_0\)</span>-dependent ELBO is</p>
 <p><span class="math display">\[
 \mathcal{L}_{f_0}
