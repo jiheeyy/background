@@ -1,0 +1,1863 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Jihee You" />
+
+<meta name="date" content="2026-09-08" />
+
+<title>BG Model Implementation</title>
+
+<script src="site_libs/header-attrs-2.31/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/main/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">background</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/jiheeyy/background">
+    <span class="fab fa-github"></span>
+     
+    Source code
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">BG Model Implementation</h1>
+<h4 class="author">Jihee You</h4>
+<h4 class="date">2026-09-08</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+workflowr <span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2026-09-08
+</p>
+<p>
+<strong>Checks:</strong> <span
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>background/</code> <span
+class="glyphicon glyphicon-question-sign" aria-hidden="true"
+title="This is the local directory in which the code in this file was executed.">
+</span>
+</p>
+<p>
+This reproducible <a href="https://rmarkdown.rstudio.com">R Markdown</a>
+analysis was created with <a
+  href="https://github.com/workflowr/workflowr">workflowr</a> (version
+1.7.2). The <em>Checks</em> tab describes the reproducibility checks
+that were applied when the results were created. The <em>Past
+versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
+</a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git
+repository, you know the exact version of the code that produced these
+results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the
+global environment can affect the analysis in your R Markdown file in
+unknown ways. For reproduciblity it’s best to always run the code in an
+empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20260201code">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Seed:</strong>
+<code>set.seed(20260201)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20260201code"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20260201)</code> was run prior to running
+the code in the R Markdown file. Setting a seed ensures that any results
+that rely on randomness, e.g. subsampling or permutations, are
+reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Session information:</strong>
+recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package
+versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be
+confident that you successfully produced the results during this
+run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr
+project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree88c2d508afd4ab05189ce6826d44fb4e17fae341targetblank88c2d50a">
+<span class="glyphicon glyphicon-ok text-success"
+aria-hidden="true"></span> <strong>Repository version:</strong>
+<a href="https://github.com/jiheeyy/background/tree/88c2d508afd4ab05189ce6826d44fb4e17fae341" target="_blank">88c2d50</a>
+</a>
+</p>
+</div>
+<div
+id="strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree88c2d508afd4ab05189ce6826d44fb4e17fae341targetblank88c2d50a"
+class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development
+and connecting the code version to the results is critical for
+reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version
+<a href="https://github.com/jiheeyy/background/tree/88c2d508afd4ab05189ce6826d44fb4e17fae341" target="_blank">88c2d50</a>.
+See the <em>Past versions</em> tab to see a history of the changes made
+to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for
+the analysis have been committed to Git prior to generating the results
+(you can use <code>wflow_publish</code> or
+<code>wflow_git_commit</code>). workflowr only checks the R Markdown
+file, but you know if there are other scripts or data files that it
+depends on. Below is the status of the Git repository when the results
+were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .DS_Store
+    Ignored:    .RData
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    analysis/.DS_Store
+
+Untracked files:
+    Untracked:  Rplots.pdf
+    Untracked:  analysis/.ipynb_checkpoints/
+    Untracked:  analysis/Untitled.ipynb
+    Untracked:  analysis/bg_news.Rmd
+    Untracked:  analysis/gene_lst.txt
+    Untracked:  analysis/gtex_processing.ipynb
+    Untracked:  analysis/omim_topics_k=40.RData
+    Untracked:  analysis/v1.Rmd
+    Untracked:  analysis/v2.Rmd
+    Untracked:  tests/
+    Untracked:  writeup/
+
+Unstaged changes:
+    Deleted:    analysis/bg.Rmd
+    Modified:   analysis/index.Rmd
+    Modified:   analysis/main.Rmd
+    Deleted:    analysis/omim.Rmd
+    Modified:   background.Rproj
+    Deleted:    code/README.md
+    Deleted:    data/README.md
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not
+included in this status report because it is ok for generated content to
+have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+These are the previous versions of the repository in which changes were
+made to the R Markdown (<code>analysis/bg_implement.Rmd</code>) and HTML
+(<code>docs/bg_implement.html</code>) files. If you’ve configured a
+remote Git repository (see <code>?wflow_git_remote</code>), click on the
+hyperlinks in the table below to view the files as they were in that
+past version.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/88c2d508afd4ab05189ce6826d44fb4e17fae341/analysis/bg_implement.Rmd" target="_blank">88c2d50</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-09-08
+</td>
+<td>
+Publish the initial files for myproject
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="ebpmf-bg-implementation" class="section level1">
+<h1>EBPMF-BG Implementation</h1>
+<p>This document describes the EBPMF-BG implementation. When it is
+knitted, its R code chunks are exported to <code>bg_implement.R</code>,
+which is sourced by experiment documents such as
+<code>bg_sim.Rmd</code>.</p>
+<p>When running EBPMF-BG, the key object is <code>state</code>, a list
+containing <code>L</code> (<span class="math inline">\(n\times
+K\)</span>), <code>f0</code> (<span class="math inline">\(p\)</span>
+entries), <code>pi</code> (<span class="math inline">\(M\times
+K\)</span>), <code>qF</code>, and <code>qZ</code>. In turn,
+<code>qF</code> contains <code>mean</code> and <code>mean_log</code>
+(both <span class="math inline">\(p\times K\)</span>),
+<code>resp_sumj</code> (<span class="math inline">\(K\times M\)</span>),
+and the scalar <code>mixture_base</code>; <code>qZ</code> contains
+<code>sum_i</code> (<span class="math inline">\(p\times K\)</span>),
+<code>sum_j</code> (<span class="math inline">\(n\times K\)</span>), and
+the scalar <code>allocation_entropy</code>. The two scalars are cached
+only for ELBO evaluation. The remaining eight numeric arrays replace the
+much larger responsibility and allocation tensors used in my earlier
+implementation.</p>
+<p>For <span class="math inline">\(n=10{,}000\)</span>, <span
+class="math inline">\(p=10^6\)</span>, <span
+class="math inline">\(K=3\)</span>, and <span
+class="math inline">\(M=5\)</span>, these eight arrays are approximately
+80.5 MB, excluding R object overhead and <code>X</code>. The current
+<code>qF</code> update raises the peak excluding <code>X</code> to
+roughly 250–300 MB. The <code>qZ</code> peak also depends on <span
+class="math inline">\(N=\operatorname{nnz}(X)\)</span> because the
+working vectors all scale with <span
+class="math inline">\(N\)</span>.</p>
+<div id="update-qf" class="section level3">
+<h3>Update q(F)</h3>
+<p><code>refresh_qF_moments</code> updates <span
+class="math inline">\(\mathbb{E}[f_{jk}]\)</span> (<code>qF$mean</code>)
+and <span class="math inline">\(\mathbb{E}[\log f_{jk}]\)</span>
+(<code>qF$mean_log</code>) with the following equations.
+Responsibilities are computed for one factor at a time in a temporary
+<span class="math inline">\(p \times M\)</span> matrix. At the end, only
+their <span class="math inline">\(K \times M\)</span> column sums are
+retained for the mixture-weight update.</p>
+<p>$$</p>
+<p>E[f_{jk}] =<em>m r</em>{jkm}, E[f_{jk}] =<em>m r</em>{jkm} </p>
+<p>$$</p>
+<pre class="r"><code># Calculate qF moments and the soft counts needed by update_pi().
+# A p x M responsibility matrix is created for one factor k, summarized, and
+# discarded before moving to the next factor; no p x K x M array is retained.
+refresh_qF_moments &lt;- function(C, f0, L_sum, pi, a) {
+  p &lt;- nrow(C)
+  K &lt;- ncol(C)
+  M &lt;- length(a)
+  mean &lt;- mean_log &lt;- matrix(0, p, K)
+  resp_sumj &lt;- matrix(0, K, M)
+  mixture_term &lt;- 0
+  log_pi &lt;- log(pi)
+  prior_constant &lt;- a * log(a) - lgamma(a)
+
+  for (k in seq_len(K)) {
+    C_k &lt;- C[, k]
+    D_k &lt;- f0 * L_sum[k]
+    active &lt;- which(pi[, k] &gt; 0)
+    if (!length(active)) {
+      stop(&quot;Each column of pi must contain positive mass.&quot;)
+    }
+
+    # log_resp is only p x M for the current factor. Zero-weight components
+    # stay at -Inf and receive exactly zero responsibility.
+    log_resp &lt;- matrix(-Inf, p, M)
+    for (m in active) {
+      shape &lt;- C_k + a[m]
+      rate &lt;- D_k + a[m]
+      log_resp[, m] &lt;-
+        log_pi[m, k] + prior_constant[m] +
+        lgamma(shape) - shape * log(rate)
+    }
+
+    # Stable row-wise softmax without apply(), which avoids additional large
+    # intermediate arrays.
+    row_max &lt;- log_resp[, active[1L]]
+    if (length(active) &gt; 1L) {
+      for (m in active[-1L]) {
+        row_max &lt;- pmax(row_max, log_resp[, m])
+      }
+    }
+
+    row_sum &lt;- numeric(p)
+    for (m in active) {
+      log_resp[, m] &lt;- exp(log_resp[, m] - row_max)
+      row_sum &lt;- row_sum + log_resp[, m]
+    }
+
+    mean_k &lt;- mean_log_k &lt;- numeric(p)
+    for (m in active) {
+      responsibility &lt;- log_resp[, m] / row_sum
+      shape &lt;- C_k + a[m]
+      rate &lt;- D_k + a[m]
+      mean_k &lt;- mean_k + responsibility * shape / rate
+      mean_log_k &lt;- mean_log_k +
+        responsibility * (digamma(shape) - log(rate))
+      resp_sumj[k, m] &lt;- sum(responsibility)
+    }
+
+    mean[, k] &lt;- mean_k
+    mean_log[, k] &lt;- mean_log_k
+
+    # Because qF is the coordinate-optimal distribution, log_normalizer is
+    # its local objective including log(pi). Remove the expected Poisson
+    # contribution C * E[log(F)] - D * E[F] to obtain the qF mixture term.
+    mixture_term &lt;- mixture_term + sum(
+      row_max + log(row_sum) - C_k * mean_log_k + D_k * mean_k
+    )
+  }
+
+  # Retain only the pi-independent portion. If update_pi() subsequently
+  # changes pi, calculate_elbo() can add sum_jkm r_jkm * log(pi_mk) from the
+  # small K x M matrix resp_sumj; the full responsibility tensor is unneeded.
+  positive_pi &lt;- pi &gt; 0
+  mixture_base &lt;- mixture_term - sum(
+    t(resp_sumj)[positive_pi] * log_pi[positive_pi]
+  )
+
+  list(
+    mean = mean,
+    mean_log = mean_log,
+    resp_sumj = resp_sumj,
+    mixture_base = mixture_base
+  )
+}
+
+# Main qF update. C already exists as qZ$sum_i; D is generated one column at
+# a time inside refresh_qF_moments(), so neither D nor resp is stored in qF.
+update_qF &lt;- function(state, a) {
+  state$qF &lt;- refresh_qF_moments(
+    C = state$qZ$sum_i,
+    f0 = state$f0,
+    L_sum = colSums(state$L),
+    pi = state$pi,
+    a = a
+  )
+  state
+}</code></pre>
+<p>The code calculates a part of a Negative Binomial log marginal
+likelihood, omitting terms that do not depend on mixture component <span
+class="math inline">\(m\)</span>. Because <span
+class="math inline">\(C\)</span> may be non-integer, this is a pseudo
+negative-binomial mass. For the record, below is the full equation for
+negative-binomial mass, but C * log(D) - lgamma(C + 1) is omitted in
+code.</p>
+<p><span class="math display">\[
+\begin{aligned}
+\log \widetilde p(C_{jk}\mid \text{shape = }a_m,\text{inverse scale =
+}D_{jk})
+={}&amp;
+\log\Gamma(a_m+C_{jk})
+-\log\Gamma(a_m)
+-\log\Gamma(C_{jk}+1)\\
+&amp;+a_m\log(a_m)
++C_{jk}\log(D_{jk})
+-(a_m+C_{jk})\log(a_m+D_{jk}).
+\end{aligned}
+\]</span></p>
+</div>
+<div id="pi-update" class="section level3">
+<h3>Pi Update</h3>
+<p><span class="math display">\[
+\pi_{mk}^{\mathrm{new}}
+=
+\frac{N_{mk}}{\sum_{h=1}^{M}N_{hk}}
+\]</span></p>
+<pre class="r"><code># Use previously stored qF$resp_sumj to recover
+# pi_new, which is soft counts Multinomial MLE
+# However, note in implementation,
+# Instead of recovering exact Multinomial MLE,
+# Add Dirichlet smoothing term 
+# To prevent mixture weights from getting stuck at zero
+# Over future iteration
+update_pi &lt;- function(state, pseudocount = 1e-8) {
+  counts &lt;- state$qF$resp_sumj
+  counts &lt;- counts + pseudocount
+  state$pi[] &lt;- t(sweep(counts, 1L, rowSums(counts), &quot;/&quot;))
+  state
+}</code></pre>
+</div>
+<div id="update-z" class="section level3">
+<h3>Update Z</h3>
+<p><span class="math display">\[
+q(Z_{ij\cdot})
+=
+\operatorname{Multinomial}
+\left(X_{ij};\phi_{ij1},\ldots,\phi_{ijK}\right),
+\]</span></p>
+<p>where</p>
+<p><span class="math display">\[
+\phi_{ijk}
+=
+\frac{
+l_{ik}\exp(\mathbb{E}_q [\log f_{jk}])
+}{
+\sum_{h=1}^{K}l_{ih}\exp(\mathbb{E}_q [\log f_{jk}])
+}.
+\]</span></p>
+<pre class="r"><code>update_qZ &lt;- function(state, X) {
+  sparse_cache &lt;- attr(X, &quot;bg_sparse_cache&quot;, exact = TRUE)
+  if (is.null(sparse_cache) || !inherits(X, &quot;dgCMatrix&quot;)) {
+    stop(&quot;Call prepare_sparse_X(X) once before update_qZ().&quot;)
+  }
+
+  n &lt;- nrow(X)
+  p &lt;- ncol(X)
+  K &lt;- ncol(state$L)
+  log_L &lt;- log(state$L)
+  mean_log_F &lt;- state$qF$mean_log
+
+  # A sparse CSC matrix stores only its nonzero values and their row indices.
+  # Expand the column pointers once so each stored value has matching (i, j)
+  # coordinates; all qZ calculations below therefore have length nnzero(X),
+  # rather than n * p.
+  row_index &lt;- sparse_cache$row_index
+  column_index &lt;- sparse_cache$column_index
+  factor_score &lt;- function(k) {
+    log_L[row_index, k] + mean_log_F[column_index, k]
+  }
+
+  # Find max_k s_ijk over factors for every nonzero X_ij. This is the first
+  # pass of a stable log-sum-exp and uses only nnzero(X)-length vectors.
+  max_score &lt;- factor_score(1L)
+
+  if (K &gt; 1L) {
+    for (k in 2:K) {
+      max_score &lt;- pmax(max_score, factor_score(k))
+    }
+  }
+
+  # Complete log-sum-exp in a second pass. Subtracting max_score keeps every
+  # exponential at most one and prevents numerical overflow.
+  weight_sum &lt;- numeric(length(X@x))
+  for (k in seq_len(K)) {
+    weight_sum &lt;- weight_sum + exp(factor_score(k) - max_score)
+  }
+  log_normalizer &lt;- max_score + log(weight_sum)
+  rm(max_score, weight_sum)
+
+  # Only the summaries needed by the qF and L updates are retained. Reuse X&#39;s
+  # sparse structure to aggregate one factor at a time without storing phi or
+  # E[Z].
+  sum_i &lt;- matrix(0, p, K)
+  sum_j &lt;- matrix(0, n, K)
+  mean_Z &lt;- X
+
+  for (k in seq_len(K)) {
+    # log(phi_ijk) = s_ijk - log(sum_h exp(s_ijh)), evaluated only where
+    # X_ij is nonzero. Consequently E[Z_ijk] = X_ij * phi_ijk is also sparse.
+    log_phi &lt;- factor_score(k) - log_normalizer
+    mean_Z@x &lt;- X@x * exp(log_phi)
+
+    # Sufficient summaries for the qF and L updates.
+    sum_i[, k] &lt;- as.numeric(Matrix::colSums(mean_Z))
+    sum_j[, k] &lt;- as.numeric(Matrix::rowSums(mean_Z))
+  }
+
+  # Cache -sum_ijk E[Z_ijk] log(phi_ijk) for the ELBO. Since
+  # log(phi_ijk) = score_ijk - log_normalizer_ij and sum_k E[Z_ijk] = X_ij,
+  # the nnzero(X)-length product is needed only once, rather than once per k.
+  allocation_entropy &lt;- sum(X@x * log_normalizer)
+  for (k in seq_len(K)) {
+    allocation_entropy &lt;- allocation_entropy -
+      sum(sum_j[, k] * log_L[, k]) -
+      sum(sum_i[, k] * mean_log_F[, k])
+  }
+
+  state$qZ &lt;- list(
+    sum_i = sum_i,
+    sum_j = sum_j,
+    allocation_entropy = allocation_entropy
+  )
+  state
+}</code></pre>
+</div>
+<div id="update-l" class="section level3">
+<h3>Update L</h3>
+<p><span class="math display">\[
+l_{ik}^{\mathrm{new}}
+=
+\frac{
+\sum_{j=1}^{p}\overline z_{ijk}
+}{
+\sum_{j=1}^{p}f_{j0}\mathbb{E}_q [f_{jk}]
+}.
+\]</span></p>
+<pre class="r"><code># In contrast to theory, in implementation, I prevent zero L
+
+update_L &lt;- function(state, min_loading = 1e-12) {
+  numerator &lt;- state$qZ$sum_j
+  denominator &lt;- drop(
+    crossprod(state$f0, state$qF$mean)
+  )
+
+  # Update one factor column at a time to avoid allocating full n-by-K
+  # intermediate matrices for both the division and pmax operations.
+  for (k in seq_along(denominator)) {
+    # The ratio is the unconstrained coordinate-wise MLE for L[, k].
+    # The floor prevents exact zeros so log(L) remains finite in update_qZ.
+    state$L[, k] &lt;- pmax(
+      numerator[, k] / denominator[k],
+      min_loading
+    )
+  }
+  state
+}</code></pre>
+</div>
+<div id="update-f0" class="section level3">
+<h3>Update f0</h3>
+<p><span class="math display">\[
+y_j=\sum_{i=1}^{n}X_{ij},
+\qquad
+A_j
+=
+\sum_{k=1}^{K}
+\left(\sum_{i=1}^{n}l_{ik}\right)\mathbb{E}_q [f_{jk}].
+\]</span></p>
+<p><span class="math display">\[
+f_{j0}^{\mathrm{new}}
+=
+\frac{y_j}{A_j}.
+\]</span></p>
+<pre class="r"><code># y is calculated once, before CAVI loop
+update_f0 &lt;- function(state, y) {
+  expected_rate &lt;- drop(
+    state$qF$mean %*% colSums(state$L)
+  )
+
+  state$f0[] &lt;- y / expected_rate
+  state
+}</code></pre>
+</div>
+<div id="detail-changed-for-better-implementation-l-scaling"
+class="section level3">
+<h3>Detail changed for better implementation: L scaling</h3>
+<p><span class="math inline">\(x_{ij} \sim Pois(\lambda_{ij}),
+\lambda_{ij}=\sum_k l_{ik}f_{0j}f_{jk}\)</span> from model formulation.
+However, due to the following relationship,</p>
+<p><span class="math display">\[
+(L/c)(cf_0)F = L (f_0) F
+\]</span></p>
+<p>every pair <span class="math inline">\(\left(\frac{\widehat
+L}{c},c\widehat f_0\right), c&gt;0\)</span> has exactly the same Poisson
+likelihood. To choose one representative from this family of equivalent
+solutions, impose the constraint <span
+class="math inline">\(\frac{1}{n}\sum_i\sum_k l_{ik}=1\)</span>.This is
+done by defining <span class="math inline">\(s_L=\frac{1}{n}\sum_i\sum_k
+l_{ik}\)</span>. Then take <span
+class="math inline">\(L^*=\frac{L}{s_L},\qquad
+f_0^*=s_Lf_0\)</span>.</p>
+<pre class="r"><code># L scaling
+normalize_loading_scale &lt;- function(state, target_mean_row_sum = 1) {
+  current_scale &lt;- mean(rowSums(state$L))
+  scale_factor &lt;- current_scale / target_mean_row_sum
+
+  state$L &lt;- state$L / scale_factor
+  state$f0 &lt;- state$f0 * scale_factor
+
+  state
+}</code></pre>
+</div>
+<div id="elbo-calculation" class="section level3">
+<h3>ELBO Calculation</h3>
+<p>$$ <span class="math display">\[\begin{align*}
+
+\mathrm{ELBO}
+&amp;=
+\underbrace{
+\mathbb E_q[\log p(Z\mid L,F,f_0)]
+-
+\mathbb E_q[\log q(Z)]
+}_{\texttt{poisson_term}}
++
+\underbrace{
+\mathbb E_q[\log p(F,\delta)]
+-
+\mathbb E_q[\log q(F,\delta)]
+}_{\texttt{mixture_term}} \\
+
+\text{poisson_term} &amp;= \sum_{ijk}
+\mathbb{E}_q[z_{ijk}\log(l_{ik}f_{j0}f_{jk})-l_{ik}f_{j0}f_{jk}] -
+\mathbb{E}_q[z_{ijk}\log[\phi_{ijk}]] \\
+&amp;= \sum_{ijk} \bar z_{ijk} \text{ expected_log_rate}_{ij} -
+\sum_{ij} \text{expected_rate}_{ij} - \sum_{ijk} \bar z_{ijk}
+\mathbb{E}_q[\log \phi_{ijk}] \\
+\text{mixture_term} &amp;= \sum_{jk} \sum_m r_{jkm}
+E_{q(F_{jk}\mid m)}
+\left[
+\log \pi_{mk}
++
+\log p(F_{jk}\mid m)
+-
+\log r_{jkm}
+-
+\log q(F_{jk}\mid m)
+\right] \\
+&amp;=
+\sum_{jkm}
+r_{jkm}\log\pi_{mk}+
+\sum_{jkm}
+r_{jkm}
+\left[
+-\log r_{jkm}
++
+E\log p(F_{jk}\mid m)
+-
+E\log q(F_{jk}\mid m)
+\right]
+\end{align*}\]</span> $$ Note <span class="math inline">\(\sum_{ijk}
+\bar z_{ijk} \mathbb{E}_q[\log \phi_{ijk}]\)</span> was stored as
+<code>qZ$allocation_entropy</code>and <span
+class="math inline">\(\sum_{jkm} r_{jkm}[-\log r_{jkm}+E\log
+p(F_{jk}\mid m)-E\log q(F_{jk}\mid m)]\)</span> was stored as
+<code>qF$mixture_base</code>.</p>
+<!-- Poisson likelihood includes \mathbb{E}_q[-log(z_{ijk}!)] but this term is canceled out with the multinomial probability mass. Also, multinomial probability includes constant log(X_{ij}!) term, which is omitted during ELBO calculation. !-->
+<pre class="r"><code>calculate_elbo &lt;- function(state, X, a) {
+  n &lt;- nrow(X)
+  p &lt;- ncol(X)
+  K &lt;- ncol(state$L)
+  M &lt;- length(a)
+
+  stopifnot(
+    all(dim(state$L) == c(n, K)),
+    length(state$f0) == p,
+    all(dim(state$pi) == c(M, K)),
+    all(dim(state$qF$mean) == c(p, K)),
+    all(dim(state$qF$mean_log) == c(p, K)),
+    all(dim(state$qF$resp_sumj) == c(K, M)),
+    all(dim(state$qZ$sum_i) == c(p, K)),
+    all(dim(state$qZ$sum_j) == c(n, K)),
+    length(state$qF$mixture_base) == 1L,
+    length(state$qZ$allocation_entropy) == 1L
+  )
+
+  # Component no. 1 of poisson_term: Expected allocated-count log rates.
+  # qZ$sum_j[i, k] = sum_j E[Z_ijk] and
+  # qZ$sum_i[j, k] = sum_i E[Z_ijk]. These two summaries let us evaluate
+  # sum_ijk E[Z_ijk] * E[log(lambda_ijk)] without reconstructing E[Z].
+  log_L &lt;- log(state$L)
+  log_f0 &lt;- log(state$f0)
+  allocated_log_rate &lt;- 0
+
+  for (k in seq_len(K)) {
+    document_counts &lt;- state$qZ$sum_j[, k]
+    feature_counts &lt;- state$qZ$sum_i[, k]
+    positive_documents &lt;- document_counts &gt; 0
+    positive_features &lt;- feature_counts &gt; 0
+
+    # Restrict multiplication by log-rates to positive expected counts. This
+    # defines the limiting value 0 * log(0) as zero when update_f0() assigns
+    # f0_j = 0 to a feature whose observed column total is zero.
+    allocated_log_rate &lt;- allocated_log_rate +
+      sum(
+        document_counts[positive_documents] *
+          log_L[positive_documents, k]
+      ) +
+      sum(
+        feature_counts[positive_features] *
+          (
+            log_f0[positive_features] +
+              state$qF$mean_log[positive_features, k]
+          )
+      )
+  }
+
+  # Component no. 2 of poisson_term: Expected total Poisson rate.
+  # sum_ijk L_ik * f0_j * E[F_jk] factorizes into a product of two
+  # factor-specific sums, so no n x p rate matrix is needed.
+  expected_total_rate &lt;- sum(
+    colSums(state$L) *
+      drop(crossprod(state$f0, state$qF$mean))
+  )
+
+  # Component no. 3 of poisson_term
+  # allocation_entropy is -sum_ijk E[Z_ijk] log(phi_ijk), cached by
+  # update_qZ() while log(phi) is available. As in the previous implementation,
+  # the data-only constant -sum_ij lgamma(X_ij + 1) is omitted.
+  # Put poisson_term together
+  poisson_term &lt;-
+    allocated_log_rate -
+    expected_total_rate +
+    state$qZ$allocation_entropy
+
+  # Component no. 1 of mixture_term
+  # qF$mixture_base contains the conditional-Gamma contribution and the
+  # categorical entropy, neither of which changes when update_pi() changes pi.
+  # resp_sumj supplies the expected component counts for the remaining
+  # sum_jkm r_jkm log(pi_mk) term.
+  # Put mixture_term together
+  component_counts &lt;- state$qF$resp_sumj
+  pi_by_factor &lt;- t(state$pi)
+  positive_counts &lt;- component_counts &gt; 0
+
+  if (any(pi_by_factor[positive_counts] &lt;= 0)) {
+    mixture_term &lt;- -Inf
+  } else {
+    mixture_term &lt;-
+      state$qF$mixture_base +
+      sum(
+        component_counts[positive_counts] *
+          log(pi_by_factor[positive_counts])
+      )
+  }
+
+  # Finally, return the scalar ELBO, up to the omitted data-only constant.
+  poisson_term + mixture_term
+}</code></pre>
+</div>
+<div id="initialization" class="section level3">
+<h3>Initialization</h3>
+<p>Currently, there are three possible initialization options for the
+loadings: “gamma”, “deviance_kmeans”, “fasttopics”. “gamma” samples
+<span class="math inline">\(L_{ik} \sim\)</span> (shape=1, rate=1).
+“deviance_kmeans”, “fasttopics”</p>
+<p>Pi (initialized to 1/M), f0 (initialized to 1), qF (calculated with
+<code>initialize_qF</code>) are also initialized inside the main
+<code>initialize_state</code> function.</p>
+<pre class="r"><code># Main initialization function
+# Initialize model parameters; qZ is synchronized once after any overrides.
+initialize_state &lt;- function(
+    X,
+    K,
+    a,
+    L_init = c(&quot;gamma&quot;, &quot;deviance_kmeans&quot;, &quot;fasttopics&quot;),
+    seed = 2L,
+    kmeans_args = list(),
+    fasttopics_args = list()
+) {
+  X &lt;- prepare_sparse_X(X)
+  L_init &lt;- match.arg(L_init)
+  stopifnot(
+    K &gt;= 1L,
+    length(a) &gt;= 1L,
+    all(is.finite(a)),
+    all(a &gt; 0),
+    is.list(kmeans_args),
+    is.list(fasttopics_args)
+  )
+  n &lt;- nrow(X)
+  p &lt;- ncol(X)
+  M &lt;- length(a)
+
+  L &lt;- switch(
+    L_init,
+    gamma = {
+      set.seed(seed)
+      matrix(rgamma(n * K, shape = 1, rate = 1), n, K)
+    },
+    deviance_kmeans = {
+      kmeans_args$X &lt;- X
+      kmeans_args$K &lt;- K
+      if (is.null(kmeans_args$kmeans_seed)) {
+        kmeans_args$kmeans_seed &lt;- seed
+      }
+      do.call(initialize_deviance_kmeans, kmeans_args)
+    },
+    fasttopics = {
+      fasttopics_args$X &lt;- X
+      fasttopics_args$K &lt;- K
+      if (is.null(fasttopics_args$seed)) {
+        fasttopics_args$seed &lt;- seed
+      }
+      do.call(initialize_fasttopics, fasttopics_args)
+    }
+  )
+
+  pi &lt;- matrix(1 / M, M, K)
+  list(
+    L = L,
+    f0 = rep(1, p),
+    pi = pi,
+    qF = initialize_qF(pi, a, p)
+  )
+}
+
+# Initialize qF at its Gamma-mixture prior. This is done once, before CAVI.
+initialize_qF &lt;- function(pi, a, p) {
+  K &lt;- ncol(pi)
+  mean_log_by_factor &lt;- drop(
+    crossprod(pi, digamma(a) - log(a))
+  )
+  positive_pi &lt;- pi &gt; 0
+
+  list(
+    mean = matrix(1, p, K),
+    mean_log = matrix(
+      rep(mean_log_by_factor, each = p),
+      p,
+      K
+    ),
+    # sum_j r_{jkm} = p \pi_{mk}
+    resp_sumj = p * t(pi),
+
+    mixture_base = -p * sum(
+      pi[positive_pi] * log(pi[positive_pi])
+    )
+  )
+}</code></pre>
+<div id="possible-initialization-method-k-means-initialization"
+class="section level4">
+<h4>Possible initialization method: k-means initialization</h4>
+<!-- Notation note \sum_i \mu_{ij} = x_{+j} = sum_i x_{ij} !-->
+<p>Assume <span class="math inline">\(X_{ij} \sim
+\text{Pois}(\mu_{ij})\)</span>, where <span
+class="math inline">\(\mu_{ij} = \frac{x_{i+}x_{j+}}{x_{++}}\)</span>
+(note: <span class="math inline">\(\sum_i \mu_{ij} = x_{+j} = \sum_i
+x_{ij}\)</span>)is the expected Poisson count under the independence
+model across i and j. The squared signed Poisson-deviance residual is
+<span class="math inline">\(2 \big(\ell(X_{ij} \mid \hat \mu_{ij} =
+X_{ij}) - \ell(X_{ij} \mid \mu_{ij}) \big)\)</span>. In other words,</p>
+<p><span class="math display">\[
+r_{ij}^2 = 2[x_{ij} \log \frac{x_{ij}}{\mu_{ij}} - (x_{ij} - \mu_{ij})]
+\]</span></p>
+<p>Then, deviance of feature j is <span class="math display">\[
+\begin{align}
+d_j &amp;= \sum_i r_{ij}^2 \\
+&amp;= 2 \sum_i x_{ij} \log \frac{x_{ij}}{\mu_{ij}}
+\end{align}
+\]</span> The deviance calculation part can be performed in different
+blocks (split across features) for memory efficiency.</p>
+<p>From there, I select top 1000 features with highest <span
+class="math inline">\(d_j\)</span> and run k-means on n x 1000 matrix,
+where the values are residuals (approximately normally distributed,
+since deviance is distributed along a chi square distribution). As a
+result, I get approximately a single membership L as initialziation.</p>
+<pre class="r"><code># Compute signed Poisson-deviance residuals for one feature block.
+poisson_deviance_residual_block &lt;- function(
+    X,
+    columns,
+    row_totals,
+    column_totals,
+    grand_total
+) {
+  observed &lt;- as.matrix(X[, columns, drop = FALSE])
+  storage.mode(observed) &lt;- &quot;double&quot;
+  expected &lt;- tcrossprod(
+    row_totals / grand_total,
+    column_totals[columns]
+  )
+
+  # Half the Poisson deviance equals mu when x = 0. Evaluate x log(x/mu)
+  # only where x is positive, avoiding log(0).
+  deviance_half &lt;- expected - observed
+  positive &lt;- observed &gt; 0
+  if (any(positive)) {
+    x &lt;- observed[positive]
+    mu &lt;- pmax(expected[positive], .Machine$double.xmin)
+    deviance_half[positive] &lt;- x * log(x / mu) - (x - mu)
+  }
+
+  residual &lt;- sign(observed - expected) *
+    sqrt(pmax(2 * deviance_half, 0))
+  if (any(!is.finite(residual))) {
+    stop(&quot;Non-finite Poisson-deviance residuals were produced.&quot;)
+  }
+  residual
+}
+
+# Score every feature by its total squared deviance residual, in blocks.
+score_poisson_deviance_features &lt;- function(
+    X,
+    block_size,
+    row_totals,
+    column_totals,
+    grand_total
+) {
+  p &lt;- ncol(X)
+  score &lt;- numeric(p)
+  for (block_start in seq.int(1L, p, by = block_size)) {
+    block_end &lt;- min(p, block_start + block_size - 1L)
+    columns &lt;- seq.int(block_start, block_end)
+    residual &lt;- poisson_deviance_residual_block(
+      X,
+      columns,
+      row_totals,
+      column_totals,
+      grand_total
+    )
+    score[columns] &lt;- colSums(residual * residual)
+  }
+  score
+}
+
+# Select deviant features, cluster nonzero documents, and return initial L.
+initialize_deviance_kmeans &lt;- function(
+    X,
+    K,
+    nfeatures = 1000L,
+    block_memory_mb = 256,
+    minimum_document_frequency = 5L,
+    maximum_document_frequency_fraction = 0.95,
+    kmeans_nstart = 25L,
+    kmeans_seed = 2L,
+    loading_epsilon = 1e-4
+) {
+  X &lt;- prepare_sparse_X(X)
+  stopifnot(
+    K &gt;= 2L,
+    nfeatures &gt;= 1L,
+    is.finite(block_memory_mb),
+    block_memory_mb &gt; 0,
+    minimum_document_frequency &gt;= 0L,
+    is.finite(maximum_document_frequency_fraction),
+    maximum_document_frequency_fraction &gt; 0,
+    maximum_document_frequency_fraction &lt;= 1,
+    kmeans_nstart &gt;= 1L,
+    is.finite(loading_epsilon),
+    loading_epsilon &gt; 0,
+    loading_epsilon &lt; 1
+  )
+
+  n &lt;- nrow(X)
+  p &lt;- ncol(X)
+  cache &lt;- attr(X, &quot;bg_sparse_cache&quot;, exact = TRUE)
+  grand_total &lt;- sum(cache$row_totals)
+  if (grand_total &lt;= 0) {
+    stop(&quot;X has zero grand total; deviance initialization is undefined.&quot;)
+  }
+
+  # The residual calculation holds about six dense n-by-block matrices.
+  block_size &lt;- as.integer(max(
+    1,
+    min(p, floor(block_memory_mb * 1e6 / (8 * 6 * n)))
+  ))
+  score &lt;- score_poisson_deviance_features(
+    X,
+    block_size,
+    cache$row_totals,
+    cache$column_totals,
+    grand_total
+  )
+
+  eligible_feature &lt;-
+    cache$column_totals &gt; 0 &amp;
+    cache$document_frequency &gt;= minimum_document_frequency &amp;
+    cache$document_frequency &lt;=
+      maximum_document_frequency_fraction * n
+  eligible &lt;- which(eligible_feature)
+  if (!length(eligible)) {
+    stop(
+      &quot;No features pass the nonzero-total and document-frequency filters.&quot;
+    )
+  }
+
+  ranked &lt;- eligible[
+    order(-score[eligible], eligible, method = &quot;radix&quot;)
+  ]
+  selected &lt;- head(ranked, min(as.integer(nfeatures), length(ranked)))
+  rm(score)
+
+  residual &lt;- matrix(NA_real_, n, length(selected))
+  for (block_start in seq.int(1L, length(selected), by = block_size)) {
+    block_end &lt;- min(length(selected), block_start + block_size - 1L)
+    positions &lt;- seq.int(block_start, block_end)
+    residual[, positions] &lt;-
+      poisson_deviance_residual_block(
+        X,
+        selected[positions],
+        cache$row_totals,
+        cache$column_totals,
+        grand_total
+      )
+  }
+
+  nonzero_documents &lt;- which(cache$row_totals &gt; 0)
+  if (length(nonzero_documents) &lt; K) {
+    stop(&quot;Fewer than K nonzero-total documents are available for k-means.&quot;)
+  }
+
+  set.seed(kmeans_seed)
+  cluster &lt;- stats::kmeans(
+    residual[nonzero_documents, , drop = FALSE],
+    centers = K,
+    nstart = kmeans_nstart,
+    iter.max = 100L
+  )$cluster
+
+  # Give each clustered document one dominant factor. All-zero documents are
+  # excluded from k-means and receive neutral loadings.
+  L &lt;- matrix(loading_epsilon, n, K)
+  L[cbind(nonzero_documents, cluster)] &lt;- 1
+  zero_documents &lt;- which(cache$row_totals == 0)
+  L[zero_documents, ] &lt;- 1 / K
+
+  stopifnot(
+    all(is.finite(L)),
+    all(L &gt; 0)
+  )
+  L
+}</code></pre>
+</div>
+<div id="possible-initialization-method-fasttopics"
+class="section level4">
+<h4>Possible initialization method: fastTopics</h4>
+<pre class="r"><code># Fit Poisson NMF and return a positive, column-scaled loading matrix.
+initialize_fasttopics &lt;- function(
+    X,
+    K,
+    numiter = 200L,
+    seed = 2L,
+    minimum_loading = 1e-12
+) {
+  if (!requireNamespace(&quot;fastTopics&quot;, quietly = TRUE)) {
+    stop(&quot;The fastTopics package is required for this initialization.&quot;)
+  }
+  stopifnot(
+    K &gt;= 1L,
+    numiter &gt;= 1L,
+    length(minimum_loading) == 1L,
+    is.finite(minimum_loading),
+    minimum_loading &gt; 0
+  )
+
+  X &lt;- prepare_sparse_X(X)
+  set.seed(seed)
+  L &lt;- fastTopics::fit_poisson_nmf(
+    X,
+    K,
+    numiter = numiter,
+    verbose = &quot;none&quot;
+  )$L
+
+  # NMF column scales are arbitrary. Match the unit-mean qF initialization
+  # while retaining the relative document loadings within each factor.
+  L &lt;- pmax(L, minimum_loading)
+  L &lt;- sweep(L, 2L, colMeans(L), &quot;/&quot;)
+  stopifnot(
+    all(dim(L) == c(nrow(X), K)),
+    all(is.finite(L)),
+    all(L &gt; 0)
+  )
+  L
+}</code></pre>
+</div>
+</div>
+<div id="any-helper-functions" class="section level3">
+<h3>Any helper functions</h3>
+<p>Record helper functions here.</p>
+<pre class="r"><code>prepare_sparse_X &lt;- function(X) {
+  cached &lt;- attr(X, &quot;bg_sparse_cache&quot;, exact = TRUE)
+  if (!is.null(cached)) {
+    return(X)
+  }
+
+  if (length(dim(X)) != 2L || nrow(X) &lt; 1L || ncol(X) &lt; 1L ||
+      (!is.matrix(X) &amp;&amp; !inherits(X, &quot;sparseMatrix&quot;))) {
+    stop(&quot;X must be a nonempty matrix or Matrix sparse matrix.&quot;)
+  }
+  if (!requireNamespace(&quot;Matrix&quot;, quietly = TRUE)) {
+    stop(&quot;The Matrix package is required for sparse input.&quot;)
+  }
+  if (!inherits(X, &quot;sparseMatrix&quot;)) {
+    X &lt;- Matrix::Matrix(X, sparse = TRUE)
+  }
+  if (!inherits(X, &quot;dgCMatrix&quot;)) {
+    X &lt;- methods::as(X, &quot;dgCMatrix&quot;)
+  }
+  X &lt;- Matrix::drop0(X)
+  if (any(!is.finite(X@x)) || any(X@x &lt; 0)) {
+    stop(&quot;X must contain finite, nonnegative counts.&quot;)
+  }
+
+  # Cache quantities determined solely by X and its fixed sparsity pattern.
+  # update_qZ reuses the coordinates, while initialization and the f0 update
+  # reuse the marginal counts without rescanning X.
+  attr(X, &quot;bg_sparse_cache&quot;) &lt;- list(
+    row_index = X@i + 1L,
+    column_index = rep.int(seq_len(ncol(X)), diff(X@p)),
+    row_totals = as.numeric(Matrix::rowSums(X)),
+    column_totals = as.numeric(Matrix::colSums(X)),
+    document_frequency = diff(X@p)
+  )
+  X
+}</code></pre>
+</div>
+<div id="full-ebpmf-bg-loop" class="section level3">
+<h3>Full EBPMF-BG Loop</h3>
+<p><code>run_ebpmf_bg_cavi</code> function puts together qF, pi, qZ, L,
+f0 updates, along with initialization, L scaling, ELBO calculation.</p>
+<pre class="r"><code>run_ebpmf_bg_cavi &lt;- function(
+    state,
+    X,
+    a,
+    max_niter = 500L,
+    elbo_every = 10L,
+    fit_elbo_tolerance = 1e-6,
+    fit_elbo_patience = 3L,
+    estimate_pi = TRUE,
+    estimate_f0 = TRUE,
+    early_stop = TRUE
+) {
+  X &lt;- prepare_sparse_X(X)
+  stopifnot(
+    max_niter &gt;= 1L,
+    elbo_every &gt;= 1L,
+    fit_elbo_tolerance &gt;= 0,
+    fit_elbo_patience &gt;= 1L,
+    isTRUE(estimate_pi) || identical(estimate_pi, FALSE), # Is one logical value?
+    isTRUE(estimate_f0) || identical(estimate_f0, FALSE),
+    isTRUE(early_stop) || identical(early_stop, FALSE)
+  )
+  # Compute once and store for f0 update
+  y &lt;- attr(X, &quot;bg_sparse_cache&quot;, exact = TRUE)$column_totals # y_j = \sum_i X_{ij}
+
+  # Compute qZ once after initialization and any oracle overrides.
+  state &lt;- update_qZ(state, X)
+  previous_elbo &lt;- calculate_elbo(state, X, a)
+  if (!is.finite(previous_elbo)) {
+    stop(&quot;The initial EBPMF-BG ELBO is not finite.&quot;)
+  }
+
+  # Preallocate traces. pi_trace is retained because downstream plots use the
+  # complete mixture-weight path; ELBO is stored only at checkpoints.
+  n_checkpoints &lt;- max_niter %/% elbo_every + 1L
+  elbo_trace &lt;- data.frame(
+    iteration = integer(n_checkpoints),
+    elbo = rep(NA_real_, n_checkpoints),
+    relative_change = rep(NA_real_, n_checkpoints)
+  )
+  elbo_trace$elbo[1L] &lt;- previous_elbo
+
+  pi_trace &lt;- array(
+    NA_real_,
+    dim = c(max_niter + 1L, length(a), ncol(state$L)),
+    dimnames = list(
+      iteration = 0:max_niter,
+      mixture = paste0(&quot;a=&quot;, a),
+      estimated_factor = paste0(&quot;column&quot;, seq_len(ncol(state$L)))
+    )
+  )
+  pi_trace[1L, , ] &lt;- state$pi
+
+  checkpoint &lt;- 1L
+  stable_checkpoints &lt;- 0L
+  converged &lt;- FALSE
+
+  for (iter in seq_len(max_niter)) {
+    # One coordinate-ascent sweep: F/pi, allocations, loadings, then f0.
+    state &lt;- update_qF(state, a)
+    if (estimate_pi) state &lt;- update_pi(state)
+    state &lt;- update_qZ(state, X)
+    state &lt;- update_L(state)
+    if (estimate_f0) {
+      state &lt;- update_f0(state, y)
+      state &lt;- normalize_loading_scale(state)
+    }
+    pi_trace[iter + 1L, , ] &lt;- state$pi
+
+    if (iter %% elbo_every != 0L) next
+
+    # Check convergence from successive checkpoint ELBO values.
+    current_elbo &lt;- calculate_elbo(state, X, a)
+    relative_change &lt;- abs(current_elbo - previous_elbo) /
+      max(1, abs(previous_elbo))
+    if (!is.finite(current_elbo) || !is.finite(relative_change)) {
+      stop(&quot;The EBPMF-BG ELBO became non-finite at iteration &quot;, iter, &quot;.&quot;)
+    }
+
+    checkpoint &lt;- checkpoint + 1L
+    elbo_trace[checkpoint, ] &lt;- list(iter, current_elbo, relative_change)
+    stable_checkpoints &lt;- if (relative_change &lt;= fit_elbo_tolerance) {
+      stable_checkpoints + 1L
+    } else {
+      0L
+    }
+    converged &lt;- early_stop &amp;&amp; stable_checkpoints &gt;= fit_elbo_patience
+    previous_elbo &lt;- current_elbo
+    if (converged) break
+  }
+
+  completed_niter &lt;- iter
+  elbo_trace &lt;- elbo_trace[seq_len(checkpoint), , drop = FALSE]
+  pi_trace &lt;- pi_trace[seq_len(completed_niter + 1L), , , drop = FALSE]
+
+  list(
+    state = state,
+    elbo_trace = elbo_trace,
+    pi_trace = pi_trace,
+    completed_niter = completed_niter,
+    converged = converged
+  )
+}</code></pre>
+</div>
+<div id="create-simulated-data" class="section level3">
+<h3>Create Simulated Data</h3>
+<p>Generate simulated synthetic data explored in
+<code>bg_sim.Rmd</code>.</p>
+<pre class="r"><code># Simulate X and the generating L, F, f0, and pi.
+simulate_background_model &lt;- function(
+    n,
+    p,
+    K,
+    a,
+    pi,
+    seed = 1L,
+    loading_mode = c(&quot;single&quot;, &quot;primary_secondary&quot;),
+    primary_weight = 0.7,
+    epsilon = 1e-4
+) {
+  loading_mode &lt;- match.arg(loading_mode)
+  M &lt;- length(a)
+  stopifnot(
+    n &gt;= K,
+    p &gt;= 1L,
+    K &gt;= 1L,
+    all(is.finite(a)),
+    all(a &gt; 0),
+    is.matrix(pi),
+    all(dim(pi) == c(M, K)),
+    all(is.finite(pi)),
+    all(pi &gt;= 0),
+    all(abs(colSums(pi) - 1) &lt; 1e-10),
+    length(epsilon) == 1L,
+    is.finite(epsilon),
+    epsilon &gt; 0,
+    K * epsilon &lt; 1
+  )
+  if (loading_mode == &quot;primary_secondary&quot;) {
+    stopifnot(
+      K &gt;= 2L,
+      length(primary_weight) == 1L,
+      is.finite(primary_weight),
+      primary_weight &gt; 0,
+      primary_weight &lt; 1
+    )
+  }
+
+  set.seed(seed)
+  # Draw each feature&#39;s Gamma-mixture component and factor value.
+  F &lt;- matrix(0, p, K)
+  for (k in seq_len(K)) {
+    component &lt;- sample.int(M, p, replace = TRUE, prob = pi[, k])
+    F[, k] &lt;- rgamma(p, shape = a[component], rate = a[component])
+  }
+
+  # Assign balanced primary groups.
+  group_size &lt;- rep(n %/% K, K)
+  group_size[seq_len(n %% K)] &lt;- group_size[seq_len(n %% K)] + 1L
+  primary &lt;- rep(seq_len(K), group_size)
+
+  L &lt;- matrix(epsilon, n, K)
+  row &lt;- seq_len(n)
+  if (loading_mode == &quot;single&quot;) {
+    L[cbind(row, primary)] &lt;- 1 - (K - 1L) * epsilon
+  } else {
+    # Select a secondary factor uniformly, excluding the primary factor.
+    secondary &lt;- (
+      primary - 1L + sample.int(K - 1L, n, replace = TRUE)
+    ) %% K + 1L
+
+    # Split the mass left after assigning epsilon to inactive factors.
+    active_mass &lt;- 1 - (K - 2L) * epsilon
+    L[cbind(row, primary)] &lt;- primary_weight * active_mass
+    L[cbind(row, secondary)] &lt;- (1 - primary_weight) * active_mass
+  }
+
+  f0 &lt;- exp(rnorm(p, sd = 0.4)) # Increase sd for stronger heterogeneity
+  f0 &lt;- f0 / mean(f0) # Now f0 represents relative feature-specific background intensity
+
+  # A sum of independent Poisson variables is Poisson with the summed rate,
+  # so neither component-specific rates nor an n x p x K latent Z are needed.
+  X &lt;- tcrossprod(L, F * f0)
+  X[] &lt;- rpois(length(X), X)
+  X &lt;- prepare_sparse_X(X)
+
+  list(X = X, L = L, F = F, f0 = f0, pi = pi)
+}</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.6.1 (2026-06-24)
+Platform: aarch64-apple-darwin23
+Running under: macOS Tahoe 26.6.2
+
+Matrix products: default
+BLAS:   /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.6/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: America/Chicago
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] here_1.0.2      workflowr_1.7.2
+
+loaded via a namespace (and not attached):
+ [1] vctrs_0.7.3       httr_1.4.8        cli_3.6.6         knitr_1.51       
+ [5] rlang_1.3.0       xfun_0.60         stringi_1.8.7     otel_0.2.0       
+ [9] processx_3.9.0    promises_1.5.0    jsonlite_2.0.0    glue_1.8.1       
+[13] rprojroot_2.1.1   git2r_0.36.2      htmltools_0.5.9   httpuv_1.6.17    
+[17] sass_0.4.10       rmarkdown_2.31    jquerylib_0.1.4   tibble_3.3.1     
+[21] evaluate_1.0.5    fastmap_1.2.0     yaml_2.3.12       lifecycle_1.0.5  
+[25] whisker_0.4.1     stringr_1.6.0     compiler_4.6.1    fs_2.1.0         
+[29] pkgconfig_2.0.3   Rcpp_1.1.2        rstudioapi_0.19.0 later_1.4.8      
+[33] digest_0.6.39     R6_2.6.1          pillar_1.11.1     callr_3.8.0      
+[37] magrittr_2.0.5    bslib_0.11.0      tools_4.6.1       cachem_1.1.0     
+[41] getPass_0.2-4    </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+https://docs.mathjax.org/en/latest/web/configuration.html. This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
