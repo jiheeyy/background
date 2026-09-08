@@ -39,7 +39,7 @@ run_rmd_chunk <- function(file, label, envir = globalenv()) {
 }
 ```
 
-This page presents the mathematical foundation of the proposed ebpmf-background model.
+This page presents, briefly, the mathematical foundation of the proposed ebpmf-background model.
 
 # Section 1: ebpmf-background problem formulation
 Let ${\bf X} \in \mathbb{R}_{+}^{n \times p}$ denote a matrix of observed counts $x_{ij} \in \mathbb{R}$. Background Poisson NMF parameters include ${\bf L} \in \mathbb{R}_{+}^{n \times K}$, ${\bf F} \in \mathbb{R}_{+}^{p\times K}$, and $\bf f_0 \in \mathbb{R}_{+}^p$ and we seek values of ${\bf L}$, ${\bf F}$, $\bf f_0$ such that ${\bf X} \approx ({\bf L}{\bf F}^T) \text{diag}({\bf f_0})$. In the progress, we will also update ${\boldsymbol \pi} \in \mathbb{R}_{+}^{M \times K}$.
@@ -224,7 +224,7 @@ $$
 q(\delta_{jk}=m)=r_{jkm}.
 $$
 
-The implementation stores these responsibilities as `resp[j, k, m]`. Define for simplicity the expected allocated count  $C_{jk} = \sum_{i=1}^{n}\mathbb{E}_q[z_{ijk}]$ and exposure $D_{jk}=f_{j0}\sum_{i=1}^{n}l_{ik}$.
+Define for simplicity the expected allocated count  $C_{jk} = \sum_{i=1}^{n}\mathbb{E}_q[z_{ijk}]$ and exposure $D_{jk}=f_{j0}\sum_{i=1}^{n}l_{ik}$.
 
 For a fixed mixture component $m$, the coordinate ascent variational inference (CAVI) update is
 
@@ -271,7 +271,7 @@ $$
 $$
 
 the updated Gamma shape and rate. The unnormalized joint factor can then be
-written as
+written as a product of unnormalized weight of component m and the Gamma density indicated by component m.
 
 $$
 q^*(f_{jk},\delta_{jk}=m)
@@ -426,7 +426,7 @@ $$
 
 ### Section 2.5 Update $f_0$
 
-Similar to 2.3 and 2.4, olding other parameters fixed, the $f_0$-dependent ELBO is
+Similar to 2.3 and 2.4, holding other parameters fixed, the $f_0$-dependent ELBO is
 
 $$
 \mathcal{L}_{f_0}
