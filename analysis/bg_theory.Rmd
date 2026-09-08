@@ -1,0 +1,463 @@
+---
+title: "Background Model's Mathematical Justifications"
+author: "Jihee You"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# I want to run something like 
+# run_rmd_chunk("analysis/bg.Rmd", "main-loop")
+# later
+
+knitr::opts_chunk$set(echo = TRUE)
+library(here)
+here()
+
+run_rmd_chunk <- function(file, label, envir = globalenv()) {
+  lines <- readLines(file)
+
+  start <- grep(
+    sprintf("^```\\{r[[:space:]]+%s([,[:space:]]|\\})", label),
+    lines
+  )
+
+  if (length(start) != 1L) {
+    stop("Chunk label not found or is not unique: ", label)
+  }
+
+  end <- which(seq_along(lines) > start & lines == "```")[1]
+
+  if (is.na(end)) {
+    stop("Closing code fence not found.")
+  }
+
+  eval(
+    parse(text = lines[(start + 1L):(end - 1L)]),
+    envir = envir
+  )
+}
+```
+
+This page presents the mathematical foundation of the proposed ebpmf-background model.
+
+# Section 1: ebpmf-background problem formulation
+Let ${\bf X} \in \mathbb{R}_{+}^{n \times p}$ denote a matrix of observed counts $x_{ij} \in \mathbb{R}$. Background Poisson NMF parameters include ${\bf L} \in \mathbb{R}_{+}^{n \times K}$, ${\bf F} \in \mathbb{R}_{+}^{p\times K}$, and $\bf f_0 \in \mathbb{R}_{+}^p$ and we seek values of ${\bf L}$, ${\bf F}$, $\bf f_0$ such that ${\bf X} \approx ({\bf L}{\bf F}^T) \text{diag}({\bf f_0})$. In the progress, we will also update ${\boldsymbol \pi} \in \mathbb{R}_{+}^{M \times K}$.
+
+$$
+\begin{align}
+x_{ij} &\sim \mathrm{Pois}(\lambda_{ij}) \\
+\lambda_{ij} &= f_{j0} \sum_{k=1}^K l_{ik} f_{jk} \\
+f_{jk} &\sim g_k, \qquad 
+g_k = \sum_{m=1}^M \pi_{mk} \text{Gamma}(\text{shape} = a_m, \text{rate} =a_m) \\
+f_{j0}, f_{jk}, 
+l_{ik}, \pi_{mk} &\geq 0, \qquad 
+\sum_{m=1}^M \pi_{mk}=1
+\quad \text{for each } k
+\end{align}
+$$
+
+We use the same Poisson latent variable formulation as in ebpmf-gamma, modified to include the background term $f_{j0}$:
+
+$$
+x_{ij} = \sum_{k=1}^K z_{ijk},
+\qquad
+z_{ijk} \sim \mathrm{Pois}(f_{j0}l_{ik}f_{jk}).
+$$
+The latent variable formulation remains essentially the same, with the main changes being the feature-specific background factor $\bf f_0$, and now $\pi_{mk}$ is the optimization objective while $a_m$ remains fixed.
+
+In addition, we maintain the assumption for mean field variational distribution $q(\mathbf{Z},\mathbf{F}) = q(\mathbf{Z})q(\mathbf{F})$. This is the only assumption we make for the posterior.
+
+# Section 2: EBPMF-BG ELBO Update
+
+### Section 2.1 Update $\boldsymbol \pi$
+
+Introduce a latent mixture indicator
+$\delta_{jk}\in\{1,\ldots,M\}$, with
+
+$$
+p(\delta_{jk}=m\mid \boldsymbol \pi)=\pi_{mk}.
+$$
+
+Here, we regard $\delta_{jk}$ as the hidden component assignment for $f_{jk}$, and $\pi_{mk}$ is the prior probability that $f_{\cdot k}$ belongs to component m. Note $\pi_{mk}$ is shared across all j.
+
+Variational posterior probability that component $m$ generated $f_{jk}$ can be called "responsibility":
+$$
+r_{jkm}
+=
+q(\delta_{jk}=m)
+$$
+
+These responsibilities are updated in the $q(F,{\boldsymbol \delta})$ update in Section 2.2 and are held fixed when updating $\boldsymbol \pi$.To see how responsibilities enter the $\boldsymbol \pi$ update, begin with the full ELBO for the indicator-augmented model:
+
+$$
+\begin{aligned}
+\mathcal{L}
+&=
+\mathbb{E}_q\Big[
+\log p(Z\mid L,F,f_0)
++ \log p(F\mid\delta)
++ \log p(\delta\mid\pi) \\
+&\qquad\qquad
+- \log q(Z)
+- \log q(F,\delta)
+\Big]
++ \mathrm{const}.
+\end{aligned}
+$$
+
+During the coordinate update for $\pi$, the variational distribution $q$ and the model parameters other than $\pi$ are held fixed. Consequently, $\log p(\delta\mid\pi)$ is the only term in the full ELBO that changes with $\pi$. All remaining terms can be absorbed into a constant:
+
+$$
+\mathcal{L}_{\pi}
+=
+\mathbb{E}_q[\log p(\delta\mid\pi)]
++ \mathrm{const}.
+$$
+
+Because each $\delta_{jk}$ is categorical, its probability can be written
+using indicator variables:
+
+$$
+\begin{aligned}
+p(\delta_{jk}=m\mid\pi)
+&=
+\pi_{mk} \\
+&=
+\prod_{m=1}^{M}
+\pi_{mk}^{\mathbf{1}\{\delta_{jk}=m\}} \\
+\log p(\delta\mid\pi)
+&=
+\sum_{j=1}^{p}
+\sum_{k=1}^{K}
+\sum_{m=1}^{M}
+\mathbf{1}\{\delta_{jk}=m\}\log\pi_{mk}.
+\end{aligned}
+$$
+
+Taking the expectation replaces each indicator by its variational probability:
+
+$$
+\mathbb{E}_q\!\left[
+\mathbf{1}\{\delta_{jk}=m\}
+\right]
+=
+q(\delta_{jk}=m)
+=
+r_{jkm}.
+$$
+
+Therefore,
+
+$$
+\begin{aligned}
+\mathcal{L}_{\pi}
+&=
+\sum_{j=1}^{p}
+\sum_{k=1}^{K}
+\sum_{m=1}^{M}
+r_{jkm}\log\pi_{mk}
++ \mathrm{const}.
+\end{aligned}
+$$
+
+For each factor $k$, define the expected component count for simplicity:
+
+$$
+N_{mk}
+=
+\sum_{j=1}^{p}r_{jkm}.
+$$
+
+The coordinate update for $\pi_{\cdot k}$ therefore solves
+
+$$
+\begin{aligned}
+\underset{\pi_{\cdot k}}{\operatorname{maximize}}
+\quad&
+\sum_{m=1}^{M}N_{mk}\log\pi_{mk} \\
+\text{subject to}\quad&
+\pi_{mk}\geq 0,
+\qquad
+\sum_{m=1}^{M}\pi_{mk}=1.
+\end{aligned}
+$$
+
+This is a multinomial maximum-likelihood problem with soft
+component counts. Its solution is
+
+$$
+\begin{aligned}
+\pi_{mk}^{\mathrm{new}}
+&=
+\frac{N_{mk}}{\sum_{h=1}^{M}N_{hk}} \\
+&=
+\frac{\sum_{j=1}^{p}r_{jkm}}{p},
+\end{aligned}
+$$
+
+because $\sum_{m=1}^{M}r_{jkm}=1$ for every feature $j$ and factor $k$.
+
+<!-- In finite-precision arithmetic, repeated updates can drive an unused component
+below the smallest representable positive number. The implementation therefore
+solves the same multinomial M-step with the additional numerical constraint
+$\pi_{mk}\geq\epsilon$, using $\epsilon=10^{-12}$. Components whose unconstrained
+weights fall below $\epsilon$ are fixed at the boundary, and the remaining
+probability mass is distributed among the free components in proportion to
+their expected counts. This keeps `log(pi)` finite while preserving an exact
+coordinate maximizer over the constrained simplex. -->
+
+
+### Section 2.2 Update $q(F,\delta)$
+The Gamma-mixture indicator is explicit in this update. For each
+$f_{jk}$, use the variational factorization
+
+$$
+q(f_{jk},\delta_{jk})
+=
+q(f_{jk}\mid\delta_{jk})q(\delta_{jk}),
+$$
+
+where
+
+$$
+q(\delta_{jk}=m)=r_{jkm}.
+$$
+
+The implementation stores these responsibilities as `resp[j, k, m]`. Define for simplicity the expected allocated count  $C_{jk} = \sum_{i=1}^{n}\mathbb{E}_q[z_{ijk}]$ and exposure $D_{jk}=f_{j0}\sum_{i=1}^{n}l_{ik}$.
+
+For a fixed mixture component $m$, the coordinate ascent variational inference (CAVI) update is
+
+$$
+\begin{aligned}
+q^*(f_{jk},\delta_{jk}=m)
+&\propto
+\exp\Bigg\{
+\mathbb{E}_{q(Z)}
+\left[
+\log p(Z_{\cdot jk}\mid L_{\cdot k},f_{jk},f_{j0})
+\right]
++\log p(f_{jk}\mid\delta_{jk}=m)
++\log p(\delta_{jk}=m\mid\pi)
+\Bigg\} \\[4pt]
+&\propto
+\exp\Bigg\{
+\underbrace{
+C_{jk}\log f_{jk}-D_{jk}f_{jk}
+}_{\text{likelihood terms involving }f_{jk}}
++
+\log\left[
+\frac{a_m^{a_m}}{\Gamma(a_m)}
+f_{jk}^{a_m-1}
+\exp(-a_mf_{jk})
+\right]
++\log\pi_{mk}
+\Bigg\} \\[4pt]
+&\propto
+\pi_{mk}
+\frac{a_m^{a_m}}{\Gamma(a_m)}
+\underbrace{f_{jk}^{a_m+C_{jk}-1}
+\exp\left[-(a_m+D_{jk})f_{jk}\right]}_{\text{kernel of Gamma(shape =} a_m + C_{jk}, \text{rate = } a_m + D_{jk} )}.
+\end{aligned}
+$$
+Define for simplicity
+
+$$
+\alpha_{jkm}=a_m+C_{jk},
+$$
+
+$$
+\beta_{jkm}=a_m+D_{jk},
+$$
+
+the updated Gamma shape and rate. The unnormalized joint factor can then be
+written as
+
+$$
+q^*(f_{jk},\delta_{jk}=m)
+\propto
+\widetilde r_{jkm}
+\operatorname{Gamma}
+\left(f_{jk};\alpha_{jkm},\beta_{jkm}\right),
+$$
+
+Integrating the unnormalized joint kernel over $f_{jk}$ gives the component
+responsibility up to a common normalization constant:
+
+$$
+\begin{aligned}
+\widetilde r_{jkm}
+&\propto
+\int_0^\infty
+q^*(f_{jk},\delta_{jk}=m)\,df_{jk} \\
+&\propto
+\pi_{mk}
+\int_0^\infty
+\operatorname{Pois}(C_{jk};D_{jk}f_{jk})
+\operatorname{Gamma}(f_{jk};a_m,a_m)
+\,df_{jk} \\
+&\propto
+\pi_{mk}\,
+\widetilde{\operatorname{NB}}
+\left(
+C_{jk};
+\operatorname{size}=a_m,\,
+\operatorname{prob}=
+\frac{a_m}{a_m+D_{jk}}
+\right).
+\end{aligned}
+$$
+
+Here $\widetilde{\operatorname{NB}}$ denotes an NB-shaped Gamma--Poisson
+marginal score. It is not necessarily an ordinary negative-binomial
+probability mass because $C_{jk}$ is an expected count and can be fractional.
+The implementation evaluates the equivalent Gamma-function expression on the
+log scale for numerical stability.
+
+Normalizing over mixture components gives
+
+$$
+r_{jkm}
+=
+\frac{\widetilde r_{jkm}}
+{\sum_{h=1}^{M}\widetilde r_{jkh}}.
+$$
+
+Therefore,
+
+$$
+q(\delta_{jk}=m)=r_{jkm},
+$$
+
+and
+
+$$
+q(f_{jk}\mid\delta_{jk}=m)
+=
+\operatorname{Gamma}
+\left(f_{jk};\alpha_{jkm},\beta_{jkm}\right).
+$$
+
+The moments required by the $q(Z)$, $L$, and ELBO calculations are
+
+$$
+\mathbb{E}_q[f_{jk}]
+=
+\sum_{m=1}^{M}
+r_{jkm}\frac{\alpha_{jkm}}{\beta_{jkm}},
+$$
+
+and
+
+$$
+\mathbb{E}_q[\log f_{jk}]
+=
+\sum_{m=1}^{M}
+r_{jkm}
+\left[
+\psi(\alpha_{jkm})-\log\beta_{jkm}
+\right].
+$$
+
+### Section 2.3 Update q(Z)
+
+The CAVI update is
+
+$$
+q^*(Z)
+\propto
+\exp\left\{
+\mathbb{E}_{q(F,\delta)}
+\left[\log p(Z\mid L,F,f_0)\right]
+\right\}.
+$$
+
+Conditional on $X_{ij}=\sum_k Z_{ijk}$, the factor allocations follow
+
+$$
+q(Z_{ij\cdot})
+=
+\operatorname{Multinomial}
+\left(X_{ij};\phi_{ij1},\ldots,\phi_{ijK}\right),
+$$
+
+where
+
+$$
+\phi_{ijk}
+=
+\frac{
+l_{ik}\exp(\mathbb{E}_q [\log f_{jk}])
+}{
+\sum_{h=1}^{K}l_{ih}\exp(\mathbb{E}_q [\log f_{jk}])
+}.
+$$
+
+The factor $f_{j0}$ cancels because it is shared across $k$ for a fixed
+feature $j$.
+
+### Section 2.4 Update L
+
+Holding other parameters fixed, the $L$-dependent ELBO is
+
+$$
+\mathcal{L}_L
+=
+\sum_{i=1}^{n}\sum_{k=1}^{K}
+\left[
+\left(\sum_{j=1}^{p}\overline z_{ijk}\right)\log l_{ik}
+-
+l_{ik}\sum_{j=1}^{p}f_{j0}\mathbb{E}_q [f_{jk}]
+\right]
++ \mathrm{const}.
+$$
+
+Setting its derivative to zero gives the maximizer
+
+$$
+l_{ik}^{\mathrm{new}}
+=
+\frac{
+\sum_{j=1}^{p}\overline z_{ijk}
+}{
+\sum_{j=1}^{p}f_{j0}\mathbb{E}_q [f_{jk}]
+}.
+$$
+
+### Section 2.5 Update $f_0$
+
+Similar to 2.3 and 2.4, olding other parameters fixed, the $f_0$-dependent ELBO is
+
+$$
+\mathcal{L}_{f_0}
+=
+\sum_{j=1}^{p}
+\left[
+\left(\sum_{i=1}^{n}\sum_{k=1}^{K}\overline z_{ijk}\right)
+\log f_{j0}
+-
+f_{j0}
+\sum_{i=1}^{n}\sum_{k=1}^{K}
+l_{ik}\mathbb{E}_q [f_{jk}]
+\right]
++ \mathrm{const}.
+$$
+
+Because $\sum_k\overline z_{ijk}=X_{ij}$, define for simplicity:
+
+$$
+y_j=\sum_{i=1}^{n}X_{ij},
+\qquad
+A_j
+=
+\sum_{k=1}^{K}
+\left(\sum_{i=1}^{n}l_{ik}\right)\mathbb{E}_q [f_{jk}].
+$$
+
+Maximizing $y_j\log f_{j0}-A_jf_{j0}$ gives
+
+$$
+f_{j0}^{\mathrm{new}}
+=
+\frac{y_j}{A_j}.
+$$
