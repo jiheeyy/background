@@ -1,0 +1,208 @@
+---
+title: "Background Model on Newsgroups Dataset"
+author: "Jihee You"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE
+)
+library(here)
+library(Matrix)
+library(ggplot2)
+library(cowplot)
+library(fastTopics)
+source(here("docs", "code", "bg_implement.R"), local = TRUE)
+source(here("docs", "code", "bg_post.R"), local = TRUE)
+```
+
+# Experiments on Newsgroups
+
+Both models use the full document-by-term count matrix by default.
+
+```{r load}
+news <- load_news_data(
+  here("docs", "data", "newsgroups.RData"),
+  here("docs", "data", "20news-bydate", "train.map")
+)
+```
+
+```{r run}
+K <- 10L
+a <- c(0.1, 1, 10, 100, 1000)
+ebpmf_maxiter <- 600L
+fasttopics_numiter <- 600L
+X <- news$X
+
+set.seed(1)
+
+stopifnot(nrow(X) > 0L, ncol(X) > 0L, all(Matrix::colSums(X) > 0))
+ebpmf_elapsed <- system.time({
+  state <- initialize_state(X, K, a, L_init = "deviance_kmeans")
+  initial_state <- state
+  ebpmf <- run_ebpmf_bg_cavi(
+    state, X, a, max_niter = ebpmf_maxiter, early_stop = FALSE
+  )
+})[["elapsed"]]
+
+fasttopics_elapsed <- system.time({
+  fasttopics <- fastTopics::fit_poisson_nmf(
+    X, k = K, numiter = fasttopics_numiter,
+    init.method = "random", verbose = "none"
+  )
+})[["elapsed"]]
+fits <- list(
+  ebpmf = ebpmf,
+  fasttopics = fasttopics,
+  dimensions = data.frame(documents = nrow(X), terms = ncol(X), topics = K),
+  timing = data.frame(
+    method = c("EBPMF-BG", "fastTopics"),
+    initialization = c("deviance k-means L; all-one F", "random"),
+    iterations = c(ebpmf$completed_niter, fasttopics_numiter),
+    elapsed_seconds = c(ebpmf_elapsed, fasttopics_elapsed)
+  )
+)
+fits$dimensions
+fits$timing
+```
+
+Both models are fitted to the same sparse matrix. Timings include initialization and fitting.
+
+### See Initialized Loadings
+
+Document-topic proportions from the initial background model loadings, before CAVI updates.
+
+```{r initial-L, fig.width=14, fig.height=4, dpi=150}
+plot_news_structure(initial_state$L, news$labels)
+```
+
+### Align the fitted topics
+
+```{r newsgroups-align}
+aligned <- align_news_models(fits)
+aligned$alignment_table
+```
+
+The assignment matches fastTopics to EBPMF using the average cosine similarity of document-topic proportions and word profiles. 
+
+For EBPMF topic k and fastTopics topic h, the matching score is
+$$
+S_{kh}=
+\frac{
+\operatorname{cosine}(\text{doc-topic-prop}^{E}_{\cdot k},\text{doc-topic-prop}^{F}_{\cdot h})
++
+\operatorname{cosine}(F^{E}_{\cdot k},F^{F}_{\cdot h})
+}{2}.
+$$
+Topics match well when they have similar documents (in terms of topic contribution degree) and similar words.
+
+
+### Convergence diagnostics
+
+```{r newsgroups-convergence, fig.width=12, fig.height=8, dpi=150}
+plot_news_convergence(fits)
+```
+
+The fastTopics likelihood and EBPMF ELBO are different objectives; their
+magnitudes are not directly comparable.
+
+
+### Plot mixprop estimations
+
+```{r newsgroups-mixprop, fig.width=7, fig.height=6}
+plot_news_mixprop(fits$ebpmf$state$pi, a)
+```
+
+
+### Loading and word-frequency agreement
+
+```{r newsgroups-factor-agreement, fig.width=14, fig.height=10, dpi=150}
+plot_news_agreement(aligned, news$terms)
+```
+
+
+### Document-topic structure
+
+```{r newsgroups-structure, fig.width=14, fig.height=7.5, dpi=150}
+# The same horizontal position represents different documents in the two panels.
+plot_news_structure(aligned, news$labels, plot_sample = TRUE)
+plot_news_structure(aligned, news$labels, plot_sample = FALSE)
+```
+
+Both panels show the same sampled documents (sampled after full dataset fitting), grouped by observed newsgroup.
+Each model uses its own seeded 1D t-SNE ordering within each newsgroup for a smoother document topic graph. Therefore, the horizontal position does not represent same document in the two panels. 
+
+### Keywords
+
+Top words in each EBPMF topic, ranked by raw fitted $F_{jk}$.
+For EBPMF, these are posterior means $E_q[F_{jk}]$, without the background
+multiplier $f_{0j}$. These values are not normalized topic-word probabilities.
+
+```{r newsgroups-top-words}
+# Set n to 5, 10, 20, etc.; also lists recurring words and their topics.
+news_top_words(fits, news$terms, n = 5)
+```
+
+### Investigating a keyword
+
+Change `word`, `topic` below.
+
+```{r keyword-controls}
+word <- "stephanopoulos"
+topic <- 6L
+```
+
+Summary object returns more specific occurrences of a certain word. On the other hand, document object prints information of a single document containing the word, including the sorted word count of one document containing the word. How to interpret: 0.03 means 3 percent of the document's fitted expected word-count is attributed to topic k. Total_tokens 5044 means there were total of 5044 words in that document, whereas word_count is specific to the word of interest.
+
+```{r keyword-documents}
+news_word_documents(news, aligned$L_ebpmf_topics, word = word, k = topic, n=1) 
+```
+
+### Topic sizes
+
+`effective_documents` sums document-topic proportions. `dominant_documents`
+assigns each document to the topic associated with its largest document-topic proportion.
+
+```{r topic-sizes}
+news_topic_sizes(news, aligned$L_ebpmf_topics)
+```
+
+<!--
+### Keyword-like topic
+
+```{r newsgroups-keyword-topic, fig.width=12, fig.height=5.5, dpi=150}
+plot_news_keyword(aligned, news$X, news$terms)
+```
+
+The selected topic places the most average mass on words occurring across many
+documents. Labels identify words enriched relative to other topics.
+-->
+
+### Distinctive words
+
+```{r newsgroups-distinct}
+news_distinctive_words(aligned, news$terms)
+```
+
+A different notion of keywords. Words that do not appear frequently in other topics but appear in that topic.
+
+
+### Note on scaling
+Simply normalizing the loadings do not make sense. For example,
+If a document has $L_i = (2,2)$ simple normalization would yield $(0.5,0.5)$ document-topic proportion, but the two topics could have very different total feature masses $\sum_j F_{j1} = 10, \sum_j F_{j2} = 2$. Accounting for this, topic 1's contribution to the document i's expected total word count is $\frac{2*10}{24}$, and topic 2's contribution is $\frac{2*2}/24$.
+This is the document-topic proportion we are interested in. Note for the bg model, $F_{jk}$ would be replaced with $f_0 F_{jk}$. 
+$$
+\frac{
+L_{ik}\sum_jF_{jk}
+}{
+\sum_h L_{ih}\sum_jF_{jh}
+}
+$$
+
+### Note on background, keywords
+In some contexts, the background model makes more sense than a sparse model because . And how this model might naturally lead to identification of key genes or key words? Higher $F_{jk}$ means more 
+
+Where keywords are associated with smaller a,b and background words are associated with larger a,b (with larger variance).
