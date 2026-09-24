@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtreef7eae12c5b2e5feb59fc1f89e6f20af635a9b2c1targetblankf7eae12a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtreee88e3f1868df5c6e23350b2e27568b5045d76ca1targetblanke88e3f1a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/jiheeyy/background/tree/f7eae12c5b2e5feb59fc1f89e6f20af635a9b2c1" target="_blank">f7eae12</a>
+<a href="https://github.com/jiheeyy/background/tree/e88e3f1868df5c6e23350b2e27568b5045d76ca1" target="_blank">e88e3f1</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtreef7eae12c5b2e5feb59fc1f89e6f20af635a9b2c1targetblankf7eae12a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtreee88e3f1868df5c6e23350b2e27568b5045d76ca1targetblanke88e3f1a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/jiheeyy/background/tree/f7eae12c5b2e5feb59fc1f89e6f20af635a9b2c1" target="_blank">f7eae12</a>.
+<a href="https://github.com/jiheeyy/background/tree/e88e3f1868df5c6e23350b2e27568b5045d76ca1" target="_blank">e88e3f1</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -631,6 +631,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/jiheeyy/background/blob/e88e3f1868df5c6e23350b2e27568b5045d76ca1/analysis/bg_news.Rmd" target="_blank">e88e3f1</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-09-24
+</td>
+<td>
+wflow_publish("analysis/bg_news.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jiheeyy/background/fe723d7d67bc3ab66184877d778ff714d8e28f9c/docs/bg_news.html" target="_blank">fe723d7</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-09-24
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/jiheeyy/background/blob/f7eae12c5b2e5feb59fc1f89e6f20af635a9b2c1/analysis/bg_news.Rmd" target="_blank">f7eae12</a>
 </td>
 <td>
@@ -697,8 +731,8 @@ fits$dimensions</code></pre>
 1     18774 55911     10</code></pre>
 <pre class="r"><code>fits$timing</code></pre>
 <pre><code>      method                initialization iterations elapsed_seconds
-1   EBPMF-BG deviance k-means L; all-one F        600         488.755
-2 fastTopics                        random        600         585.613</code></pre>
+1   EBPMF-BG deviance k-means L; all-one F        600         483.726
+2 fastTopics                        random        600         586.685</code></pre>
 <p>Both models are fitted to the same sparse matrix. Timings include
 initialization and fitting.</p>
 <div id="see-initialized-loadings" class="section level3">
@@ -707,6 +741,43 @@ initialization and fitting.</p>
 loadings, before CAVI updates.</p>
 <pre class="r"><code>plot_news_structure(initial_state$L, news$labels)</code></pre>
 <p><img src="figure/bg_news.Rmd/initial-L-1.png" alt="" width="2100" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-initial-L-1">
+Past versions of initial-L-1.png
+</button>
+</p>
+<div id="fig-initial-L-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/fe723d7d67bc3ab66184877d778ff714d8e28f9c/docs/figure/bg_news.Rmd/initial-L-1.png" target="_blank">fe723d7</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-09-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="align-the-fitted-topics" class="section level3">
 <h3>Align the fitted topics</h3>
@@ -741,6 +812,43 @@ of topic contribution degree) and similar words.</p>
 <h3>Convergence diagnostics</h3>
 <pre class="r"><code>plot_news_convergence(fits)</code></pre>
 <p><img src="figure/bg_news.Rmd/newsgroups-convergence-1.png" alt="" width="1800" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-newsgroups-convergence-1">
+Past versions of newsgroups-convergence-1.png
+</button>
+</p>
+<div id="fig-newsgroups-convergence-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/fe723d7d67bc3ab66184877d778ff714d8e28f9c/docs/figure/bg_news.Rmd/newsgroups-convergence-1.png" target="_blank">fe723d7</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-09-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>The fastTopics likelihood and EBPMF ELBO are different objectives;
 their magnitudes are not directly comparable.</p>
 </div>
@@ -748,11 +856,85 @@ their magnitudes are not directly comparable.</p>
 <h3>Plot mixprop estimations</h3>
 <pre class="r"><code>plot_news_mixprop(fits$ebpmf$state$pi, a)</code></pre>
 <p><img src="figure/bg_news.Rmd/newsgroups-mixprop-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-newsgroups-mixprop-1">
+Past versions of newsgroups-mixprop-1.png
+</button>
+</p>
+<div id="fig-newsgroups-mixprop-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/fe723d7d67bc3ab66184877d778ff714d8e28f9c/docs/figure/bg_news.Rmd/newsgroups-mixprop-1.png" target="_blank">fe723d7</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-09-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="loading-and-word-frequency-agreement" class="section level3">
 <h3>Loading and word-frequency agreement</h3>
 <pre class="r"><code>plot_news_agreement(aligned, news$terms)</code></pre>
 <p><img src="figure/bg_news.Rmd/newsgroups-factor-agreement-1.png" alt="" width="2100" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-newsgroups-factor-agreement-1">
+Past versions of newsgroups-factor-agreement-1.png
+</button>
+</p>
+<div id="fig-newsgroups-factor-agreement-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/fe723d7d67bc3ab66184877d778ff714d8e28f9c/docs/figure/bg_news.Rmd/newsgroups-factor-agreement-1.png" target="_blank">fe723d7</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-09-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>   factor document_correlation word_correlation
 1      k1                0.887            0.932
 2      k2                0.122            0.222
@@ -770,8 +952,82 @@ their magnitudes are not directly comparable.</p>
 <pre class="r"><code># The same horizontal position represents different documents in the two panels.
 plot_news_structure(aligned, news$labels, plot_sample = TRUE)</code></pre>
 <p><img src="figure/bg_news.Rmd/newsgroups-structure-1.png" alt="" width="2100" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-newsgroups-structure-1">
+Past versions of newsgroups-structure-1.png
+</button>
+</p>
+<div id="fig-newsgroups-structure-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/fe723d7d67bc3ab66184877d778ff714d8e28f9c/docs/figure/bg_news.Rmd/newsgroups-structure-1.png" target="_blank">fe723d7</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-09-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>plot_news_structure(aligned, news$labels, plot_sample = FALSE)</code></pre>
 <p><img src="figure/bg_news.Rmd/newsgroups-structure-2.png" alt="" width="2100" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-newsgroups-structure-2">
+Past versions of newsgroups-structure-2.png
+</button>
+</p>
+<div id="fig-newsgroups-structure-2" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/fe723d7d67bc3ab66184877d778ff714d8e28f9c/docs/figure/bg_news.Rmd/newsgroups-structure-2.png" target="_blank">fe723d7</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-09-24
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>Both panels show the same sampled documents (sampled after full
 dataset fitting), grouped by observed newsgroup. Each model uses its own
 seeded 1D t-SNE ordering within each newsgroup for a smoother document
@@ -857,11 +1113,14 @@ topic &lt;- 6L</code></pre>
 <p>Summary object returns more specific occurrences of a certain word.
 On the other hand, document object prints information of a single
 document containing the word, including the sorted word count of one
-document containing the word. How to interpret: 0.03 means 3 percent of
-the document’s fitted expected word-count is attributed to topic k.
-Total_tokens 5044 means there were total of 5044 words in that document,
-whereas word_count is specific to the word of interest.</p>
-<pre class="r"><code>news_word_documents(news, aligned$L_ebpmf_topics, word = word, k = topic, n=1) </code></pre>
+document containing the word.</p>
+<p>Total_tokens 5044 means there were total of 5044 words in that
+document, whereas word_count is specific to the word of interest.
+topic_proportion means every document containing the selected word has
+at the lowest/highest, such ratio of document-topic proportions related
+to the selected topic.</p>
+<pre class="r"><code># Return n documents per group: highest and lowest topic membership.
+news_word_documents(news, aligned$L_ebpmf_topics, word = word, k = topic, n=1) </code></pre>
 <pre><code>$summary
             word topic documents_containing fraction_of_documents
 1 stephanopoulos    k6                    6          0.0003195909
@@ -869,10 +1128,18 @@ whereas word_count is specific to the word of interest.</p>
 1               450
 
 $documents
-   document_row          newsgroup topic_proportion word_count total_tokens
-k6        10682 talk.politics.misc     3.884376e-14        153         6339
-                                                                                                                                                                                                                                                                                                                              word_counts
-k6 the (409), that (243), to (197), stephanopoulos (153), mr (152), it (123), he (119), of (104), and (100), in (88), is (87), you (83), president (77), on (75), this (66), was (62), have (62), we (59), not (57), know (56), be (53), what (50), don (50), think (48), for (47), about (45), but (43), said (43), with (42), they (42)</code></pre>
+  membership document_row          newsgroup topic_proportion word_count
+1    highest        10715 talk.politics.misc     1.599212e-12          1
+2     lowest        10682 talk.politics.misc     3.884376e-14        153
+  total_tokens
+1          154
+2         6339
+                                                                                                                                                                                                                                                                                                                             word_counts
+1                          the (13), to (7), in (6), of (5), and (4), like (2), on (2), with (2), for (2), his (2), ten (2), slick (2), tax (2), care (2), top (2), health (2), willie (2), resources (1), available (1), get (1), go (1), lists (1), book (1), an (1), be (1), americans (1), jr (1), national (1), very (1), truth (1)
+2 the (409), that (243), to (197), stephanopoulos (153), mr (152), it (123), he (119), of (104), and (100), in (88), is (87), you (83), president (77), on (75), this (66), was (62), have (62), we (59), not (57), know (56), be (53), what (50), don (50), think (48), for (47), about (45), but (43), said (43), with (42), they (42)</code></pre>
+<p>The <code>membership</code> column identifies the highest and lowest
+groups. Both groups contain only documents with the searched word; they
+may overlap when few documents contain it.</p>
 </div>
 <div id="topic-sizes" class="section level3">
 <h3>Topic sizes</h3>
@@ -900,6 +1167,35 @@ plot_news_keyword(aligned, news$X, news$terms)
 ```
 
 <img src="figure/bg_news.Rmd/newsgroups-keyword-topic-1.png" alt="" width="1800" style="display: block; margin: auto;" />
+
+  <p>
+  <button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig"
+  data-toggle="collapse" data-target="#fig-newsgroups-keyword-topic-1">
+  Past versions of newsgroups-keyword-topic-1.png
+  </button>
+  </p>
+
+  <div id="fig-newsgroups-keyword-topic-1" class="collapse">
+  <div class="table-responsive">
+  <table class="table table-condensed table-hover">
+  <thead>
+  <tr>
+  <th>Version</th>
+  <th>Author</th>
+  <th>Date</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+  <td><a href="https://github.com/jiheeyy/background/blob/fe723d7d67bc3ab66184877d778ff714d8e28f9c/docs/figure/bg_news.Rmd/newsgroups-keyword-topic-1.png" target="_blank">fe723d7</a></td>
+  <td>jiheeyy</td>
+  <td>2026-09-24</td>
+  </tr>
+  </tbody>
+  </table>
+  </div>
+  </div>
+  
 
 ```
     factor  EBPMF fastTopics mean_score
