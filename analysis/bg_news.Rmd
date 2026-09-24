@@ -155,11 +155,18 @@ word <- "stephanopoulos"
 topic <- 6L
 ```
 
-Summary object returns more specific occurrences of a certain word. On the other hand, document object prints information of a single document containing the word, including the sorted word count of one document containing the word. How to interpret: 0.03 means 3 percent of the document's fitted expected word-count is attributed to topic k. Total_tokens 5044 means there were total of 5044 words in that document, whereas word_count is specific to the word of interest.
+Summary object returns more specific occurrences of a certain word. On the other hand, document object prints information of a single document containing the word, including the sorted word count of one document containing the word. 
+
+Total_tokens 5044 means there were total of 5044 words in that document, whereas word_count is specific to the word of interest. topic_proportion means every document containing the selected word has at the lowest/highest, such ratio of document-topic proportions related to the selected topic.
 
 ```{r keyword-documents}
+# Return n documents per group: highest and lowest topic membership.
 news_word_documents(news, aligned$L_ebpmf_topics, word = word, k = topic, n=1) 
 ```
+
+The `membership` column identifies the highest and lowest groups. Both groups
+contain only documents with the searched word; they may overlap when few
+documents contain it.
 
 ### Topic sizes
 
