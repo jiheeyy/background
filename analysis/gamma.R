@@ -26,3 +26,8 @@ x2 <- rgamma(n,shape = 10,scale = 0.1)
 par(mfcol = c(2,1))
 hist(log2(x1),n = 64,col = "red",xlim = c(-20,20))
 hist(log2(x2),n = 64,col = "blue",xlim = c(-20,20))
+
+ggplot(diamonds,aes(price, fill = cut)) +
+  geom_histogram(binwidth = 500,position = "stack")
+ggplot(diamonds,aes(price, fill = cut)) +
+  geom_histogram(binwidth = 500,position = "identity")
