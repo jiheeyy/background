@@ -1,0 +1,16 @@
+---
+title: Choice of the mixture-of-gammas prior
+author: Peter Carbonetto
+output:
+  workflowr::wflow_html:
+    toc: no
+    theme: readable
+    highlight: textmate
+    lib_dir: site_libs
+    self_contained: no
+---
+
+```{r knitr-opts, include=FALSE}
+knitr::opts_chunk$set(comment = "#",collapse = TRUE,results = "hold",
+                      fig.align = "center",dpi = 120)
+```
