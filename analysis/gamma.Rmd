@@ -66,7 +66,7 @@ plot_gammamix(a,s,n = 10000) +
 ```
 
 In this second design, all the gamma components have (roughly) the
-same *median* (but different medians):
+same *median* (but different means):
 
 ```{r medians-are-equal, fig.height=2.2, fig.width=2.5}
 a <- c(10,1,0.1)
