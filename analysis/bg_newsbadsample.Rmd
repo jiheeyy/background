@@ -60,6 +60,7 @@ ebpmf_elapsed <- system.time({
   )
 })[["elapsed"]]
 
+set.seed(1) # Call again, since the earlier random sequence was already used
 fasttopics_elapsed <- system.time({
   fasttopics <- fastTopics::fit_poisson_nmf(
     X, k = K, numiter = fasttopics_numiter,
@@ -131,14 +132,14 @@ plot_news_structure(aligned, news$labels, plot_sample = FALSE)
 Both panels show the same sampled documents (sampled after full dataset fitting), grouped by observed newsgroup.
 Each model uses its own seeded 1D t-SNE ordering within each newsgroup for a smoother document topic graph. Therefore, the horizontal position does not represent same document in the two panels.
 
-# With different initialization
-We don't see k10 dominate anymore.
+# With fasttopics initialization
+We don't see latent group membership dominate anymore.
 
 ```{r}
 K <- 10L
 a <- c(0.1, 1, 10, 100, 1000)
-ebpmf_maxiter <- 500L
-fasttopics_numiter <- 500L
+ebpmf_maxiter <- 600L
+fasttopics_numiter <- 600L
 X <- news$X
 
 set.seed(1)
@@ -152,6 +153,7 @@ ebpmf_elapsed <- system.time({
   )
 })[["elapsed"]]
 
+set.seed(1)
 fasttopics_elapsed <- system.time({
   fasttopics <- fastTopics::fit_poisson_nmf(
     X, k = K, numiter = fasttopics_numiter,
@@ -181,6 +183,16 @@ Document-topic proportions from the initial background model loadings, before CA
 
 ```{r fig.width=14, fig.height=4, dpi=150}
 plot_news_structure(initial_state$L, news$labels)
+```
+
+Show numerical equivalence in ebpmf-bg fasttopics initialization and fasttopics run.
+```{r}
+L_fast <- pmax(fasttopics$L, 1e-12)
+L_fast <- sweep(L_fast, 2, colMeans(L_fast), "/")
+
+all.equal(initial_state$L, L_fast, check.attributes = FALSE)
+max(abs(initial_state$L - L_fast))
+
 ```
 
 ### Align the fitted topics
@@ -222,5 +234,3 @@ plot_news_structure(aligned, news$labels, plot_sample = FALSE)
 
 Both panels show the same sampled documents (sampled after full dataset fitting), grouped by observed newsgroup.
 Each model uses its own seeded 1D t-SNE ordering within each newsgroup for a smoother document topic graph. Therefore, the horizontal position does not represent same document in the two panels.
-
-

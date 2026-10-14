@@ -11,7 +11,7 @@
 
 <meta name="author" content="Jihee You" />
 
-<meta name="date" content="2026-09-08" />
+<meta name="date" content="2026-09-23" />
 
 <title>BG Model on Simulated Data</title>
 
@@ -361,7 +361,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">BG Model on Simulated Data</h1>
 <h4 class="author">Jihee You</h4>
-<h4 class="date">2026-09-08</h4>
+<h4 class="date">2026-09-23</h4>
 
 </div>
 
@@ -369,7 +369,7 @@ div.tocify {
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
 <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
-workflowr <span class="glyphicon glyphicon-ok text-success"
+workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger"
 aria-hidden="true"></span>
 </button>
 </p>
@@ -380,8 +380,8 @@ aria-hidden="true"></span>
 </li>
 <li>
 <a data-toggle="tab" href="#checks"> Checks <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
-</a>
+class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -390,13 +390,13 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-09-08
+<strong>Last updated:</strong> 2026-09-23
 </p>
 <p>
 <strong>Checks:</strong> <span
-class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7
+class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6
 <span class="glyphicon glyphicon-exclamation-sign text-danger"
-aria-hidden="true"></span> 0
+aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>background/</code> <span
@@ -419,18 +419,21 @@ versions</em> tab lists the development history.
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate">
-<span class="glyphicon glyphicon-ok text-success"
-aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date
-</a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges">
+<span class="glyphicon glyphicon-exclamation-sign text-danger"
+aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted
+changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate"
+<div id="strongRMarkdownfilestronguncommittedchanges"
 class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git
-repository, you know the exact version of the code that produced these
-results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of
+the R Markdown file created these results, you’ll want to first commit
+it to the Git repo. If you’re still working on the analysis, you can
+ignore this warning. When you’re finished, you can run
+<code>wflow_publish</code> to commit the R Markdown file and build the
+HTML.</p>
 </div>
 </div>
 </div>
@@ -521,15 +524,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree88c2d508afd4ab05189ce6826d44fb4e17fae341targetblank88c2d50a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree6eca2a48ed2fa1c2e399203229dd95b3af4b1bc4targetblank6eca2a4a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/jiheeyy/background/tree/88c2d508afd4ab05189ce6826d44fb4e17fae341" target="_blank">88c2d50</a>
+<a href="https://github.com/jiheeyy/background/tree/6eca2a48ed2fa1c2e399203229dd95b3af4b1bc4" target="_blank">6eca2a4</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree88c2d508afd4ab05189ce6826d44fb4e17fae341targetblank88c2d50a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree6eca2a48ed2fa1c2e399203229dd95b3af4b1bc4targetblank6eca2a4a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +542,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/jiheeyy/background/tree/88c2d508afd4ab05189ce6826d44fb4e17fae341" target="_blank">88c2d50</a>.
+<a href="https://github.com/jiheeyy/background/tree/6eca2a48ed2fa1c2e399203229dd95b3af4b1bc4" target="_blank">6eca2a4</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -575,6 +578,8 @@ Untracked files:
 
 Unstaged changes:
     Deleted:    analysis/bg.Rmd
+    Modified:   analysis/bg_implement.Rmd
+    Modified:   analysis/bg_sim.Rmd
     Modified:   analysis/index.Rmd
     Modified:   analysis/main.Rmd
     Deleted:    analysis/omim.Rmd
@@ -626,6 +631,23 @@ Message
 <tbody>
 <tr>
 <td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jiheeyy/background/a3c6d8fbbb92affa0c84c7824443a97b299e97ba/docs/bg_sim.html" target="_blank">a3c6d8f</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-09-08
+</td>
+<td>
+Build site.
+</td>
+</tr>
+<tr>
+<td>
 Rmd
 </td>
 <td>
@@ -651,10 +673,8 @@ Publish the initial files for myproject
 <div id="code-to-run-experiments-on-synthetic-data"
 class="section level2">
 <h2>Code to run experiments on synthetic data</h2>
-<pre class="r"><code>library(here)
-here()</code></pre>
-<pre><code>[1] &quot;/Users/jiheeyou/background&quot;</code></pre>
-<pre class="r"><code>source(here(&quot;docs&quot;,&quot;code&quot;,&quot;bg_implement.R&quot;))</code></pre>
+<pre class="r"><code>source(here(&quot;docs&quot;, &quot;code&quot;, &quot;bg_implement.R&quot;), local = TRUE)
+source(here(&quot;docs&quot;, &quot;code&quot;, &quot;bg_post.R&quot;), local = TRUE)</code></pre>
 <p>Run ebpmf-bg full loop on simulated data.</p>
 <pre class="r"><code>a_grid &lt;- c(0.1, 1, 10, 100, 1000)
 pi_mat &lt;- cbind(
@@ -675,7 +695,6 @@ settings &lt;- list(
 
 synthetic &lt;- do.call(simulate_background_model, settings)
 
-
 # Experiment switches.
 init &lt;- &quot;deviance_kmeans&quot; # &quot;gamma&quot;, &quot;deviance_kmeans&quot;, or &quot;fasttopics&quot;
 oracle_f0 &lt;- FALSE
@@ -687,41 +706,19 @@ max_niter &lt;- 400L
 elbo_every &lt;- 10L
 fit_elbo_tolerance &lt;- 1e-6
 fit_elbo_patience &lt;- 3L</code></pre>
-<pre class="r"><code>init &lt;- match.arg(init, c(&quot;gamma&quot;, &quot;deviance_kmeans&quot;, &quot;fasttopics&quot;))
-
-# Avoid an unnecessary k-means run when oracle L will replace it.
-state &lt;- initialize_state(
-  synthetic$X,
-  settings$K,
-  settings$a,
-  L_init = if (oracle_l) &quot;gamma&quot; else init,
-  seed = 2L
+<pre class="r"><code>initialization &lt;- initialize_experiment_state(
+  synthetic = synthetic,
+  settings = settings,
+  init = init,
+  oracle_f0 = oracle_f0,
+  oracle_pi = oracle_pi,
+  oracle_l = oracle_l
 )
+state &lt;- initialization$state
+initialization_method &lt;- initialization$method
 
-# Apply any known parameters. Oracle L is initialization only; CAVI updates it.
-if (oracle_f0) state$f0 &lt;- synthetic$f0
-if (oracle_pi) {
-  state$pi &lt;- synthetic$pi
-  state$qF &lt;- initialize_qF(state$pi, settings$a, ncol(synthetic$X))
-}
-if (oracle_l) state$L &lt;- synthetic$L
-
-# Label the initialization used by the diagnostic summary.
-initialization_method &lt;- if (oracle_l) &quot;oracle L&quot; else switch(
-  init,
-  gamma = &quot;Gamma-random L&quot;,
-  deviance_kmeans = &quot;deviance k-means L&quot;,
-  fasttopics = &quot;fastTopics L&quot;
-)
-
-# Save the exact parameters entering CAVI for the diagnostic plots below.
-L_initial &lt;- state$L
-F_initial &lt;- state$qF$mean
-pi_initial &lt;- state$pi
-f0_initial &lt;- state$f0
-
-# run_ebpmf_bg_cavi() synchronizes qZ before evaluating the initial ELBO.
-M &lt;- length(settings$a)
+# initialization$state retains the starting values for the diagnostic plots.</code></pre>
+<pre class="r"><code># Main fitting
 main_fit &lt;- run_ebpmf_bg_cavi(
   state,
   synthetic$X,
@@ -739,16 +736,13 @@ elbo_trace &lt;- main_fit$elbo_trace
 pi_trace &lt;- main_fit$pi_trace
 niter &lt;- main_fit$completed_niter
 
-if (oracle_pi) stopifnot(max(abs(state$pi - synthetic$pi)) &lt; 1e-15)
-
-# Summarize and verify ELBO changes between stored checkpoints.
+# Summarize ELBO changes between stored checkpoints.
 elbo_comparison &lt;- data.frame(
   iteration = elbo_trace$iteration[-1L],
   elbo = tail(elbo_trace$elbo, -1L),
   change = diff(elbo_trace$elbo),
   relative_change = elbo_trace$relative_change[-1L]
 )
-stopifnot(all(elbo_comparison$change &gt;= -1e-8))
 
 fit_summary &lt;- data.frame(
   maximum_iterations = max_niter,
@@ -782,132 +776,97 @@ tail(elbo_comparison, 10L)</code></pre>
 <div id="diagnostic-plots" class="section level2">
 <h2>Diagnostic Plots</h2>
 <p>The plots below provide diagnostic tools for interpreting EBPMF-BG
-runs. I eventually plan to use them in a coherent experimental log that
-includes earlier unsuccessful results; for now, this section documents
-only the visualization code.</p>
+runs. For the functions called in this section, see
+<code>bg_post.R</code>.</p>
 <div id="initial-parameter-values" class="section level3">
 <h3>Initial parameter values</h3>
-<p>The panels below show the state that enters the main CAVI loop.
-<code>F_initial</code> is the variational mean <code>qF$mean</code>.
+<p>The panels below show the state that enters the main CAVI loop. The
+initial feature matrix is the variational mean <code>qF$mean</code>.
 Factor columns are shown in their actual fitting order, without post-hoc
 alignment to the simulated truth.</p>
-<pre class="r"><code>initial_heatmap &lt;- function(
-    value,
-    main,
-    row_label,
-    row_axis_at = NULL,
-    row_axis_labels = NULL
-) {
-  color_limit &lt;- range(value, finite = TRUE)
-  if (diff(color_limit) == 0) {
-    padding &lt;- max(abs(color_limit[1L]), 1) * 1e-8
-    color_limit &lt;- color_limit + c(-padding, padding)
-  }
-
-  image(
-    x = seq_len(ncol(value)),
-    y = seq_len(nrow(value)),
-    z = t(value),
-    col = hcl.colors(80L, &quot;Viridis&quot;),
-    zlim = color_limit,
-    xlab = &quot;Factor&quot;,
-    ylab = row_label,
-    main = main,
-    axes = FALSE,
-    useRaster = TRUE
-  )
-  axis(1, at = seq_len(ncol(value)), labels = seq_len(ncol(value)))
-
-  if (is.null(row_axis_at)) {
-    row_axis_at &lt;- unique(c(1L, nrow(value)))
-    row_axis_labels &lt;- row_axis_at
-  }
-  axis(
-    2,
-    at = row_axis_at,
-    labels = row_axis_labels,
-    las = 1,
-    cex.axis = 0.8
-  )
-  box()
-  mtext(
-    sprintf(&quot;range: %.3g to %.3g&quot;, min(value), max(value)),
-    side = 3,
-    line = 0.2,
-    cex = 0.75
-  )
-}
-
-old_par &lt;- par(mfrow = c(2, 2), mar = c(2.5, 3, 2, 0.5))
-
-initial_heatmap(
-  L_initial,
-  main = &quot;Initial L&quot;,
-  row_label = &quot;Document&quot;
-)
-
-initial_heatmap(
-  F_initial,
-  main = &quot;Initial E_q[F]&quot;,
-  row_label = &quot;Feature&quot;
-)
-
-initial_heatmap(
-  pi_initial,
-  main = &quot;Initial pi&quot;,
-  row_label = &quot;Gamma component&quot;,
-  row_axis_at = seq_len(nrow(pi_initial)),
-  row_axis_labels = paste0(&quot;a=&quot;, settings$a)
-)
-
-plot(
-  seq_along(f0_initial),
-  f0_initial,
-  type = &quot;l&quot;,
-  lwd = 1.5,
-  col = &quot;steelblue&quot;,
-  xlab = &quot;Feature&quot;,
-  ylab = &quot;f0&quot;,
-  main = &quot;Initial f0&quot;
-)
-abline(h = 1, col = &quot;grey50&quot;, lty = 2)
-grid(col = &quot;grey90&quot;)</code></pre>
+<pre class="r"><code>plot_initial_parameters(initialization$state, settings$a)</code></pre>
 <p><img src="figure/bg_sim.Rmd/initial-parameters-1.png" alt="" width="1950" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>par(old_par)</code></pre>
-<p>Plot the log-scaled gap from the best recorded ELBO. Values decrease
-toward <code>log10(elbo_plot_epsilon)</code> as the fit converges.</p>
-<pre class="r"><code>elbo_plot_epsilon &lt;- 1e-8
-best_elbo &lt;- max(elbo_trace$elbo)
-elbo_by_iteration &lt;- head(
-  elbo_trace[, c(&quot;iteration&quot;, &quot;elbo&quot;)],
-  -1L
-)
-elbo_by_iteration$log10_gap &lt;- log10(
-  best_elbo - elbo_by_iteration$elbo + elbo_plot_epsilon
-)
-
-plot(
-  log10_gap ~ iteration,
-  data = elbo_by_iteration,
-  type = &quot;b&quot;,
-  pch = 19,
-  lwd = 2,
-  col = &quot;steelblue&quot;,
-  xlab = &quot;CAVI iteration&quot;,
-  ylab = expression(log[10](max(ELBO) - ELBO + epsilon)),
-  main = &quot;ELBO convergence&quot;
-)
-grid(col = &quot;grey90&quot;)
-
-# Label the final visible checkpoint (iteration 390 in the current run).
-last_point &lt;- tail(elbo_by_iteration, 1L)
-text(
-  last_point$iteration,
-  last_point$log10_gap,
-  labels = paste(&quot;Iteration&quot;, last_point$iteration),
-  pos = 2
-)</code></pre>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-initial-parameters-1">
+Past versions of initial-parameters-1.png
+</button>
+</p>
+<div id="fig-initial-parameters-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/a3c6d8fbbb92affa0c84c7824443a97b299e97ba/docs/figure/bg_sim.Rmd/initial-parameters-1.png" target="_blank">a3c6d8f</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-09-08
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div id="plot-elbo-convergence" class="section level3">
+<h3>Plot ELBO Convergence</h3>
+<p>Plot the log10 gap from the best recorded ELBO, omitting the final
+checkpoint.</p>
+<pre class="r"><code>plot_elbo_gap(elbo_trace)</code></pre>
 <p><img src="figure/bg_sim.Rmd/elbo-iteration-1.png" alt="" width="1350" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-elbo-iteration-1">
+Past versions of elbo-iteration-1.png
+</button>
+</p>
+<div id="fig-elbo-iteration-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/a3c6d8fbbb92affa0c84c7824443a97b299e97ba/docs/figure/bg_sim.Rmd/elbo-iteration-1.png" target="_blank">a3c6d8f</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-09-08
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="aligned-factor-recovery-for-easier-analysis"
 class="section level3">
@@ -916,85 +875,24 @@ class="section level3">
 components may be permuted. The comparisons below therefore align
 components by their rate contributions (with cosine similarity) and
 adopt a common scale before assessing recovery.</p>
-<pre class="r"><code>## Posterior point estimates
+<pre class="r"><code>## Match fitted components to the generating components without rescaling them.
 L_true &lt;- synthetic$L
 F_true &lt;- synthetic$F
 f0_true &lt;- synthetic$f0
 pi_true &lt;- synthetic$pi
-
-L_hat &lt;- state$L
-F_hat &lt;- state$qF$mean
-f0_hat &lt;- state$f0
-pi_hat &lt;- state$pi
-
+B_true &lt;- sweep(F_true, 1L, f0_true, &quot;*&quot;)
 K &lt;- ncol(L_true)
 
-## Effective feature factors: these are what enter the likelihood
-B_true &lt;- sweep(F_true, 1, f0_true, &quot;*&quot;)
-B_hat  &lt;- sweep(F_hat,  1, f0_hat,  &quot;*&quot;)
+aligned &lt;- align_k(synthetic, state)
+L_hat &lt;- aligned$L
+F_hat &lt;- aligned$F
+B_hat &lt;- aligned$B
+pi_hat &lt;- aligned$pi
+f0_hat &lt;- state$f0
+best_permutation &lt;- aligned$permutation
 
-
-## ------------------------------------------------------------------
-## 1. Match estimated components to true components
-## ------------------------------------------------------------------
-
-# For rank-one matrices, &lt;l1 b1&#39;, l2 b2&#39;&gt; = &lt;l1, l2&gt;&lt;b1, b2&gt; and
-# ||l b&#39;||_F = ||l|| ||b||. Use these identities to avoid constructing any
-# dense n-by-p component-specific Poisson-rate matrices.
-loading_inner_product &lt;- crossprod(L_true, L_hat)
-feature_inner_product &lt;- crossprod(B_true, B_hat)
-true_component_norm &lt;-
-  sqrt(diag(crossprod(L_true))) * sqrt(diag(crossprod(B_true)))
-fitted_component_norm &lt;-
-  sqrt(diag(crossprod(L_hat))) * sqrt(diag(crossprod(B_hat)))
-
-component_similarity &lt;-
-  (loading_inner_product * feature_inner_product) /
-  outer(true_component_norm, fitted_component_norm)
-
-# Base-R permutation generator; practical for a modest number of factors.
-all_permutations &lt;- function(x) {
-  if (length(x) == 1L) {
-    return(matrix(x, nrow = 1L))
-  }
-
-  do.call(
-    rbind,
-    lapply(seq_along(x), function(i) {
-      cbind(x[i], all_permutations(x[-i]))
-    })
-  )
-}
-
-permutations &lt;- all_permutations(seq_len(K))
-
-permutation_score &lt;- apply(permutations, 1, function(perm) {
-  sum(component_similarity[cbind(seq_len(K), perm)])
-})
-
-best_permutation &lt;- permutations[which.max(permutation_score), ]
-
-# Reorder estimated quantities to match the true components.
-L_hat &lt;- L_hat[, best_permutation, drop = FALSE]
-F_hat &lt;- F_hat[, best_permutation, drop = FALSE]
-B_hat &lt;- B_hat[, best_permutation, drop = FALSE]
-pi_hat &lt;- pi_hat[, best_permutation, drop = FALSE]
-
-
-## ------------------------------------------------------------------
-## 2. Resolve the remaining component-wise L/B scale ambiguity
-## ------------------------------------------------------------------
 ## L[, k] * B[, k]&#39; is unchanged if L[, k] is divided by c and
 ## B[, k] is multiplied by c. Use mean(L[, k]) = 1 as a convention.
-
-canonicalize &lt;- function(L, B) {
-  component_scale &lt;- colMeans(L)
-
-  list(
-    L = sweep(L, 2, component_scale, &quot;/&quot;),
-    B = sweep(B, 2, component_scale, &quot;*&quot;)
-  )
-}
 
 true_canonical &lt;- canonicalize(L_true, B_true)
 hat_canonical  &lt;- canonicalize(L_hat, B_hat)
@@ -1005,195 +903,87 @@ L_hat_plot  &lt;- hat_canonical$L
 B_true_plot &lt;- true_canonical$B
 B_hat_plot  &lt;- hat_canonical$B
 
-
-## ------------------------------------------------------------------
-## 3. Direct factor-comparison plots
-## ------------------------------------------------------------------
-
-plot_comparison &lt;- function(truth, estimate, main, xlab, ylab) {
-  limits &lt;- range(c(truth, estimate), finite = TRUE)
-
-  plot(
-    truth, estimate,
-    pch = 19,
-    col = rgb(0.1, 0.35, 0.75, 0.55),
-    xlim = limits,
-    ylim = limits,
-    xlab = xlab,
-    ylab = ylab,
-    main = main
-  )
-
-  abline(0, 1, col = &quot;firebrick&quot;, lwd = 2, lty = 2)
-
-  legend(
-    &quot;topleft&quot;,
-    legend = sprintf(&quot;cor = %.3f&quot;, cor(truth, estimate)),
-    bty = &quot;n&quot;
-  )
-}
-
-old_par &lt;- par(mfrow = c(2, K), mar = c(4, 4, 3, 1))
-
-for (k in seq_len(K)) {
-  plot_comparison(
-    L_true_plot[, k],
-    L_hat_plot[, k],
-    main = sprintf(&quot;L, component %d&quot;, k),
-    xlab = &quot;True normalized L&quot;,
-    ylab = &quot;Estimated normalized L&quot;
-  )
-}
-
-for (k in seq_len(K)) {
-  plot_comparison(
-    B_true_plot[, k],
-    B_hat_plot[, k],
-    main = sprintf(&quot;f0 * F, component %d&quot;, k),
-    xlab = &quot;True effective F&quot;,
-    ylab = &quot;Estimated effective F&quot;
-  )
-}</code></pre>
+plot_factor_recovery(true_canonical, hat_canonical)</code></pre>
 <p><img src="figure/bg_sim.Rmd/align-normalize-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>par(old_par)</code></pre>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-align-normalize-1">
+Past versions of align-normalize-1.png
+</button>
+</p>
+<div id="fig-align-normalize-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/a3c6d8fbbb92affa0c84c7824443a97b299e97ba/docs/figure/bg_sim.Rmd/align-normalize-1.png" target="_blank">a3c6d8f</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-09-08
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="plot-mixture-proportions-convergence" class="section level3">
 <h3>Plot mixture proportions convergence</h3>
-<pre class="r"><code>mixprop_tolerance &lt;- 0.01
-iterations &lt;- 0:niter
-
-# best_permutation maps:
-# true factor k -&gt; estimated factor column best_permutation[k]
-#
-# Apply one fixed final permutation to the complete trajectory.
-pi_trace_aligned &lt;- pi_trace[
-  ,
-  ,
-  best_permutation,
-  drop = FALSE
-]
-
-dimnames(pi_trace_aligned)$estimated_factor &lt;-
-  paste0(&quot;k&quot;, seq_len(K))
-
-# Confirm that the final trace values equal the aligned pi used
-# by the mixture-proportion heatmap.
-stopifnot(
-  isTRUE(all.equal(
-    unname(pi_trace_aligned[niter + 1L, , ]),
-    unname(pi_hat),
-    tolerance = 1e-10
-  ))
-)
-
-# First iteration after which all proportions remain within the
-# tolerance of their final values.
-stabilization_iteration &lt;- vapply(
-  seq_len(K),
-  function(k) {
-    final_pi &lt;- pi_trace_aligned[niter + 1L, , k]
-
-    distance_from_final &lt;- apply(
-      abs(sweep(
-        pi_trace_aligned[, , k],
-        2,
-        final_pi,
-        &quot;-&quot;
-      )),
-      1,
-      max
-    )
-
-    future_maximum &lt;- rev(cummax(rev(distance_from_final)))
-    first_stable &lt;- which(
-      future_maximum &lt;= mixprop_tolerance
-    )[1]
-
-    if (is.na(first_stable)) {
-      NA_integer_
-    } else {
-      first_stable - 1L
-    }
-  },
-  integer(1)
-)
-
-mixture_colors &lt;- setNames(
-  hcl.colors(M, &quot;Dark 3&quot;),
-  paste0(&quot;a = &quot;, settings$a)
-)
-
-old_par &lt;- par(
-  mfrow = c(1, K),
-  mar = c(4, 4, 3, 1)
-)
-
-for (k in seq_len(K)) {
-  matplot(
-    iterations,
-    pi_trace_aligned[, , k],
-    type = &quot;l&quot;,
-    lty = 1,
-    lwd = 2,
-    col = mixture_colors,
-    ylim = c(0, 1),
-    xlab = &quot;Iteration&quot;,
-    ylab = &quot;Mixture proportion&quot;,
-    main = paste(&quot;True factor&quot;, k)
-  )
-
-  # Generating mixture proportions.
-  for (m in seq_len(M)) {
-    abline(
-      h = synthetic$pi[m, k],
-      col = mixture_colors[m],
-      lty = 2
-    )
-  }
-
-  # Empirical stabilization iteration.
-  if (!is.na(stabilization_iteration[k])) {
-    abline(
-      v = stabilization_iteration[k],
-      col = &quot;grey40&quot;,
-      lty = 3
-    )
-  }
-
-  legend(
-    &quot;right&quot;,
-    legend = names(mixture_colors),
-    col = mixture_colors,
-    lty = 1,
-    lwd = 2,
-    cex = 0.85,
-    bty = &quot;n&quot;
-  )
-}</code></pre>
+<pre class="r"><code>plot_mixprop_convergence(pi_trace, pi_true, pi_hat, best_permutation, settings$a)</code></pre>
 <p><img src="figure/bg_sim.Rmd/mixprop-iter-1.png" alt="" width="1440" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>par(old_par)
-
-final_mixprop &lt;- expand.grid(
-  mixture = paste0(&quot;a=&quot;, settings$a),
-  factor = paste0(&quot;k&quot;, seq_len(K))
-)
-
-final_mixprop$generating &lt;- as.vector(synthetic$pi)
-final_mixprop$estimated &lt;- as.vector(
-  pi_trace_aligned[niter + 1L, , ]
-)
-
-list(
-  alignment = data.frame(
-    true_factor = paste0(&quot;k&quot;, seq_len(K)),
-    estimated_column = best_permutation
-  ),
-  stabilization = data.frame(
-    factor = paste0(&quot;k&quot;, seq_len(K)),
-    iteration = stabilization_iteration
-  ),
-  final_proportions = final_mixprop
-)</code></pre>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-mixprop-iter-1">
+Past versions of mixprop-iter-1.png
+</button>
+</p>
+<div id="fig-mixprop-iter-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/a3c6d8fbbb92affa0c84c7824443a97b299e97ba/docs/figure/bg_sim.Rmd/mixprop-iter-1.png" target="_blank">a3c6d8f</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-09-08
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>$alignment
   true_factor estimated_column
 1          k1                3
@@ -1229,33 +1019,45 @@ proportions.</p>
 </div>
 <div id="plot-reconstructed-poisson-rate" class="section level3">
 <h3>Plot reconstructed Poisson rate</h3>
-<pre class="r"><code>lambda_true &lt;- L_true %*% t(B_true)
-lambda_hat  &lt;- L_hat  %*% t(B_hat)
-
-lambda_limits &lt;- range(c(lambda_true, lambda_hat))
-
-plot(
-  as.vector(lambda_true),
-  as.vector(lambda_hat),
-  pch = 19,
-  cex = 0.7,
-  col = rgb(0, 0, 0, 0.25),
-  xlim = lambda_limits,
-  ylim = lambda_limits,
-  xlab = &quot;True Poisson mean&quot;,
-  ylab = &quot;Estimated Poisson mean&quot;,
-  main = &quot;Reconstructed mean: true versus fitted&quot;
-)
-abline(0, 1, col = &quot;firebrick&quot;, lwd = 2)</code></pre>
+<pre class="r"><code>plot_lambda(L_true, B_true, L_hat, B_hat)</code></pre>
 <p><img src="figure/bg_sim.Rmd/rate-lineplot-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>lambda_metrics &lt;- data.frame(
-  correlation = cor(as.vector(lambda_true), as.vector(lambda_hat)),
-  relative_error = sqrt(sum((lambda_hat - lambda_true)^2)) /
-    sqrt(sum(lambda_true^2)),
-  rmse = sqrt(mean((lambda_hat - lambda_true)^2))
-)
-
-lambda_metrics</code></pre>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-rate-lineplot-1">
+Past versions of rate-lineplot-1.png
+</button>
+</p>
+<div id="fig-rate-lineplot-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/a3c6d8fbbb92affa0c84c7824443a97b299e97ba/docs/figure/bg_sim.Rmd/rate-lineplot-1.png" target="_blank">a3c6d8f</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-09-08
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>  correlation relative_error       rmse
 1   0.9800146     0.07716166 0.08205771</code></pre>
 <p>The reconstructed-rate plot compares <span
@@ -1266,69 +1068,45 @@ exactly.</p>
 </div>
 <div id="background-recovery" class="section level3">
 <h3>Background recovery</h3>
-<pre class="r"><code>loading_scale &lt;- c(
-  true = mean(rowSums(L_true)),
-  estimated = mean(rowSums(L_hat))
-)
-
-if (any(abs(loading_scale - 1) &gt; 1e-2)) {
-  warning(sprintf(
-    &quot;Loading scales are not both within 1e-2 of 1 (true = %.4f, estimated = %.4f); raw f0 values may not be directly comparable.&quot;,
-    loading_scale[&quot;true&quot;], loading_scale[&quot;estimated&quot;]
-  ))
-}
-
-log_f0_true &lt;- log(f0_true)
-log_f0_hat &lt;- log(f0_hat)
-plot_limits &lt;- range(log_f0_true, log_f0_hat)
-feature &lt;- seq_along(f0_true)
-
-old_par &lt;- par(mfrow = c(1, 2), mar = c(4, 4, 3, 1))
-
-matplot(
-  feature,
-  cbind(log_f0_true, log_f0_hat),
-  type = &quot;l&quot;,
-  lty = c(1, 2),
-  lwd = 2,
-  col = c(&quot;black&quot;, &quot;steelblue&quot;),
-  xlab = &quot;Feature&quot;,
-  ylab = &quot;log(f0)&quot;,
-  main = &quot;Background profile&quot;
-)
-legend(
-  &quot;topright&quot;,
-  legend = c(&quot;True&quot;, &quot;Estimated&quot;),
-  col = c(&quot;black&quot;, &quot;steelblue&quot;),
-  lty = c(1, 2),
-  lwd = 2,
-  bty = &quot;n&quot;
-)
-
-plot(
-  log_f0_true,
-  log_f0_hat,
-  pch = 19,
-  col = rgb(0.1, 0.35, 0.75, 0.55),
-  xlim = plot_limits,
-  ylim = plot_limits,
-  xlab = &quot;True log(f0)&quot;,
-  ylab = &quot;Estimated log(f0)&quot;,
-  main = &quot;Background recovery&quot;
-)
-abline(0, 1, col = &quot;firebrick&quot;, lwd = 2, lty = 2)</code></pre>
+<pre class="r"><code>plot_bgquality(L_true, L_hat, f0_true, f0_hat)</code></pre>
 <p><img src="figure/bg_sim.Rmd/bg-lineplot-1.png" alt="" width="1152" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>par(old_par)
-
-log_error &lt;- log_f0_hat - log_f0_true
-background_metrics &lt;- data.frame(
-  correlation = cor(f0_true, f0_hat),
-  log_correlation = cor(log_f0_true, log_f0_hat),
-  log_rmse = sqrt(mean(log_error^2)),
-  median_fold_error = exp(median(abs(log_error)))
-)
-
-background_metrics</code></pre>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-bg-lineplot-1">
+Past versions of bg-lineplot-1.png
+</button>
+</p>
+<div id="fig-bg-lineplot-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/a3c6d8fbbb92affa0c84c7824443a97b299e97ba/docs/figure/bg_sim.Rmd/bg-lineplot-1.png" target="_blank">a3c6d8f</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-09-08
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>  correlation log_correlation   log_rmse median_fold_error
 1   0.9838248       0.9819057 0.06962263          1.047052</code></pre>
 <p>The plots compare the raw true and estimated <code>f0</code>
@@ -1337,206 +1115,88 @@ values.</p>
 <div id="plot-true-vs.-estimated-loadings-factors"
 class="section level3">
 <h3>Plot true vs. estimated loadings, factors</h3>
-<pre class="r"><code>draw_heatmap_wide &lt;- function(
-    x,
-    main,
-    zlim,
-    row_labels = NULL,
-    xlab = &quot;Index&quot;
-) {
-  x_plot &lt;- log1p(x)
-
-  image(
-    x = seq_len(ncol(x_plot)),
-    y = seq_len(nrow(x_plot)),
-    z = t(x_plot),
-    zlim = zlim,
-    col = hcl.colors(100, &quot;Viridis&quot;),
-    useRaster = TRUE,
-    axes = FALSE,
-    xlab = xlab,
-    ylab = &quot;&quot;,
-    main = main
-  )
-
-  # Show a few horizontal index labels.
-  x_ticks &lt;- unique(round(seq(
-    1,
-    ncol(x_plot),
-    length.out = min(6, ncol(x_plot))
-  )))
-
-  axis(1, at = x_ticks, labels = x_ticks)
-
-  if (is.null(row_labels)) {
-    row_labels &lt;- seq_len(nrow(x_plot))
-  }
-
-  axis(
-    2,
-    at = seq_len(nrow(x_plot)),
-    labels = row_labels,
-    las = 1
-  )
-
-  box()
-}
-
-draw_pair_wide &lt;- function(
-    truth,
-    estimate,
-    label,
-    row_labels = NULL,
-    xlab = &quot;Index&quot;
-) {
-  pair_range &lt;- range(
-    c(log1p(truth), log1p(estimate)),
-    finite = TRUE
-  )
-
-  if (diff(pair_range) == 0) {
-    pair_range &lt;- pair_range + c(-1, 1) * 1e-8
-  }
-
-  draw_heatmap_wide(
-    truth,
-    main = paste(&quot;True&quot;, label, &quot;, Max value &quot;, round(max(truth),1)),
-    zlim = pair_range,
-    row_labels = row_labels,
-    xlab = xlab
-  )
-
-  draw_heatmap_wide(
-    estimate,
-    main = paste(&quot;Estimated&quot;, label, &quot;, Max value &quot;, round(max(estimate),1)),
-    zlim = pair_range,
-    row_labels = row_labels,
-    xlab = xlab
-  )
-}
-
-factor_labels &lt;- paste0(&quot;k&quot;, seq_len(K))
-
-old_par &lt;- par(
-  mfrow = c(3, 2),
-  # With the 16 x 18 inch device above, every heatmap receives a
-  # plotting region of roughly 8 x 6 inches instead of being squeezed
-  # into one quarter of R Markdown&#39;s default-height graphics device.
-  mar = c(2.5, 3, 2, 0.5),
-  mgp = c(2.4, 0.7, 0),
-  tcl = -0.25,
-  cex.axis = 0.9,
-  cex.lab = 1,
-  cex.main = 1.05
-)
-
-# K rows × n columns
-draw_pair_wide(
-  t(L_true_plot),
-  t(L_hat_plot),
-  label = &quot;L&quot;,
-  row_labels = factor_labels,
-  xlab = &quot;Sample&quot;
-)
-
-# K rows × p columns
-draw_pair_wide(
-  t(B_true_plot),
-  t(B_hat_plot),
-  label = &quot;f0 * F&quot;,
-  row_labels = factor_labels,
-  xlab = &quot;Feature&quot;
-)
-
-par(old_par)</code></pre>
+<pre class="r"><code>plot_lf(true_canonical, hat_canonical)</code></pre>
 <p><img src="figure/bg_sim.Rmd/lf-heatmap-1.png" alt="" width="100%" style="display: block; margin: auto;" /></p>
-<p>Heatmaps use <code>log1p</code> values (because L, f0*F likely
-contain most entries close to zero and a few much larger values). The
-effective factor <span class="math inline">\(f_0F\)</span> is emphasized
-because it is the feature-side quantity that enters the Poisson rate.
-However, note separate differences in <code>f0</code> and <code>F</code>
-can compensate for one another.</p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-lf-heatmap-1">
+Past versions of lf-heatmap-1.png
+</button>
+</p>
+<div id="fig-lf-heatmap-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/a3c6d8fbbb92affa0c84c7824443a97b299e97ba/docs/figure/bg_sim.Rmd/lf-heatmap-1.png" target="_blank">a3c6d8f</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-09-08
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="plot-true-vs.-estimated-mixture-proportions"
 class="section level3">
 <h3>Plot true vs. estimated mixture proportions</h3>
-<pre class="r"><code>draw_mixture_proportions &lt;- function(pi, main, a = NULL) {
-  M &lt;- nrow(pi)
-  K &lt;- ncol(pi)
-
-  image(
-    x = seq_len(K),
-    y = seq_len(M),
-    z = t(pi),
-    zlim = c(0, 1),
-    col = hcl.colors(100, &quot;Blues 3&quot;, rev = TRUE),
-    axes = FALSE,
-    xlab = &quot;Factor&quot;,
-    ylab = &quot;&quot;,
-    main = main,
-    useRaster = TRUE
-  )
-
-  axis(
-    1,
-    at = seq_len(K),
-    labels = paste0(&quot;k&quot;, seq_len(K))
-  )
-
-  mixture_labels &lt;- paste0(&quot;m&quot;, seq_len(M))
-  if (!is.null(a)) {
-    mixture_labels &lt;- sprintf(
-      &quot;m%d (a = %g)&quot;,
-      seq_len(M),
-      a
-    )
-  }
-
-  axis(
-    2,
-    at = seq_len(M),
-    labels = mixture_labels,
-    las = 1
-  )
-
-  cells &lt;- expand.grid(
-    factor = seq_len(K),
-    mixture = seq_len(M)
-  )
-  values &lt;- as.vector(t(pi))
-
-  text(
-    x = cells$factor,
-    y = cells$mixture,
-    labels = sprintf(&quot;%.3f&quot;, values),
-    col = ifelse(values &gt;= 0.55, &quot;white&quot;, &quot;black&quot;),
-    font = 2,
-    cex = 1.15
-  )
-
-  box()
-}
-
-old_par &lt;- par(
-  mfrow = c(1, 2),
-  mar = c(3, 4, 2, 0.5),
-  mgp = c(2.4, 0.7, 0),
-  tcl = -0.25
-)
-
-draw_mixture_proportions(
-  pi_true,
-  main = &quot;True mixture proportions&quot;,
-  a = settings$a
-)
-
-draw_mixture_proportions(
-  pi_hat,
-  main = &quot;Estimated mixture proportions&quot;,
-  a = settings$a
-)</code></pre>
+<pre class="r"><code>plot_mixprop(pi_true, pi_hat, settings$a)</code></pre>
 <p><img src="figure/bg_sim.Rmd/mixprop-heatmap-1.png" alt="" width="100%" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>par(old_par)</code></pre>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-mixprop-heatmap-1">
+Past versions of mixprop-heatmap-1.png
+</button>
+</p>
+<div id="fig-mixprop-heatmap-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/a3c6d8fbbb92affa0c84c7824443a97b299e97ba/docs/figure/bg_sim.Rmd/mixprop-heatmap-1.png" target="_blank">a3c6d8f</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-09-08
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <p>The annotated cells report <span
 class="math inline">\(\pi_{mk}\)</span> directly. Columns of the
 estimated matrix use the same factor matching as the preceding plots,
@@ -1546,26 +1206,45 @@ parameters <code>settings$a</code>.</p>
 <div id="plot-if-f0-error-is-correlated-with-f_jk-error"
 class="section level3">
 <h3>Plot if f0 error is correlated with f_jk error</h3>
-<pre class="r"><code># If correlation high, error in f0 is offsetting error in F
-F_true_canonical &lt;- sweep(B_true_plot, 1, f0_true, &quot;/&quot;)
-F_hat_canonical  &lt;- sweep(B_hat_plot, 1, f0_hat, &quot;/&quot;)
-
-log_f0_error &lt;- log(f0_hat / f0_true)
-mean_log_F_error &lt;- rowMeans(
-  log(F_hat_canonical / F_true_canonical)
-)
-
-plot(
-  log_f0_error,
-  -mean_log_F_error,
-  pch = 19,
-  xlab = &quot;log(f0_hat / f0_true)&quot;,
-  ylab = &quot;-mean log(F_hat / F_true)&quot;,
-  main = &quot;Compensation between f0 and F&quot;
-)
-abline(0, 1, col = &quot;firebrick&quot;, lwd = 2)</code></pre>
+<pre class="r"><code>plot_compensate(B_true_plot, B_hat_plot, f0_true, f0_hat)</code></pre>
 <p><img src="figure/bg_sim.Rmd/error-compensate-1.png" alt="" width="672" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>cor(log_f0_error, -mean_log_F_error)</code></pre>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-error-compensate-1">
+Past versions of error-compensate-1.png
+</button>
+</p>
+<div id="fig-error-compensate-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/a3c6d8fbbb92affa0c84c7824443a97b299e97ba/docs/figure/bg_sim.Rmd/error-compensate-1.png" target="_blank">a3c6d8f</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-09-08
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre><code>[1] 0.01986574</code></pre>
 <p>If correlation high, error in f0 is offsetting error in F. On the
 other hand, if the plot is concentrated near the red vertical line at

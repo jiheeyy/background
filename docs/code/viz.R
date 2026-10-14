@@ -3,12 +3,17 @@ library(gridExtra)
 
 # Plot matrix L,F
 plot_lf <- function(L, F, lf_str, breaks=seq(0, 1, length.out = 101)){
+  legend_breaks <- c(0, 0.2, 0.4, 0.6, 0.8, 1)
+  legend_labels <- c("0", "0.2", "0.4", "0.6", "0.8", "1+")
+
   pl <- pheatmap(L,
            main = paste(lf_str, " Loadings"),
            cluster_rows = FALSE,
            cluster_cols = FALSE,
            silent = TRUE,
            breaks = breaks,
+           legend_breaks = legend_breaks,
+           legend_labels = legend_labels,
            xlab = "Factor", ylab = "Sample")
   pf <- pheatmap(F,
            main = paste(lf_str," Factors"),
@@ -16,6 +21,8 @@ plot_lf <- function(L, F, lf_str, breaks=seq(0, 1, length.out = 101)){
            cluster_cols = FALSE,
            silent= TRUE,
            breaks = breaks,
+           legend_breaks = legend_breaks,
+           legend_labels = legend_labels,
            xlab = "Feature", ylab = "Factor")
   grid.arrange(pl$gtable, pf$gtable, ncol=2)
 }

@@ -25,10 +25,10 @@ normalize_w_matrix <- function(w) {
 ###########################
 # Define mixture weights for each L_k and F_k
 # 21st mixture component (shape, rate) value is 1
-# 1e-16, ..., 1, ... ,1000
-g0 <- c(1, rep(0, 33))
-g1 <- c(rep(0, 20),1, rep(0,13))
-g1000 <- c(rep(0, 33), 1)
+# 1e-16, 1e-8, 0.01,  ..., 1, ... ,1000
+g0 <- c(1, rep(0, 18)) # 0.1
+g1 <- c(0, 1, rep(0, 17)) # 0.2
+g1000 <- c(rep(0, 18), 1) # 10
 # Weights will be normalized by column inside visualize_mixtures or generate_synthetic
 ###########################
 
@@ -98,6 +98,44 @@ general_load <- function(data_type=NA, w_matrix = NA, n=12, p=30, K=3){
     return(list(L = LL, F = FF, X = X))
   }
 
+  if (data_type == "modelA_3groupL"){
+    # w_matrix is M by K
+    w_matrix = cbind(g1000,g1000,g1000, #loadings
+                     g0,g1,g1000) #factors
+
+    w_matrix <- normalize_w_matrix(w_matrix)
+    colnames(w_matrix) <- c(paste0("L", 1:K), paste0("F", 1:K))
+
+    LL = matrix(0, nrow=n, ncol=K)
+    FF = matrix(0, nrow=p, ncol=K)
+
+    grid_info = gammamix()
+    shapes <- grid_info$shape
+    rates  <- grid_info$rate
+    len_grid <- length(shapes)
+
+    for (k in 1:K){
+      w_L <- w_matrix[, k]
+      # Pick mixture component for each of n values in L_k
+      idx_L <- sample(1:len_grid, size = n, replace = TRUE, prob = w_L)
+      LL[, k] <- rgamma(n, shape = shapes[idx_L], rate = rates[idx_L])
+
+      w_F <- w_matrix[, K + k]
+      idx_F <- sample(1:len_grid, size = p, replace = TRUE, prob = w_F)
+      FF[, k] <- rgamma(p, shape = shapes[idx_F], rate = rates[idx_F])
+    }
+
+    LL = matrix(0, nrow=n, ncol=K)
+    LL[1:(n/3),1] = 1
+    LL[((n/3)+1):(2*n/3),2] = 1
+    LL[((2*n/3)+1):n,3] = 1
+    LL = LL + matrix(runif(n*K,0,0.2),nrow=n)
+
+    lambda = LL %*% t(FF)
+    X = matrix(rpois(n=length(lambda),lambda),nrow=n)
+    return(list(L = LL, F = FF, X = X))
+  }
+
   if (data_type == "unif"){
     F <- rand(p,K) # fasttopics uses 4 args, but current rand requires 2
     L <- rand(n,K)
@@ -114,26 +152,29 @@ general_load <- function(data_type=NA, w_matrix = NA, n=12, p=30, K=3){
     LL[((n/3)+1):(2*n/3),2] = 1
     LL[((2*n/3)+1):n,3] = 1
     LL = LL + matrix(runif(n*K,0,0.5),nrow=n)
-    FF[1:(p/3), 1] = 1+10
-    FF[((p/3)+1):(2*p/3), 2] = 1+10
-    FF[((2*p/3)+1):p, 3] = 1+10
-    FF = FF + matrix(rnorm(p*K,0,1),ncol=K)
+    FF[1:(p/3), 1] = 1+4
+    FF[((p/3)+1):(2*p/3), 2] = 1+4
+    FF[((2*p/3)+1):p, 3] = 1+4
+    FF = FF + matrix(runif(p*K,0,0.5),nrow=p)
     FF = pmax(FF,0)
     lambda = LL %*% t(FF)
     X = matrix(rpois(n=length(lambda),lambda),nrow=n)
     return(list(L = LL, F = FF, X = X))
   }
 
-  if (data_type == "news"){
-    load(here("docs","data","newsgroups.RData"))
-    X <- counts
-    y <- topics
-    return(list(X = X,y=y))
+  if (data_type == "news") {
+    load(here("docs", "data", "newsgroups.RData"))
 
+    return(list(
+      X = counts,
+      L = NULL,
+      F = NULL,
+      topics = topics
+    ))
   }
 
   if (data_type == "gtex"){
-
+    load(here("docs", "data", "single-cell-data", "gtex_v11.RData"))
   }
 }
 

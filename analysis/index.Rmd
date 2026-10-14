@@ -16,4 +16,5 @@ This site collects notes, code, and results for the background model project.
 - [EM notes](em.html): Poisson nonnegative matrix factorization and EM derivations.
 - [Simulation and OMIM demo](v1.html): early simulation and OMIM analysis notes.
 - [Model A CAVI implementation](v2.html): coordinate-ascent variational inference implementation notes.
-- [Choice of the mixture-of-gammas prior](gamma.html)
+
+## Helper R Files

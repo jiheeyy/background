@@ -2,7 +2,7 @@
 # Takes 3 parameters, then creates data frame with 3 corresponding columns
 # Assigns custom class "gammamix"
 gammamix <- function(pi=NULL) {
-  grid = c(1e-16, 1e-8, seq(0.01, 0.10, 0.01), seq(0.2, 0.9, 0.1), seq(1,15,2), 20, 50, 75, 100, 200, 1000)
+  grid = c(seq(0.1, 1, 0.1), seq(2,10,1))
   len_grid = length(grid)
 
   # Default: equal weight
@@ -12,8 +12,8 @@ gammamix <- function(pi=NULL) {
   if (length(pi) != len_grid) stop("Length of 'pi' must match the grid length.")
 
   return(structure(data.frame(pi = pi, shape = grid, rate = grid),
-                       class = "gammamix"))
-  }
+                   class = "gammamix"))
+}
 
 dnbinom_cts_log <- function(x, size, prob) {
   # x:    Data vector (length N)

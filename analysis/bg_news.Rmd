@@ -36,18 +36,20 @@ a <- c(0.1, 1, 10, 100, 1000)
 ebpmf_maxiter <- 600L
 fasttopics_numiter <- 600L
 X <- news$X
+L_init <- "fasttopics"
 
 set.seed(1)
 
 stopifnot(nrow(X) > 0L, ncol(X) > 0L, all(Matrix::colSums(X) > 0))
 ebpmf_elapsed <- system.time({
-  state <- initialize_state(X, K, a, L_init = "deviance_kmeans")
+  state <- initialize_state(X, K, a, L_init = L_init)
   initial_state <- state
   ebpmf <- run_ebpmf_bg_cavi(
     state, X, a, max_niter = ebpmf_maxiter, early_stop = FALSE
   )
 })[["elapsed"]]
 
+set.seed(1)
 fasttopics_elapsed <- system.time({
   fasttopics <- fastTopics::fit_poisson_nmf(
     X, k = K, numiter = fasttopics_numiter,
@@ -60,7 +62,7 @@ fits <- list(
   dimensions = data.frame(documents = nrow(X), terms = ncol(X), topics = K),
   timing = data.frame(
     method = c("EBPMF-BG", "fastTopics"),
-    initialization = c("deviance k-means L; all-one F", "random"),
+    initialization = c(L_init, "random"),
     iterations = c(ebpmf$completed_niter, fasttopics_numiter),
     elapsed_seconds = c(ebpmf_elapsed, fasttopics_elapsed)
   )
@@ -77,6 +79,15 @@ Document-topic proportions from the initial background model loadings, before CA
 
 ```{r initial-L, fig.width=14, fig.height=4, dpi=150}
 plot_news_structure(initial_state$L, news$labels)
+```
+
+Show numerical equivalence in ebpmf-bg fasttopics initialization and fasttopics run.
+```{r}
+L_fast <- pmax(fasttopics$L, 1e-12)
+L_fast <- sweep(L_fast, 2, colMeans(L_fast), "/")
+
+all.equal(initial_state$L, L_fast, check.attributes = FALSE)
+max(abs(initial_state$L - L_fast))
 ```
 
 ### Align the fitted topics
@@ -128,7 +139,6 @@ plot_news_agreement(aligned, news$terms)
 
 ```{r newsgroups-structure, fig.width=14, fig.height=7.5, dpi=150}
 # The same horizontal position represents different documents in the two panels.
-plot_news_structure(aligned, news$labels, plot_sample = TRUE)
 plot_news_structure(aligned, news$labels, plot_sample = FALSE)
 ```
 
@@ -143,7 +153,12 @@ multiplier $f_{0j}$. These values are not normalized topic-word probabilities.
 
 ```{r newsgroups-top-words}
 # Set n to 5, 10, 20, etc.; also lists recurring words and their topics.
-news_top_words(fits, news$terms, n = 5)
+news_top_words(fits, news$terms, n = 10)
+```
+
+```{r newsgroups-background-words}
+# Within each topic k, list n words that have f_{jk} closest to 1; at the bottom. also list recurring words and their topics.
+news_background_words(fits, news$terms, n = 5)
 ```
 
 ### Investigating a keyword
@@ -210,6 +225,38 @@ L_{ik}\sum_jF_{jk}
 $$
 
 ### Note on background, keywords
-In some contexts, the background model makes more sense than a sparse model because . And how this model might naturally lead to identification of key genes or key words? Higher $F_{jk}$ means more 
+#### Notes on L
+L is lower bounded at zero, when expected latent contribution of the document to topic k is zero. This means the specific scenario of document i and topic k can be understood as a clustering problem (topic not-k vs. topic k), the document would be placed in the not-k cluster. (What does this mean with regards to things formulating the document--the words?)
 
-Where keywords are associated with smaller a,b and background words are associated with larger a,b (with larger variance).
+For word \(j\), topic \(k\)’s expected contribution is
+$f_{0j}L_{ik}\mathbb E_q[F_{jk}]$. \(L_{ik}=0\) makes topic \(k\)’s contribution zero for every word type in document \(i\). Since F_{jk} cannot be strictly zero, and (I'm not so sure about F_{j0}=0 being a sensible possibility), L_{ik} has the effect of ruling out contribution to topic K. If \(L_{ik}=0\), topic \(k\) contributes zero expected count to every word type in that document, so its observed word counts are explained entirely by the remaining topics. \(0\le L_{ik}<\infty.\) However, in implementation, I do ensure L_{ik} >0 to prevent log underflow. 
+
+### Notes on F_{j0}
+When F_{j0} = 1 for all j, then BG model becomes PMF with a prior on factors. If f_{j0} = 0 for word j, it means the word is not expected to appear in the dataset, which is interchangeable with $\lambda_{ij}=0$ for word j. Count may be unobservable for word j (small sample problem). Alternatively, j might be a made-up word. Either way, we could safely disregard information from word j during the matrix factorization problem. 
+
+f_{0j} is a mean occurrence of word j per document, when f_{jk} = 1 (i.e. log fold change of the gene or word is zero)?
+
+#### Simplest example
+n=p=1, k=2
+
+* In some contexts, the background model makes more sense than a sparse model because . And how this model might naturally lead to identification of key genes or key words? Higher $F_{jk}$ means more 
+
+* Where keywords are associated with smaller a,b and background words are associated with larger a,b (with larger variance).
+
+* Frequency of word j in latent group k
+
+$$
+f_{jk} = f_{0j} \phi_{jk}
+$$
+Background frequency of word j * multiplier of the word j in latent group k.
+Most of the time, multiplier is 1.
+* Distinction between popular words <-> rare words is clear in f0j. Background f0j will be larger for popular words (i.e. and, is) but not for rare words (i.e. jpeg)
+  * ?What is the scale of f0? First answer: doesn't exist.
+  * ?However, what is the implication when f0j is updated from corpus wide initialization?
+* Multiplier can up-regulate word j's presence in topic k. Since we are working with sparse X, it is expected for F_{jk} to be sparse as well. Therefore, k different gamma priors each describing group k is likely close to Gamma(0.1, 0.1). There are a few words j within topic k that can be "assigned" high f_{jk} near 10, while most f_{jk} is approximately 0.  Within topic k, multiplier zero means no presence of word j in the topic. Multiplier close to zero means minimum contribution.
+
+* prior, cavi update what effect, bounds
+* Blei's other paper. LDA. 
+
+
+

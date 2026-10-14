@@ -335,6 +335,48 @@ calculate_elbo <- function(state, X, a) {
 }
 
 # ---- initialization ----
+initialize_experiment_state <- function(
+    synthetic,
+    settings,
+    init,
+    oracle_f0,
+    oracle_pi,
+    oracle_l
+) {
+  init <- match.arg(init, c("gamma", "deviance_kmeans", "fasttopics"))
+
+  # Call main working function for initialization
+  # Then take into account oracle settings
+  state <- initialize_state(
+    synthetic$X,
+    settings$K,
+    settings$a,
+    L_init = if (oracle_l) "gamma" else init
+  )
+
+  if (oracle_f0) state$f0 <- synthetic$f0
+  if (oracle_l) state$L <- synthetic$L
+  if (oracle_pi) {
+    state$pi <- synthetic$pi
+
+    # qF is initialized from pi, so they must be reset together.
+    state$qF <- initialize_qF(
+      state$pi,
+      settings$a,
+      ncol(synthetic$X)
+    )
+  }
+  # Save for fit summary
+  method <- if (oracle_l) "oracle L" else switch(
+    init,
+    gamma = "Gamma-random L",
+    deviance_kmeans = "deviance k-means L",
+    fasttopics = "fastTopics L"
+  )
+
+  list(state = state, method = method)
+}
+
 # Main initialization function
 # Initialize model parameters; qZ is synchronized once after any overrides.
 initialize_state <- function(
@@ -342,7 +384,7 @@ initialize_state <- function(
     K,
     a,
     L_init = c("gamma", "deviance_kmeans", "fasttopics"),
-    seed = 2L,
+    seed = 1L,
     kmeans_args = list(),
     fasttopics_args = list()
 ) {
@@ -591,8 +633,8 @@ initialize_deviance_kmeans <- function(
 initialize_fasttopics <- function(
     X,
     K,
-    numiter = 200L,
-    seed = 2L,
+    numiter = 600L,
+    seed = 1L,
     minimum_loading = 1e-12
 ) {
   if (!requireNamespace("fastTopics", quietly = TRUE)) {
@@ -612,6 +654,7 @@ initialize_fasttopics <- function(
     X,
     K,
     numiter = numiter,
+    init.method = "random",
     verbose = "none"
   )$L
 
