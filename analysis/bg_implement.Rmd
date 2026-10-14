@@ -121,16 +121,15 @@ the working vectors all scale with $N$.
 `refresh_qF_moments` updates $\mathbb{E}[f_{jk}]$ (`qF$mean`) and $\mathbb{E}[\log f_{jk}]$ (`qF$mean_log`) with the following equations. Responsibilities are computed for one factor at a time in a temporary \(p \times M\) matrix. At the end, only their \(K \times M\) column sums are retained for the mixture-weight update.
 
 $$
-
-E[f_{jk}]
-=\sum_m r_{jkm}\frac{\alpha_{jkm}}{\beta_{jkm}},
-\qquad
-E[\log f_{jk}]
+\mathbb{E}[f_{jk}]
+=\sum_m r_{jkm} \frac{\alpha_{jkm}}{\beta_{jkm}},
+\qquad 
+\mathbb{E}[\log f_{jk}]
 =\sum_m r_{jkm}
 \left[\psi(\alpha_{jkm})-\log\beta_{jkm}\right]
-
 $$
 
+Note we define for simplicity the expected allocated count  $C_{jk} = \sum_{i=1}^{n}\mathbb{E}_q[z_{ijk}]$ and exposure $D_{jk}=f_{j0}\sum_{i=1}^{n}l_{ik}$.
 
 ```{r f-updates}
 # Calculate qF moments and the soft counts needed by update_pi().
@@ -248,6 +247,8 @@ $$
 $$
 
 ### Pi Update
+
+For each factor $k$, define the expected component count for simplicity: $N_{mk}=\sum_{j=1}^{p}r_{jkm}$.
 
 $$
 \pi_{mk}^{\mathrm{new}}
