@@ -11,7 +11,7 @@
 
 <meta name="author" content="Jihee You" />
 
-<meta name="date" content="2026-09-09" />
+<meta name="date" content="2026-10-14" />
 
 <title>BG Model Implementation</title>
 
@@ -361,7 +361,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">BG Model Implementation</h1>
 <h4 class="author">Jihee You</h4>
-<h4 class="date">2026-09-09</h4>
+<h4 class="date">2026-10-14</h4>
 
 </div>
 
@@ -390,7 +390,7 @@ class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2026-09-09
+<strong>Last updated:</strong> 2026-10-14
 </p>
 <p>
 <strong>Checks:</strong> <span
@@ -521,15 +521,15 @@ project makes it easier to run your code on other machines.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree6a6381976f190e0f4fad8749f03969bfb8a971bdtargetblank6a63819a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree88f3f25f758aed0ce7c86a284421fddf52fd7d5ctargetblank88f3f25a">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/jiheeyy/background/tree/6a6381976f190e0f4fad8749f03969bfb8a971bd" target="_blank">6a63819</a>
+<a href="https://github.com/jiheeyy/background/tree/88f3f25f758aed0ce7c86a284421fddf52fd7d5c" target="_blank">88f3f25</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree6a6381976f190e0f4fad8749f03969bfb8a971bdtargetblank6a63819a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree88f3f25f758aed0ce7c86a284421fddf52fd7d5ctargetblank88f3f25a"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -539,7 +539,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/jiheeyy/background/tree/6a6381976f190e0f4fad8749f03969bfb8a971bd" target="_blank">6a63819</a>.
+<a href="https://github.com/jiheeyy/background/tree/88f3f25f758aed0ce7c86a284421fddf52fd7d5c" target="_blank">88f3f25</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -559,13 +559,11 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    analysis/.DS_Store
-    Ignored:    analysis/bg_implement.html
 
 Untracked files:
     Untracked:  Rplots.pdf
     Untracked:  analysis/.ipynb_checkpoints/
     Untracked:  analysis/Untitled.ipynb
-    Untracked:  analysis/bg_news.Rmd
     Untracked:  analysis/gene_lst.txt
     Untracked:  analysis/gtex_processing.ipynb
     Untracked:  analysis/omim_topics_k=40.RData
@@ -573,15 +571,6 @@ Untracked files:
     Untracked:  analysis/v2.Rmd
     Untracked:  tests/
     Untracked:  writeup/
-
-Unstaged changes:
-    Deleted:    analysis/bg.Rmd
-    Modified:   analysis/index.Rmd
-    Modified:   analysis/main.Rmd
-    Deleted:    analysis/omim.Rmd
-    Modified:   background.Rproj
-    Deleted:    code/README.md
-    Deleted:    data/README.md
 
 </code></pre>
 <p>
@@ -626,6 +615,57 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/88f3f25f758aed0ce7c86a284421fddf52fd7d5c/analysis/bg_implement.Rmd" target="_blank">88f3f25</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-10-14
+</td>
+<td>
+wflow_publish(c("analysis/index.Rmd", "analysis/bg_implement.Rmd"))
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/754128c38258088f0de8362d3793f2c89ba4c64b/analysis/bg_implement.Rmd" target="_blank">754128c</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-10-14
+</td>
+<td>
+Resolve merge conflict in index.Rmd (keep remote version)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jiheeyy/background/6eca2a48ed2fa1c2e399203229dd95b3af4b1bc4/docs/bg_implement.html" target="_blank">6eca2a4</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-09-09
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -708,9 +748,18 @@ Responsibilities are computed for one factor at a time in a temporary
 <span class="math inline">\(p \times M\)</span> matrix. At the end, only
 their <span class="math inline">\(K \times M\)</span> column sums are
 retained for the mixture-weight update.</p>
-<p>$$</p>
-<p>E[f_{jk}] =<em>m r</em>{jkm}, E[f_{jk}] =<em>m r</em>{jkm} </p>
-<p>$$</p>
+<p><span class="math display">\[
+\mathbb{E}[f_{jk}]
+=\sum_m r_{jkm} \frac{\alpha_{jkm}}{\beta_{jkm}},
+\qquad
+\mathbb{E}[\log f_{jk}]
+=\sum_m r_{jkm}
+\left[\psi(\alpha_{jkm})-\log\beta_{jkm}\right]
+\]</span></p>
+<p>Note we define for simplicity the expected allocated count <span
+class="math inline">\(C_{jk} =
+\sum_{i=1}^{n}\mathbb{E}_q[z_{ijk}]\)</span> and exposure <span
+class="math inline">\(D_{jk}=f_{j0}\sum_{i=1}^{n}l_{ik}\)</span>.</p>
 <pre class="r"><code># Calculate qF moments and the soft counts needed by update_pi().
 # A p x M responsibility matrix is created for one factor k, summarized, and
 # discarded before moving to the next factor; no p x K x M array is retained.
@@ -831,6 +880,9 @@ code.</p>
 </div>
 <div id="pi-update" class="section level3">
 <h3>Pi Update</h3>
+<p>For each factor <span class="math inline">\(k\)</span>, define the
+expected component count for simplicity: <span
+class="math inline">\(N_{mk}=\sum_{j=1}^{p}r_{jkm}\)</span>.</p>
 <p><span class="math display">\[
 \pi_{mk}^{\mathrm{new}}
 =
@@ -1187,14 +1239,56 @@ loadings: “gamma”, “deviance_kmeans”, “fasttopics”. “gamma” samp
 <p>Pi (initialized to 1/M), f0 (initialized to 1), qF (calculated with
 <code>initialize_qF</code>) are also initialized inside the main
 <code>initialize_state</code> function.</p>
-<pre class="r"><code># Main initialization function
+<pre class="r"><code>initialize_experiment_state &lt;- function(
+    synthetic,
+    settings,
+    init,
+    oracle_f0,
+    oracle_pi,
+    oracle_l
+) {
+  init &lt;- match.arg(init, c(&quot;gamma&quot;, &quot;deviance_kmeans&quot;, &quot;fasttopics&quot;))
+
+  # Call main working function for initialization
+  # Then take into account oracle settings
+  state &lt;- initialize_state(
+    synthetic$X,
+    settings$K,
+    settings$a,
+    L_init = if (oracle_l) &quot;gamma&quot; else init
+  )
+
+  if (oracle_f0) state$f0 &lt;- synthetic$f0
+  if (oracle_l) state$L &lt;- synthetic$L
+  if (oracle_pi) {
+    state$pi &lt;- synthetic$pi
+
+    # qF is initialized from pi, so they must be reset together.
+    state$qF &lt;- initialize_qF(
+      state$pi,
+      settings$a,
+      ncol(synthetic$X)
+    )
+  }
+  # Save for fit summary
+  method &lt;- if (oracle_l) &quot;oracle L&quot; else switch(
+    init,
+    gamma = &quot;Gamma-random L&quot;,
+    deviance_kmeans = &quot;deviance k-means L&quot;,
+    fasttopics = &quot;fastTopics L&quot;
+  )
+
+  list(state = state, method = method)
+}
+
+# Main initialization function
 # Initialize model parameters; qZ is synchronized once after any overrides.
 initialize_state &lt;- function(
     X,
     K,
     a,
     L_init = c(&quot;gamma&quot;, &quot;deviance_kmeans&quot;, &quot;fasttopics&quot;),
-    seed = 2L,
+    seed = 1L,
     kmeans_args = list(),
     fasttopics_args = list()
 ) {
@@ -1468,8 +1562,8 @@ class="section level4">
 initialize_fasttopics &lt;- function(
     X,
     K,
-    numiter = 200L,
-    seed = 2L,
+    numiter = 600L,
+    seed = 1L,
     minimum_loading = 1e-12
 ) {
   if (!requireNamespace(&quot;fastTopics&quot;, quietly = TRUE)) {
@@ -1489,6 +1583,7 @@ initialize_fasttopics &lt;- function(
     X,
     K,
     numiter = numiter,
+    init.method = &quot;random&quot;,
     verbose = &quot;none&quot;
   )$L
 
