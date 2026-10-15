@@ -357,15 +357,15 @@ results.</p>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree88f3f25f758aed0ce7c86a284421fddf52fd7d5ctargetblank88f3f25a">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree0ca26ab6e3ca0c00e5539110a068564fefb4a39etargetblank0ca26aba">
 <span class="glyphicon glyphicon-ok text-success"
 aria-hidden="true"></span> <strong>Repository version:</strong>
-<a href="https://github.com/jiheeyy/background/tree/88f3f25f758aed0ce7c86a284421fddf52fd7d5c" target="_blank">88f3f25</a>
+<a href="https://github.com/jiheeyy/background/tree/0ca26ab6e3ca0c00e5539110a068564fefb4a39e" target="_blank">0ca26ab</a>
 </a>
 </p>
 </div>
 <div
-id="strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree88f3f25f758aed0ce7c86a284421fddf52fd7d5ctargetblank88f3f25a"
+id="strongRepositoryversionstrongahrefhttpsgithubcomjiheeyybackgroundtree0ca26ab6e3ca0c00e5539110a068564fefb4a39etargetblank0ca26aba"
 class="panel-collapse collapse">
 <div class="panel-body">
 <p>
@@ -375,7 +375,7 @@ reproducibility.
 </p>
 <p>
 The results in this page were generated with repository version
-<a href="https://github.com/jiheeyy/background/tree/88f3f25f758aed0ce7c86a284421fddf52fd7d5c" target="_blank">88f3f25</a>.
+<a href="https://github.com/jiheeyy/background/tree/0ca26ab6e3ca0c00e5539110a068564fefb4a39e" target="_blank">0ca26ab</a>.
 See the <em>Past versions</em> tab to see a history of the changes made
 to the R Markdown and HTML files.
 </p>
@@ -395,18 +395,14 @@ Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
     Ignored:    analysis/.DS_Store
+    Ignored:    local/
 
 Untracked files:
-    Untracked:  Rplots.pdf
     Untracked:  analysis/.ipynb_checkpoints/
-    Untracked:  analysis/Untitled.ipynb
-    Untracked:  analysis/gene_lst.txt
-    Untracked:  analysis/gtex_processing.ipynb
-    Untracked:  analysis/omim_topics_k=40.RData
-    Untracked:  analysis/v1.Rmd
-    Untracked:  analysis/v2.Rmd
-    Untracked:  tests/
-    Untracked:  writeup/
+    Untracked:  analysis/ebpmf_gamma.Rmd
+
+Unstaged changes:
+    Deleted:    analysis/main.Rmd
 
 </code></pre>
 <p>
@@ -450,6 +446,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jiheeyy/background/blob/0ca26ab6e3ca0c00e5539110a068564fefb4a39e/analysis/index.Rmd" target="_blank">0ca26ab</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-10-14
+</td>
+<td>
+wflow_publish("analysis/index.Rmd")
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jiheeyy/background/a561c7e986b757c6365b9a82c8d1230d96df4fe0/docs/index.html" target="_blank">a561c7e</a>
+</td>
+<td>
+jiheeyy
+</td>
+<td>
+2026-10-14
+</td>
+<td>
+Add C,D,N definition to implement page and resolve index page version
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -581,18 +611,46 @@ project.</p>
 <div id="overview" class="section level2">
 <h2>Overview</h2>
 <ul>
-<li><a href="main.html">Main analysis</a>: EBPMF-BG notes and GTEx data
-processing.</li>
 <li><a href="em.html">EM notes</a>: Poisson nonnegative matrix
 factorization and EM derivations.</li>
-<li><a href="v1.html">Simulation and OMIM demo</a>: early simulation and
-OMIM analysis notes.</li>
-<li><a href="v2.html">Model A CAVI implementation</a>: coordinate-ascent
-variational inference implementation notes.</li>
+<li><a href="bg_theory.html">Derivations (short version)</a>:
+Mathematical justifications for EBPMF-BG updates.</li>
+<li><a href="bg_implement.html">Implementation</a>: EBPMF-BG algorithm
+implementation, based on results derived in <a
+href="bg_theory.html">Derivations (short version)</a>,</li>
+<li><a href="bg_sim.html">EBPMF-BG on a “Easy” Simulated Example</a>:
+Showcase EBPMF-BG on a toy example following EBPMF-BG model
+assumptions.</li>
+<li><a href="bg_news.html">EBPMF-BG on newsgroups</a>: On newsgroups
+dataset, compare fasttopics and EBPMF-BG performance.</li>
+<li><a href="gamma.html">Gamma priors</a>: Visualize different choices
+of gamma priors.</li>
 </ul>
 </div>
-<div id="helper-r-files" class="section level2">
-<h2>Helper R Files</h2>
+<div id="helpful-r-files" class="section level2">
+<h2>Helpful R Files</h2>
+<ul>
+<li>bg_post.R: referred to in bg_sim and bg_news. For plotting,
+factorization results analysis.</li>
+<li>newsgroups.R: Similar to <a href="bg_news.html">EBPMF-BG on
+newsgroups</a>, compare fasttopics and bg model runs on fasttopics.</li>
+</ul>
+</div>
+<div id="experiments" class="section level2">
+<h2>Experiments</h2>
+<ul>
+<li><a href="bg_newsbadsample.html">Impact of bad newsgroups dataset
+sampling</a>: On newsgroups dataset, compare fasttopics and EBPMF-BG
+performance working with a subset of newsgroups.</li>
+</ul>
+</div>
+<div id="outdated" class="section level2">
+<h2>Outdated</h2>
+<ul>
+<li><a href="ebpmf_gamma.html">EBPMF-gamma</a>: Messy work on EBPMF with
+initial 1 gammamix priors on F, contains some efforts in GTEx data
+processing.</li>
+</ul>
 </div>
 </div>
 </div>
