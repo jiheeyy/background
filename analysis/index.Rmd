@@ -11,8 +11,6 @@ editor_options:
 This site collects notes, code, and results for the background model project.
 
 ## Overview
-
-- [EM notes](em.html): Poisson nonnegative matrix factorization and EM derivations.
 - [Derivations (short version)](bg_theory.html): Mathematical justifications for EBPMF-BG updates.
 - [Implementation](bg_implement.html): EBPMF-BG algorithm implementation, based on results derived in [Derivations (short version)](bg_theory.html),
 - [EBPMF-BG on a "Easy" Simulated Example](bg_sim.html): Showcase EBPMF-BG on a toy example following EBPMF-BG model assumptions.
@@ -27,4 +25,5 @@ This site collects notes, code, and results for the background model project.
 - [Impact of bad newsgroups dataset sampling](bg_newsbadsample.html): On newsgroups dataset, compare fasttopics and EBPMF-BG performance working with a subset of newsgroups.
 
 ## Outdated 
+- [EM notes](em.html): Poisson nonnegative matrix factorization and EM derivations.
 - [EBPMF-gamma](ebpmf_gamma.html): Messy work on EBPMF with initial 1 gammamix priors on F, contains some efforts in GTEx data processing.

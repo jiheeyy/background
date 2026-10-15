@@ -15,8 +15,8 @@ library(Matrix)
 library(ggplot2)
 library(cowplot)
 library(fastTopics)
-source(here("docs", "code", "bg_implement.R"), local = TRUE)
-source(here("docs", "code", "bg_post.R"), local = TRUE)
+source(here("code", "bg_implement.R"), local = TRUE)
+source(here("code", "bg_post.R"), local = TRUE)
 ```
 
 # Experiments on Newsgroups
@@ -25,8 +25,8 @@ Both models use the full document-by-term count matrix by default.
 
 ```{r load}
 news <- load_news_data(
-  here("docs", "data", "newsgroups.RData"),
-  here("docs", "data", "20news-bydate", "train.map")
+  here("data", "newsgroups.RData"),
+  here("data", "train.map")
 )
 ```
 

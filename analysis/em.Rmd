@@ -196,8 +196,8 @@ Given generated X, output an initial guess of L, F
 
 ```{r}
 library(fastTopics)
-source(here("docs","code","initialize.R"))
-source(here("docs","code","utils.R"))
+source(here("code","initialize.R"))
+source(here("code","utils.R"))
 
 initialize_LF <- function(X=X, K=3, shuffle=TRUE){
   # Estimate L, F: fasttopics
@@ -293,9 +293,9 @@ Includes data generation code block, init_and_run_em, and visualization & metric
 
 
 ```{r}
-source(here("docs","code","load_data.R"))
-source(here("docs","code","utils.R"))
-source(here("docs","code","initialize.R"))
+source(here("code","load_data.R"))
+source(here("code","utils.R"))
+source(here("code","initialize.R"))
 library(pheatmap)
 library(ggplot2)
 library(Matrix)
@@ -329,7 +329,7 @@ full_EM_pipeline <- function(data_type, w_matrix=NULL, experiment_gt=FALSE){
   #           )
   
   # -------------
-  source(here("docs","code","viz.R"))
+  source(here("code","viz.R"))
 
   all_vals <- unlist(lapply(list(stor_all$gt_L,    stor_all$gt_F,
                                  stor_all$ft_L,    stor_all$ft_F,

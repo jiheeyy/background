@@ -14,8 +14,8 @@ library(here)
 ## Code to run experiments on synthetic data
 
 ```{r import}
-source(here("docs", "code", "bg_implement.R"), local = TRUE)
-source(here("docs", "code", "bg_post.R"), local = TRUE)
+source(here("code", "bg_implement.R"), local = TRUE)
+source(here("code", "bg_post.R"), local = TRUE)
 ```
 
 Run ebpmf-bg full loop on simulated data.
