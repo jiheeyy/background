@@ -12,9 +12,19 @@ This site collects notes, code, and results for the background model project.
 
 ## Overview
 
-- [Main analysis](main.html): EBPMF-BG notes and GTEx data processing.
 - [EM notes](em.html): Poisson nonnegative matrix factorization and EM derivations.
-- [Simulation and OMIM demo](v1.html): early simulation and OMIM analysis notes.
-- [Model A CAVI implementation](v2.html): coordinate-ascent variational inference implementation notes.
+- [Derivations (short version)](bg_theory.html): Mathematical justifications for EBPMF-BG updates.
+- [Implementation](bg_implement.html): EBPMF-BG algorithm implementation, based on results derived in [Derivations (short version)](bg_theory.html),
+- [EBPMF-BG on a "Easy" Simulated Example](bg_sim.html): Showcase EBPMF-BG on a toy example following EBPMF-BG model assumptions.
+- [EBPMF-BG on newsgroups](bg_news.html): On newsgroups dataset, compare fasttopics and EBPMF-BG performance.
+- [Gamma priors](gamma.html): Visualize different choices of gamma priors.
 
-## Helper R Files
+## Helpful R Files
+- bg_post.R: referred to in bg_sim and bg_news. For plotting, factorization results analysis.
+- newsgroups.R: Similar to [EBPMF-BG on newsgroups](bg_news.html), compare fasttopics and bg model runs on fasttopics.
+
+## Experiments
+- [Impact of bad newsgroups dataset sampling](bg_newsbadsample.html): On newsgroups dataset, compare fasttopics and EBPMF-BG performance working with a subset of newsgroups.
+
+## Outdated 
+- [EBPMF-gamma](ebpmf_gamma.html): Messy work on EBPMF with initial 1 gammamix priors on F, contains some efforts in GTEx data processing.
